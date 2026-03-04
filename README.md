@@ -15,20 +15,20 @@ Several things are needed in order to accomplish this:
 Copy the link of the repository. You can find it by clicking on the green button labelled "<>Code" at the top of the page.
 
 In your terminal, choose the location where you want to install ft_irc, then type:
-``
+````
 git clone pasteTheLinkYouCopied
-``
+````
 And paste the link.
 
 In your terminal, go in the cloned repository and type:
-``
+````
 make
-``
+````
 
 If everything worked, a new file should have been created, named "ft_irc". Execute it with a port and password, like this:
-``
+````
 ./ft_irc port password
-``
+````
 
 The server should now be running. Open the IRC client and connect it to your server using its name, its port and its password.
 https://docs.redhat.com/en/documentation/red_hat_fuse/7.3/html/connecting_fuse_online_to_applications_and_services/connecting-to-irc_connectors
