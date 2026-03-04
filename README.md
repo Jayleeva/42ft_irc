@@ -129,6 +129,7 @@ Several websites were used to understand the different technical aspects of the 
 
 General informations:
 - https://medium.com/@mohcin.ghalmi/irc-server-internet-relay-chat-bd08e4f469f8
+- https://www.geeksforgeeks.org/operating-systems/i-o-scheduling-in-operating-systems/
 
 Choosing an IRC client:
 - https://libera.chat/guides/clients
