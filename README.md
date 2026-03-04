@@ -22,9 +22,11 @@
 
 ### Créer sa propre branche
 Dans VSCode, cliquez sur le nom de la branche actuelle (de base: main) en bas à gauche.
+
 <img width="219" height="43" alt="github_branche" src="https://github.com/user-attachments/assets/60b117ac-e4ba-4c3d-987c-21ce724ec715" />
 
 Cela ouvrira un menu dans la palette de commandes. Sélectionnez "Create new branch"
+
 <img width="611" height="212" alt="github_newbranche" src="https://github.com/user-attachments/assets/d905c167-c8d1-451e-82eb-d699df5dac68" />
 
 Entrez un nom pour la branche. Idéalement, le nom doit refléter la feature que vous comptez implémenter (par ex.: "parsing"). Appuyez sur ``enter``.
@@ -38,6 +40,7 @@ Pour les fois suivantes, vous pourrez utiliser la simple commande ``push`` comme
 
 ### Merge sa branche
 Allez sur la page web du github. Si vous avez push quelque chose, vous devriez en avoir la notification au sommet de la page, et un nouveau bouton vert "Compare & pull request" est accessible: cliquez dessus.
+
 <img width="928" height="134" alt="github_compare" src="https://github.com/user-attachments/assets/6d1348fa-6f57-4829-aa98-0441a13f49bd" />
 
 Si vous ne voyez pas cette notification, vous pouvez accéder au même bouton en accédant à la page de votre branche, puis en cliquant sur l'hypertexte "is x commits ahead of main", puis sur le bouton "Create pull request":
@@ -49,6 +52,7 @@ Si vous ne voyez pas cette notification, vous pouvez accéder au même bouton en
 <img width="1243" height="223" alt="github_createpullrequest" src="https://github.com/user-attachments/assets/518bad28-bb80-4011-a9fd-3110e9f228dc" />
 
 Peu importe par où vous êtes passé-e, vous voilà désormais sur la page de votre requête de merge. Depuis là, vous pouvez entrer des détails comme un titre et une description, et lire les commentaires de vos collègues sur votre requête. Mais surtout, vous pouvez, si aucun conflit n'est détecté, appuyer sur le bouton vert "Merge pull request".
+
 <img width="908" height="197" alt="github_noconflict" src="https://github.com/user-attachments/assets/2a8198c4-73dd-4de0-94b1-0aed32ae0cd0" />
 Vous devrez encore appuyer sur "confirmer" avant que le merge soit effectif.
 
@@ -58,6 +62,7 @@ Si des conflits sont détectés, vous ne pourrez pas merge aussi facilement: cli
 
 ### Supprimer sa branche
 Retournez sur la page d'accueil du github. Cliquez sur la liste des branches, puis sur le symbole "poubelle" de la vôtre.
+
 <img width="318" height="49" alt="github_allbranches" src="https://github.com/user-attachments/assets/ba4fa634-83e4-404e-8427-5b98e98e3f52" />
 
 <img width="1307" height="134" alt="github_branchdelete" src="https://github.com/user-attachments/assets/94246f61-c791-4aa6-bbb4-c98491c70ce5" />
