@@ -30,7 +30,7 @@ Press ``enter``. If everything worked, a new file should have been created, name
 ./ft_irc port password
 ````
 
-The server should now be running. Open the IRC client and connect it to your server using its name, its port and its password.
+Press ``enter``. The server should now be running. Open the IRC client and connect it to your server using its name, its port and its password.
 https://docs.redhat.com/en/documentation/red_hat_fuse/7.3/html/connecting_fuse_online_to_applications_and_services/connecting-to-irc_connectors
 
 If the connection is successful, you can now use the client as if it was connected to any official server. 
