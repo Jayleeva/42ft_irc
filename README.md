@@ -18,7 +18,7 @@ In your terminal, choose the location where you want to install ft_irc, then typ
 ````
 git clone pasteTheLinkYouCopied
 ````
-And paste the link.
+Paste the link and type ``enter``.
 
 In your terminal, go in the cloned repository and type:
 ````
