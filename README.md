@@ -131,6 +131,9 @@ General informations:
 - https://medium.com/@mohcin.ghalmi/irc-server-internet-relay-chat-bd08e4f469f8
 - https://www.geeksforgeeks.org/operating-systems/i-o-scheduling-in-operating-systems/
 
+The poll() function:
+- https://man7.org/linux/man-pages/man2/poll.2.html
+
 Choosing an IRC client:
 - https://libera.chat/guides/clients
 
