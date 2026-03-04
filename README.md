@@ -48,11 +48,17 @@ To test it thoroughly, open multiple clients and connect them all to the server.
 # Ressources
 Several websites were used to understand the different technical aspects of the project.
 
+General informations:
+- https://medium.com/@mohcin.ghalmi/irc-server-internet-relay-chat-bd08e4f469f8
+
 Choosing an IRC client:
 - https://libera.chat/guides/clients
 
 Understanding how the IRC client works:
 - https://docs.redhat.com/en/documentation/red_hat_fuse/7.3/html/connecting_fuse_online_to_applications_and_services/connecting-to-irc_connectors
 
-Understanding how to manage packets:
+Understanding the sockets:
+- https://www.geeksforgeeks.org/c/socket-programming-cc/
 
+Understanding the packets:
+- https://dev.to/3rev/demystifying-tcpip-understanding-the-journey-of-a-network-packet-38g7
