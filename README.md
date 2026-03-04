@@ -54,6 +54,7 @@ Si vous ne voyez pas cette notification, vous pouvez accéder au même bouton en
 Peu importe par où vous êtes passé-e, vous voilà désormais sur la page de votre requête de merge. Depuis là, vous pouvez entrer des détails comme un titre et une description, et lire les commentaires de vos collègues sur votre requête. Mais surtout, vous pouvez, si aucun conflit n'est détecté, appuyer sur le bouton vert "Merge pull request".
 
 <img width="908" height="197" alt="github_noconflict" src="https://github.com/user-attachments/assets/2a8198c4-73dd-4de0-94b1-0aed32ae0cd0" />
+
 Vous devrez encore appuyer sur "confirmer" avant que le merge soit effectif.
 
 Une fois cela fait, bravo! Vous avez merge votre branche et pouvez la supprimer.
