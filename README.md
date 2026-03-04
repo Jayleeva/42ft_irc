@@ -39,11 +39,11 @@ To test it thoroughly, open multiple clients and connect them all to the server.
 - invite a user (client) to a channel
 - change and view the channel topic
 - change the channel's parameters (mode):
-*   set / remove the access to the channel (open / invite only)
-*   set / remove the restrictions on the command allowing to change or view the channel topic
-*   set / remove the channel's password (key)
-*   give / take owner (operator) privilege
-*   set / remove user limit
+  * set / remove the access to the channel (open / invite only)
+  * set / remove the restrictions on the command allowing to change or view the channel topic
+  * set / remove the channel's password (key)
+  * give / take owner (operator) privilege
+  * set / remove user limit
 
 # Ressources
 Several websites were used to understand the different technical aspects of the project.
