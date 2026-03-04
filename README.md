@@ -17,7 +17,7 @@
 - Chacune crée sa propre branche et travaille exclusivement sur la sienne.
 - Chacune push régulièrement (à chaque modification importante) sur sa propre branche.
 - Quand on estime avoir terminé sur sa branche, on notifie les autres de sa volonté de merge: le merge n'est fait que lorsque tout le monde a donné le feu vert.
-- Quand il y a eu merge, chacune s'assure que sa branche repart sur la même base commune.
+- Quand il y a eu merge, chacune s'assure que sa branche repart sur la même base commune (quitte à en recréer une et supprimer l'ancienne).
 - Dans la mesure du possible, on ne merge que des versions stables.
 
 ### Créer sa propre branche
