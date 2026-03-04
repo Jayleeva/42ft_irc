@@ -1,5 +1,18 @@
 *This project has been created as part of the 42 curriculum by mrosset, llabatut, cyglardo.*
 
+# POUR LE GROUPE
+
+## Etapes
+?
+
+## D'ICI PROCHAINE REU
+- M, L & C: dégrossir le projet (lire le sujet, se faire une première idée de ce qui est demandé)
+
+## A FAIRE
+- identifier les nouveautés et commencer à se renseigner sur celles-ci
+- identifer des étapes à suivre
+- distribuer les tâches
+
 # Description
 The ft_irc projects consists of creating a server that can be used by an IRC client.
 
