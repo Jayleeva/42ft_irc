@@ -25,7 +25,7 @@ In your terminal, go in the cloned repository and type:
 make
 ````
 
-If everything worked, a new file should have been created, named "ft_irc". Execute it with a port and password, like this:
+Press ``enter``. If everything worked, a new file should have been created, named "ft_irc". Execute it with a port and password, like this:
 ````
 ./ft_irc port password
 ````
