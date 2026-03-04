@@ -133,6 +133,7 @@ General informations:
 
 The poll() function:
 - https://man7.org/linux/man-pages/man2/poll.2.html
+- https://www.ibm.com/docs/en/i/7.4.0?topic=ssw_ibm_i_74/apis/poll.htm
 
 Choosing an IRC client:
 - https://libera.chat/guides/clients
