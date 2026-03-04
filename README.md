@@ -7,7 +7,9 @@ Basically, the task is to develop a programm that allows to exchange public and 
 
 Several things are needed in order to accomplish this:
 - Understanding how to use the TCP/IP protocol, more precisely how to manage the packets.
-- 
+- Understanding how to use sockets.
+- Understanding how to manage accounts and authentication.
+- Parsing the commands.
 
 # Instructions
 Copy the link of the repository. You can find it by clicking on the green button labelled "<>Code" at the top of the page.
