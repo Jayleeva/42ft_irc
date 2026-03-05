@@ -1,18 +1,5 @@
 *This project has been created as part of the 42 curriculum by mrosset, llabatut, cyglardo.*
 
-# POUR LE GROUPE
-
-## Etapes
-?
-
-## D'ICI PROCHAINE REU
-- M, L & C: dégrossir le projet (lire le sujet, se faire une première idée de ce qui est demandé)
-
-## A FAIRE
-- identifier les nouveautés et commencer à se renseigner sur celles-ci
-- identifer des étapes à suivre
-- distribuer les tâches
-
 ## Utilisation du git
 - Chacune crée sa propre branche et travaille exclusivement sur la sienne.
 - Chacune push régulièrement (à chaque modification importante) sur sa propre branche.
