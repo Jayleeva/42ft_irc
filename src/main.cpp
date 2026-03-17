@@ -3,17 +3,21 @@
 int main (int argc, char **argv)
 {
     Server          serv;
-    t_addr          addr;
     std::string     password;
 
     if (argc != 3)
         return (1);
 
-    addr.host = gethosbyname();
-    addr.address = getaddrinfo();
-    addr.port = htons(atoi(argv[1]));
     password = argv[2];
 
-    serv.createSocket();
+    sockaddr_in addr;
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(atoi(argv[1]));
+    addr.sin_addr.s_addr = INADDR_ANY;
+
+    serv.openSocket(&addr);
+    serv.run();
+    serv.closeSocket();
+
     return (0);
 }
