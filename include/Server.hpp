@@ -2,11 +2,11 @@
 #define SERVER_HPP
 
 #include <iostream>
-#include <unistd.h>
-
-#include <map>
 #include <string>
+#include <map>
 
+#include <cstdlib>
+#include <unistd.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <poll.h>
@@ -25,7 +25,7 @@
 class Server
 {
     private:
-        int socket;
+        int _socket;
         std::map<int, Client*> _clients; // fd -> Client (index des clients connectés-> clients indexés par fd)
         std::map<std::string, Channel*> _channels; // nom de channel -> Channel (index des channels existants -> channels indexés par nom)
 

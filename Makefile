@@ -1,44 +1,46 @@
 NAME = ft_IRC
 
-SRC_DIR = ./src
-OBJ_DIR = ./obj
-DIR = ./obj ./obj/Command
+#SRC_DIR = ./src
+#OBJ_DIR = ./obj
+#DIR = ./obj ./obj/Command
 
-SRC = 	main.cpp \
-		Server.cpp \
-		Client.cpp \
-		Channel.cpp \
-		Command.cpp \
-		Command/join.cpp \
-		
-SRCS = $(addprefix $(SRC_DIR)/, $(SRC))
+SRC = 	src/main.cpp \
+		src/Server.cpp \
+		src/Client.cpp \
+		src/Channel.cpp \
+		src/Command.cpp \
+		src/Command/join.cpp \
 
-OBJ = $(SRC:.c=.o)
-OBJS = $(addprefix $(OBJ_DIR)/, $(OBJ))
+#SRCS = $(addprefix $(SRC_DIR)/, $(SRC))
+
+OBJ = $(SRC:.cpp=.o)
+#OBJS = $(addprefix $(OBJ_DIR)/, $(OBJ))
 
 CC = c++
-CFLAGS = -Wall -Wextra -Werror -std=C++98 -I ./inc -g 
+CPPFLAGS = -Wall -Wextra -Werror -std=c++98 -I ./inc -g 
 
-INCLUDES = -I/usr/include
-
-MKDIR = mkdir -p
+#MKDIR = mkdir -p
 RM = rm -rf
 
 all: $(NAME)
 
-$(DIR):
-	$(MKDIR) $(DIR)
+#$(DIR):
+#	$(MKDIR) $(DIR)
 
-$(NAME): $(OBJS) | $(DIR)
-	@${CC} ${CFLAGS} ${OBJS} -o $(NAME)
+$(NAME): $(OBJ) #$(OBJS) | $(DIR)
+	$(CC) $(CPPFLAGS) $(OBJ) -o $(NAME) 
+#${OBJS} instead of OBJ
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(DIR)
-	@$(CC) $(CFLAGS) -o $@ -c $< $(INCLUDES)
+#$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(DIR)
+#	@$(CC) $(CFLAGS) -o $@ -c $< $(INCLUDES)
 
 clean:
-	@$(RM) $(OBJ_DIR)
-fclean: clean
-	@$(RM) $(NAME)
-re: fclean all
+	$(RM) $(OBJ)
+# $(OBJ_DIR) instead of OBJ
 
-.PHONY : all clean fclean re
+fclean: clean
+	$(RM) $(NAME)
+
+re: fclean $(NAME)
+
+.PHONY: all clean fclean re

@@ -1,11 +1,12 @@
 #include "../include/Server.hpp"
+#include "../include/utils.hpp"
 
 Server::Server() {};
 Server::~Server() {};
 
 int Server::getSocket() const
 {
-    return (this->socket);
+    return (this->_socket);
 }
 
 std::map<int, Client*> Server::getMapClients() const
@@ -23,23 +24,23 @@ std::map<std::string, Channel*> Server::getMapChannels() const
 
 void Server::openSocket(sockaddr_in *addr)
 {
-    this->socket = socket(AF_INET, SOCK_STREAM, 0);
+    this->_socket = socket(AF_INET, SOCK_STREAM, 0);
     
-    if (this->socket < 0)
+    if (this->_socket < 0)
     {
-        perror("socket failed");
+        printError("socket failed");
         exit(EXIT_FAILURE);
     }
 
-    if (bind(this->socket, (struct sockaddr*)addr, sizeof(addr)) < 0)
+    if (bind(this->_socket, (struct sockaddr*)addr, sizeof(addr)) < 0)
     {
-        perror("bind failed");
+        printError("bind failed");
         exit(EXIT_FAILURE);
     }
 
-    if (listen(this->socket, 5) < 0)
+    if (listen(this->_socket, 5) < 0)
     {
-        perror("listen failed");
+        printError("listen failed");
         exit(EXIT_FAILURE);
     }
 }
@@ -50,7 +51,7 @@ void    Server::closeSocket()
     {
         close(it->first);
     }
-    close(this->socket);
+    close(this->_socket);
 }
 
 void    Server::addClient()
@@ -58,15 +59,16 @@ void    Server::addClient()
 	socklen_t			len;
 	struct sockaddr_in	clientAddr;
 
-    int clientSocket = accept(this->socket, (struct sockaddr*)&clientAddr, &len);
+    int clientSocket = accept(this->_socket, (struct sockaddr*)&clientAddr, &len);
 
     if (clientSocket < 0)
     {
-        perror("listen failed");
+        printError("listen failed");
         exit(EXIT_FAILURE);
     }
     else
-        this->_clients.insert({clientSocket, &Client(clientSocket)});
+        //this->_clients.insert({clientSocket, &Client(clientSocket)});
+        this->_clients.insert(this->_clients.end(), std::make_pair(clientSocket, &Client(clientSocket)));
 }
 
 void    Server::removeClient(std::map<int, Client*>::iterator it)
@@ -81,20 +83,20 @@ void    Server::clientRequest(std::map<int, Client*>::iterator it)
     char    buffer[1024];
 
     recv(it->first, buffer, sizeof(buffer), MSG_DONTWAIT);
-    std::cout << "Message from client " << it->first << " : " << buffer << std::endl;
+    std::cout << YELLOW << "Message from client " << it->first << " : " << DEFAULT << buffer << std::endl;
 }
 
 void    Server::run()
 {
     pollfd  pfd[this->_clients.size()];
 
-    std::map<int, Client*>::iterator it = this->_clients.begin();
-    for (int i = 0; i < this->_clients.size(); i ++)
+    int i = 0;
+    for (std::map<int, Client*>::iterator it = this->_clients.begin(); it != this->_clients.end(); it ++)
     {
         pfd[i].fd = it->first;
         pfd[i].events = POLLIN | POLLHUP | POLLOUT;
         //pfd[i].revents = 0;
-        it ++;
+        i ++;
     }
     
     while (true)
@@ -102,19 +104,19 @@ void    Server::run()
         int ready = poll(pfd, this->_clients.size(), -1);
         if (ready == -1)
         {
-            perror("poll failed");
+            printError("poll failed");
             break;
         }
         else
         {
-            std::map<int, Client*>::iterator it = this->_clients.begin();
-            for (int i = 0; i < this->_clients.size(); i ++)
+            int i = 0;
+            for (std::map<int, Client*>::iterator it = this->_clients.begin(); it != this->_clients.end(); it ++)
             {
                 try
                 {
                     if (pfd[i].revents & POLLIN)
                     {
-                        if (pfd[i].fd == this->socket)
+                        if (pfd[i].fd == this->_socket)
                             this->addClient();
                         else
                             this->clientRequest(it);
@@ -124,9 +126,9 @@ void    Server::run()
                 }
                 catch (std::exception &e)
                 {
-                    std::cerr << "\033[0;31m" << e.what() << "\033[0m" << '\n';
+                    printError(e.what());
                 }
-                it ++;
+                i ++;
             }
         }
     }

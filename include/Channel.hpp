@@ -15,6 +15,7 @@ class Channel
 
     public:
         Channel(const std::string &name);
+        ~Channel();
 };
 
 #endif
