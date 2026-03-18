@@ -18,14 +18,14 @@ std::map<std::string, Channel*> Server::getMapChannels() const
     return (this->_channels);
 }
 
-void Server::setMapClients(std::map<int, Client*> _clients);
-void Server::setMapChannels(std::map<std::string, Channel*> _channels);
+//void Server::setMapClients(std::map<int, Client*> _clients);
+//void Server::setMapChannels(std::map<std::string, Channel*> _channels);
 
 void Server::openSocket(sockaddr_in *addr)
 {
-    int serverSocket;
+    int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
     
-    if ((serverSocket = socket(AF_INET, SOCK_STREAM, 0)) < 0)
+    if (serverSocket < 0)
     {
         perror("socket failed");
         exit(EXIT_FAILURE);
@@ -48,32 +48,34 @@ void    Server::closeSocket()
 {
     for (std::map<int, Client*>::iterator it; it < this->_clients.end(); it ++)
     {
-        close(it.first);
+        close(it->first);
     }
-    close(this->fd);
+    close(this->socket);
 }
 
-void    addClient()
+void    Server::addClient()
 {
 	socklen_t			len;
 	struct sockaddr_in	clientAddr;
 
-    int clientSocket = accept(this->socket, (struct sockaddr*)clientAddr, &len);
+    int clientSocket = accept(this->socket, (struct sockaddr*)&clientAddr, &len);
+
     if (clientSocket < 0)
     {
         perror("listen failed");
         exit(EXIT_FAILURE);
     }
     else
-        this->_clients.insert({clientSocket, ""});
+        this->_clients.insert({clientSocket, &Client(clientSocket)});
 }
 
-void    removeClient(int i)
+void    Server::removeClient(int i)
 {
     close(this->_clients[i].first);
+    this->_clients.erase(this->_clients[i].first);
 }
 
-void    run()
+void    Server::run()
 {
     pollfd  pfd[this->_clients.size()];
 
@@ -86,7 +88,7 @@ void    run()
     
     while (true)
     {
-        ready = poll(pfd, this->_clients.size(), -1);
+        int ready = poll(pfd, this->_clients.size(), -1);
         if (ready == -1)
         {
             perror("poll failed");

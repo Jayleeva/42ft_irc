@@ -16,6 +16,7 @@ class Client
 
     public:
         Client(int fd);
+        ~Client();
 };
 
 #endif

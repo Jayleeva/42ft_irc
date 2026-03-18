@@ -1,10 +1,14 @@
 #ifndef SERVER_HPP
 #define SERVER_HPP
 
+#include <iostream>
+#include <unistd.h>
+
 #include <map>
 #include <string>
 
-#include <ws2def.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
 #include <poll.h>
 
 #include "Client.hpp"
@@ -32,11 +36,12 @@ class Server
         std::map<int, Client*>          getMapClients() const;
         std::map<std::string, Channel*> getMapChannels() const;
 
-        void                            setMapClients(std::map<int, Client*> _clients);
-        void                            setMapChannels(std::map<std::string, Channel*> _channels);
+        //void                            setMapClients(std::map<int, Client*> _clients);
+        //void                            setMapChannels(std::map<std::string, Channel*> _channels);
 
-        void    openSocket(t_addr &addr);
+        void    openSocket(sockaddr_in *addr);
         void    closeSocket();
+        void    run();
         void    addClient();
         void    removeClient(int i);
 };
