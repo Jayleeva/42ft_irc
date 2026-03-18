@@ -23,21 +23,21 @@ std::map<std::string, Channel*> Server::getMapChannels() const
 
 void Server::openSocket(sockaddr_in *addr)
 {
-    int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
+    this->socket = socket(AF_INET, SOCK_STREAM, 0);
     
-    if (serverSocket < 0)
+    if (this->socket < 0)
     {
         perror("socket failed");
         exit(EXIT_FAILURE);
     }
 
-    if (bind(serverSocket, (struct sockaddr*)addr, sizeof(addr)) < 0)
+    if (bind(this->socket, (struct sockaddr*)addr, sizeof(addr)) < 0)
     {
         perror("bind failed");
         exit(EXIT_FAILURE);
     }
 
-    if (listen(serverSocket, 5) < 0)
+    if (listen(this->socket, 5) < 0)
     {
         perror("listen failed");
         exit(EXIT_FAILURE);
@@ -46,7 +46,7 @@ void Server::openSocket(sockaddr_in *addr)
 
 void    Server::closeSocket()
 {
-    for (std::map<int, Client*>::iterator it; it < this->_clients.end(); it ++)
+    for (std::map<int, Client*>::iterator it = this->_clients.begin(); it != this->_clients.end(); it ++)
     {
         close(it->first);
     }
@@ -69,21 +69,23 @@ void    Server::addClient()
         this->_clients.insert({clientSocket, &Client(clientSocket)});
 }
 
-void    Server::removeClient(int i)
+void    Server::removeClient(std::map<int, Client*>::iterator it)
 {
-    close(this->_clients[i].first);
-    this->_clients.erase(this->_clients[i].first);
+    close(it->first);
+    this->_clients.erase(it);
 }
 
 void    Server::run()
 {
     pollfd  pfd[this->_clients.size()];
 
+    std::map<int, Client*>::iterator it = this->_clients.begin();
     for (int i = 0; i < this->_clients.size(); i ++)
     {
-        pfd[i].fd = this->_clients[i].first;
+        pfd[i].fd = it->first;
         pfd[i].events = POLLIN | POLLHUP | POLLOUT;
         //pfd[i].revents = 0;
+        it ++;
     }
     
     while (true)
@@ -96,6 +98,7 @@ void    Server::run()
         }
         else
         {
+            std::map<int, Client*>::iterator it = this->_clients.begin();
             for (int i = 0; i < this->_clients.size(); i ++)
             {
                 try
@@ -108,12 +111,13 @@ void    Server::run()
                             clientRequest(i);
                     }
                     else if ((pfd[i].revents & POLLHUP) || (pfd[i].revents & POLLOUT))
-                        this->removeClient(i);
+                        this->removeClient(it);
                 }
                 catch (std::exception &e)
                 {
                     std::cerr << "\033[0;31m" << e.what() << "\033[0m" << '\n';
                 }
+                it ++;
             }
         }
     }

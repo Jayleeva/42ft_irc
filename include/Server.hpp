@@ -43,7 +43,7 @@ class Server
         void    closeSocket();
         void    run();
         void    addClient();
-        void    removeClient(int i);
+        void    removeClient(std::map<int, Client*>::iterator it);
 };
 
 #endif
