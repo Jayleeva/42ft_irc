@@ -5,10 +5,12 @@
 #include <string>
 #include <map>
 
+#include <cerrno>
 #include <cstdio>
 #include <cstdlib>
 #include <unistd.h>
 #include <sys/socket.h>
+#include <netdb.h>
 #include <netinet/in.h>
 #include <poll.h>
 

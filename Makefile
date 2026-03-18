@@ -18,7 +18,8 @@ OBJ = $(SRCS:.cpp=.o)
 #OBJS = $(addprefix $(OBJ_DIR)/, $(OBJ))
 
 CC = c++
-CPPFLAGS = -Wall -Wextra -Werror -std=c++98 -I ./inc -g 
+CPPFLAGS = -Wall -Wextra -Werror -std=c++98 -I ./include -g 
+#INCLUDES = -I/usr/include
 
 MKDIR = mkdir -p
 RM = rm -rf
@@ -28,12 +29,12 @@ all: $(NAME)
 $(DIR):
 	$(MKDIR) $(DIR)
 
-$(NAME): $(OBJ) #| $(DIR)
+$(NAME): $(OBJ) # $(OBJ_DIR) instead of OBJ | $(DIR)
 	$(CC) $(CPPFLAGS) $(OBJ) -o $(NAME)
-# $(OBJ_DIR) instead of OBJ
+# $(OBJS) instead of OBJ
 
-#$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(DIR)
-#	@$(CC) $(CFLAGS) -o $@ -c $< $(INCLUDES)
+#$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(DIR)
+#	@$(CC) $(CFLAGS) -o $@ -cpp $< $(INCLUDES)
 
 clean:
 	$(RM) $(OBJ)

@@ -24,6 +24,7 @@ std::map<std::string, Channel*> Server::getMapChannels() const
 
 void Server::openSocket(sockaddr_in *addr)
 {
+    int opt = 1;
     this->_socket = socket(AF_INET, SOCK_STREAM, 0);
     
     if (this->_socket < 0)
@@ -32,8 +33,17 @@ void Server::openSocket(sockaddr_in *addr)
         exit(EXIT_FAILURE);
     }
 
+    //getprotobyname("name of protocol")
+    if (setsockopt(this->_socket, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, (char *) &opt, (sizeof(opt)))) 
+    {
+        perror("setsockopt");
+        exit(EXIT_FAILURE);
+    }
+
     if (bind(this->_socket, (sockaddr*)addr, sizeof(addr)) < 0)
     {
+        int errsv = errno;
+        std::cout << "errno = " << errsv << std::endl;
         perror("bind failed");
         exit(EXIT_FAILURE);
     }
