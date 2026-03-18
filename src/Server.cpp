@@ -75,6 +75,15 @@ void    Server::removeClient(std::map<int, Client*>::iterator it)
     this->_clients.erase(it);
 }
 
+
+void    Server::clientRequest(std::map<int, Client*>::iterator it)
+{
+    char    buffer[1024];
+
+    recv(it->first, buffer, sizeof(buffer), MSG_DONTWAIT);
+    std::cout << "Message from client " << it->first << " : " << buffer << std::endl;
+}
+
 void    Server::run()
 {
     pollfd  pfd[this->_clients.size()];
@@ -108,7 +117,7 @@ void    Server::run()
                         if (pfd[i].fd == this->socket)
                             this->addClient();
                         else
-                            clientRequest(i);
+                            this->clientRequest(it);
                     }
                     else if ((pfd[i].revents & POLLHUP) || (pfd[i].revents & POLLOUT))
                         this->removeClient(it);

@@ -14,6 +14,7 @@
 #include "Client.hpp"
 #include "Channel.hpp"
 
+
 /*struct pollfd 
 {
     int   fd;         // file descriptor 
@@ -44,6 +45,7 @@ class Server
         void    run();
         void    addClient();
         void    removeClient(std::map<int, Client*>::iterator it);
+        void    clientRequest(std::map<int, Client*>::iterator it);
 };
 
 #endif
