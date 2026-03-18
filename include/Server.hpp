@@ -5,6 +5,7 @@
 #include <string>
 #include <map>
 
+#include <cstdio>
 #include <cstdlib>
 #include <unistd.h>
 #include <sys/socket.h>
@@ -14,6 +15,7 @@
 #include "Client.hpp"
 #include "Channel.hpp"
 
+# define QUEUE_SIZE 5
 
 /*struct pollfd 
 {

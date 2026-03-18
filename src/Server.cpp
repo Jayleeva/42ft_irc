@@ -28,19 +28,19 @@ void Server::openSocket(sockaddr_in *addr)
     
     if (this->_socket < 0)
     {
-        printError("socket failed");
+        perror("socket failed");
         exit(EXIT_FAILURE);
     }
 
-    if (bind(this->_socket, (struct sockaddr*)addr, sizeof(addr)) < 0)
+    if (bind(this->_socket, (sockaddr*)addr, sizeof(addr)) < 0)
     {
-        printError("bind failed");
+        perror("bind failed");
         exit(EXIT_FAILURE);
     }
 
-    if (listen(this->_socket, 5) < 0)
+    if (listen(this->_socket, QUEUE_SIZE) < 0)
     {
-        printError("listen failed");
+        perror("listen failed");
         exit(EXIT_FAILURE);
     }
 }
@@ -63,12 +63,11 @@ void    Server::addClient()
 
     if (clientSocket < 0)
     {
-        printError("listen failed");
+        perror("listen failed");
         exit(EXIT_FAILURE);
     }
-    else
-        //this->_clients.insert({clientSocket, &Client(clientSocket)});
-        this->_clients.insert(this->_clients.end(), std::make_pair(clientSocket, &Client(clientSocket)));
+    Client  newClient(clientSocket);
+    this->_clients.insert(this->_clients.end(), std::make_pair(clientSocket, &newClient));
 }
 
 void    Server::removeClient(std::map<int, Client*>::iterator it)
@@ -104,7 +103,7 @@ void    Server::run()
         int ready = poll(pfd, this->_clients.size(), -1);
         if (ready == -1)
         {
-            printError("poll failed");
+            perror("poll failed");
             break;
         }
         else

@@ -1,35 +1,36 @@
 NAME = ft_IRC
 
-#SRC_DIR = ./src
-#OBJ_DIR = ./obj
-#DIR = ./obj ./obj/Command
+SRC_DIR = ./src
+OBJ_DIR = ./obj
+DIR = ./obj ./obj/Command
 
-SRC = 	src/main.cpp \
-		src/Server.cpp \
-		src/Client.cpp \
-		src/Channel.cpp \
-		src/Command.cpp \
-		src/Command/join.cpp \
+SRC = 	main.cpp \
+		Server.cpp \
+		Client.cpp \
+		Channel.cpp \
+		Command.cpp \
+		Command/join.cpp \
+		utils.cpp
 
-#SRCS = $(addprefix $(SRC_DIR)/, $(SRC))
+SRCS = $(addprefix $(SRC_DIR)/, $(SRC))
 
-OBJ = $(SRC:.cpp=.o)
+OBJ = $(SRCS:.cpp=.o)
 #OBJS = $(addprefix $(OBJ_DIR)/, $(OBJ))
 
 CC = c++
 CPPFLAGS = -Wall -Wextra -Werror -std=c++98 -I ./inc -g 
 
-#MKDIR = mkdir -p
+MKDIR = mkdir -p
 RM = rm -rf
 
 all: $(NAME)
 
-#$(DIR):
-#	$(MKDIR) $(DIR)
+$(DIR):
+	$(MKDIR) $(DIR)
 
-$(NAME): $(OBJ) #$(OBJS) | $(DIR)
-	$(CC) $(CPPFLAGS) $(OBJ) -o $(NAME) 
-#${OBJS} instead of OBJ
+$(NAME): $(OBJ) #| $(DIR)
+	$(CC) $(CPPFLAGS) $(OBJ) -o $(NAME)
+# $(OBJ_DIR) instead of OBJ
 
 #$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(DIR)
 #	@$(CC) $(CFLAGS) -o $@ -c $< $(INCLUDES)
