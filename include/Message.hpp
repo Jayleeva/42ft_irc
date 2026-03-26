@@ -3,13 +3,28 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 
+// This class is used to represent an IRC message received from the client.
 class Message
 {
     private:
+        std::string _msg; // raw message
     
     public:
+        Message();
+        Message(const std::string& msg);
+        ~Message();
+
+        //read and modify _msg
+        std::string getMsg() const;
+        void setMsg(const std::string& msg);
 
 };
 
 #endif
+
+/*
+** The server receives this as plain text, the role of Message will be to store
+    this text and later to parse it properly.
+*/
