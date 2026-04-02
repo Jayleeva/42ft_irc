@@ -3,7 +3,8 @@
 
 #include <string>
 #include <set>
-#include "Client.hpp"
+
+class Client;
 
 class Channel
 {
