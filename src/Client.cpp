@@ -1,6 +1,6 @@
 #include "../include/Client.hpp"
 
-Client::Client(int fd) : _fd(fd), _registered(false)
+Client::Client(int fd) : _fd(fd), _registered(false), _hasNick(false), _hasUser(false)
 {
 }
 
@@ -27,16 +27,21 @@ bool Client::isRegistered() const
 void Client::setNickname(const std::string &nickname)
 {
     _nickname = nickname;
+    _hasNick = true;
+    tryRegister();
 }
 
 void Client::setUsername(const std::string &username)
 {
     _username = username;
+    _hasUser = true;
+    tryRegister();
 }
 
-void Client::setRegistered(bool registered)
+void Client::tryRegister()
 {
-    _registered = registered;
+    if (_hasNick && _hasUser)
+        _registered = true;
 }
 
 void Client::addChannel(const std::string &channelName)

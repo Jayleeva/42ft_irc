@@ -10,8 +10,9 @@ int main()
     std::cout << "registered: " << c.isRegistered() << std::endl;
 
     c.setNickname("lisa");
+    std::cout << "after nick: " << c.isRegistered() << std::endl;
     c.setUsername("lili");
-    c.setRegistered(true);
+    std::cout << "after user: " << c.isRegistered() << std::endl;
     c.addChannel("#general");
 
     std::cout << "nickname: " << c.getNickname() << std::endl;

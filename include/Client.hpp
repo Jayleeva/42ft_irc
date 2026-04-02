@@ -11,6 +11,8 @@ class Client
         std::string _nickname;
         std::string _username;
         bool _registered;
+        bool _hasNick;
+        bool _hasUser;
         std::set<std::string> _channels;
 
     public:
@@ -23,7 +25,8 @@ class Client
 
         void setNickname(const std::string &nickname);
         void setUsername(const std::string &username);
-        void setRegistered(bool registered);
+
+        void tryRegister();
 
         void addChannel(const std::string &channelName);
         void removeChannel(const std::string &channelName);
