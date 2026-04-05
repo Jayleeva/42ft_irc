@@ -4,7 +4,14 @@
 #include <iostream>
 #include <string>
 
+#include "Message.hpp"
+#include "Utils.hpp"
+// #include "Channel.hpp"
+// #include "Client.hpp"
+// #include "Server.hpp"
+
 #define CMD_INVITE "INVITE"
+#define CMD_INVITE "PASS"
 #define CMD_JOIN "JOIN"
 #define CMD_KICK "KICK"
 #define CMD_MODE "MODE"
@@ -19,15 +26,24 @@ class Command
 {
     private:
         std::string _cmd;
+
+        void pass(Message const &msg, Client &client);
     
     public:
         Command();
         Command(const std::string& cmd);
-        ~Command();
+        virtual ~Command();
 
         std::string getCmd() const;
         void setCmd(const std::string& cmd);
 
+        void execute(Message const &msg, Client &client);
+
 };
 
 #endif
+
+/*
+**getCmd: Method of Command class, return the command already stored in the object
+**getCommand : Parsing function, extract the command from the raw message
+*/
