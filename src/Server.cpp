@@ -22,37 +22,44 @@ std::map<std::string, Channel*> Server::getMapChannels() const
 //void Server::setMapClients(std::map<int, Client*> _clients);
 //void Server::setMapChannels(std::map<std::string, Channel*> _channels);
 
-void Server::openSocket(sockaddr_in *addr)
+void Server::openSocket(struct sockaddr_in *addr)
 {
-    int opt = 1;
+    int opt = 0;
     this->_socket = socket(AF_INET, SOCK_STREAM, 0);
-    
+
     if (this->_socket < 0)
     {
         perror("socket failed");
         exit(EXIT_FAILURE);
     }
 
+    std::cout << "is created\n";
+
     //getprotobyname("name of protocol")
-    if (setsockopt(this->_socket, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, (char *) &opt, (sizeof(opt)))) 
+    if (setsockopt(this->_socket, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, (const char *) &opt, (sizeof(opt)))) 
     {
         perror("setsockopt");
         exit(EXIT_FAILURE);
     }
 
-    if (bind(this->_socket, (sockaddr*)addr, sizeof(addr)) < 0)
+    std::cout << "is set\n";
+
+    if (bind(this->_socket, (struct sockaddr*)addr, sizeof(struct sockaddr)) < 0)
     {
         int errsv = errno;
         std::cout << "errno = " << errsv << std::endl;
         perror("bind failed");
         exit(EXIT_FAILURE);
     }
+ 
+    std::cout << "is bound\n";
 
     if (listen(this->_socket, QUEUE_SIZE) < 0)
     {
         perror("listen failed");
         exit(EXIT_FAILURE);
     }
+    std::cout << "is listening\n";
 }
 
 void    Server::closeSocket()

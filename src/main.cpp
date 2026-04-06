@@ -19,10 +19,11 @@ int main (int argc, char **argv)
     password = argv[2];
     port = atoi(argv[1]);
 
-    sockaddr_in addr;
+    struct sockaddr_in addr;
     addr.sin_family = AF_INET;
-    addr.sin_port = htons(port); //meme resultat que ntohs...
+    addr.sin_port = htons((u_short)port); //meme resultat que ntohs...
     addr.sin_addr.s_addr = INADDR_ANY;
+    memset(&(addr.sin_zero), 0, 8);
 
     std::cout << "recieved port : " << port << std::endl;
     std::cout << "transformed port : " << addr.sin_port << std::endl;

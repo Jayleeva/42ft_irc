@@ -6,6 +6,7 @@
 #include <map>
 
 #include <cerrno>
+#include <cstring>
 #include <cstdio>
 #include <cstdlib>
 #include <unistd.h>
@@ -13,6 +14,7 @@
 #include <netdb.h>
 #include <netinet/in.h>
 #include <poll.h>
+
 
 #include "Client.hpp"
 #include "Channel.hpp"
@@ -44,7 +46,7 @@ class Server
         //void                            setMapClients(std::map<int, Client*> _clients);
         //void                            setMapChannels(std::map<std::string, Channel*> _channels);
 
-        void    openSocket(sockaddr_in *addr);
+        void    openSocket(struct sockaddr_in *addr);
         void    closeSocket();
         void    run();
         void    addClient();
