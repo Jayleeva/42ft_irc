@@ -17,6 +17,8 @@ class Client
     public:
         Client(int fd);
         ~Client();
+
+        int getFd() const;
 };
 
 #endif

@@ -47,11 +47,11 @@ class Server
         //void                            setMapChannels(std::map<std::string, Channel*> _channels);
 
         void    openSocket(struct sockaddr_in *addr);
-        void    closeSocket();
+        void    closeSockets();
         void    run();
-        void    addClient();
-        void    removeClient(std::map<int, Client*>::iterator it);
-        void    clientRequest(std::map<int, Client*>::iterator it);
+        void    addClient(struct pollfd *fds, int nfds);
+        void    removeClient(int i); //std::map<int, Client*>::iterator it)
+        void    clientRequest(int i); //std::map<int, Client*>::iterator it)
 };
 
 void    printMap(std::map<int, Client *> map);

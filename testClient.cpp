@@ -40,8 +40,10 @@ int main(void)
 
     std::cout << "is connected!\n";
 
-    const char* message = "Hello, server!";
+    const char *message = "Hello, server!\0";
     send(clientSocket, message, strlen(message), 0);
+
+    std::cout << "tried to send message\n";
 
     close(clientSocket);
     return (0);

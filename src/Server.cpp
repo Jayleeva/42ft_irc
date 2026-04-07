@@ -27,7 +27,7 @@ void    printMap(std::map<int, Client *> map)
 {
     for (std::map<int, Client *>::iterator it = map.begin(); it != map.end(); ++it)
     {
-        std::cout << it->first << " " << it->second << " \n";
+        std::cout << "---  " << it->first << " " << it->second << " \n";
     }
 }
 
@@ -71,7 +71,7 @@ void Server::openSocket(struct sockaddr_in *addr)
     std::cout << "is listening\n";
 }
 
-void    Server::closeSocket()
+void    Server::closeSockets()
 {
     for (std::map<int, Client*>::iterator it = this->_clients.begin(); it != this->_clients.end(); it ++)
     {
@@ -80,7 +80,19 @@ void    Server::closeSocket()
     close(this->_socket);
 }
 
-void    Server::addClient()
+std::map<int, Client*>::iterator itoit(std::map<int, Client*> map, int i)
+{
+    std::map<int, Client*>::iterator it = map.begin();
+    int j = 0;
+    while (j < i)
+    {
+        it ++;
+        j ++;
+    }
+    return (it);
+}
+
+void    Server::addClient(struct pollfd *fds, int nfds)
 {
 	socklen_t			len;
 	struct sockaddr_in	clientAddr;
@@ -95,41 +107,83 @@ void    Server::addClient()
     Client  newClient(clientSocket);
     this->_clients.insert(this->_clients.end(), std::make_pair(clientSocket, &newClient));
 
+    fds[nfds].fd = clientSocket;
+    fds[nfds].events = POLLIN;
+
+    std::cout << "client added:\n";
     printMap(this->_clients);
-    std::cout << "client added\n";
 }
 
-void    Server::removeClient(std::map<int, Client*>::iterator it)
+void    Server::removeClient(int i) //std::map<int, Client*>::iterator it)
 {
+    std::map<int, Client*>::iterator it = itoit(this->_clients, i);
+
     close(it->first);
     this->_clients.erase(it);
 }
 
-
-void    Server::clientRequest(std::map<int, Client*>::iterator it)
+void    Server::clientRequest(int i) //std::map<int, Client*>::iterator it)
 {
+    std::map<int, Client*>::iterator it = itoit(this->_clients, i);
+
+    int     fd = it->second->getFd();
+
     char    buffer[1024];
 
-    recv(it->first, buffer, sizeof(buffer), MSG_DONTWAIT);
-    std::cout << YELLOW << "Message from client " << it->first << " : " << DEFAULT << buffer << std::endl;
+    /*ssize_t nbytes = recv(fd, buffer, sizeof(buffer), MSG_DONTWAIT);
+    if (nbytes)
+    {
+        buffer[nbytes] = '\0';
+        std::cout << YELLOW << "Message from client " << it->first << " : " << DEFAULT << buffer << std::endl;
+    }*/
+
+    ssize_t nbytes = recv(fd, buffer, sizeof(buffer), MSG_DONTWAIT);
+    if (nbytes < 0)
+    {
+        perror("recv() failed");
+        return ;
+    }
+    else if (nbytes == 0)
+        return ;
+    else
+    {
+        std::cout << YELLOW << "Message from client " << it->first << " : " << DEFAULT;
+        while (nbytes)
+        {
+            if (nbytes < 0)
+            {
+                perror("recv() failed");
+                return ;
+            }
+            else if (nbytes == 0)
+            {
+                buffer[0] = '\0';
+                break;
+            }
+            else
+            {
+                buffer[nbytes] = '\0';
+                std::cout << buffer << std::endl;
+            }
+            nbytes = recv(fd, buffer, sizeof(buffer), MSG_DONTWAIT);
+        }
+    }
 }
 
 void    Server::run()
 {
-    pollfd  pfd[this->_clients.size()];
+    struct pollfd   fds[200];
+    int             currentSize = 1;
 
-    int i = 0;
-    for (std::map<int, Client*>::iterator it = this->_clients.begin(); it != this->_clients.end(); it ++)
-    {
-        pfd[i].fd = it->first;
-        pfd[i].events = POLLIN | POLLHUP | POLLOUT;
-        pfd[i].revents = 0;
-        i ++;
-    }
-    
+    memset(fds, 0, sizeof(fds));
+    fds[0].events = POLLIN;
+    fds[0].fd = this->_socket;
+
     while (true)
     {
-        int ready = poll(pfd, this->_clients.size(), -1);
+        //std::cout << "loop entered with currentSize of " << currentSize << "\n";
+    
+        int ready = poll(fds, currentSize, -1);
         if (ready == -1)
         {
             perror("poll failed");
@@ -137,26 +191,32 @@ void    Server::run()
         }
         else
         {
-            int i = 0;
-            for (std::map<int, Client*>::iterator it = this->_clients.begin(); it != this->_clients.end(); it ++)
+            //std::cout << "poll ongoing\n";
+
+            for (int i = 0; i < currentSize; i ++)
             {
                 try
                 {
-                    if (pfd[i].revents & POLLIN)
+                    if (fds[i].revents & POLLIN)
                     {
-                        if (pfd[i].fd == this->_socket)
-                            this->addClient();
+                        if (fds[i].fd == this->_socket)
+                        {
+                            this->addClient(fds, currentSize);
+                            currentSize ++;
+                        }
                         else
-                            this->clientRequest(it);
+                            this->clientRequest(i -1);
                     }
-                    else if ((pfd[i].revents & POLLHUP) || (pfd[i].revents & POLLOUT))
-                        this->removeClient(it);
+                    else if ((fds[i].revents & POLLHUP) || (fds[i].revents & POLLOUT))
+                    {
+                        this->removeClient(i -1);
+                        currentSize --; // risque de changer l'ordre? normalement pas car map n'a pas de random access
+                    }
                 }
                 catch (std::exception &e)
                 {
                     printError(e.what());
                 }
-                i ++;
             }
         }
     }

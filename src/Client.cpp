@@ -6,3 +6,7 @@ Client::~Client() {};
 
 
 
+int Client::getFd() const
+{
+    return _fd;
+}

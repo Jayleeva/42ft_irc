@@ -30,7 +30,7 @@ int main (int argc, char **argv)
 
     serv.openSocket(&addr);
     serv.run();
-    serv.closeSocket();
+    serv.closeSockets();
 
     return (0);
 }
