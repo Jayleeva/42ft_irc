@@ -3,7 +3,7 @@ NAME = ft_irc
 CXX = c++
 CXXFLAGS = -Wall -Wextra -Werror -std=c++98
 
-SRCS = src/main.cpp src/Client.cpp
+SRCS = src/main.cpp src/Client.cpp src/Channel.cpp
 OBJS = $(SRCS:.cpp=.o)
 
 all: $(NAME)

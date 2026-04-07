@@ -1,27 +1,29 @@
 #include "../include/Client.hpp"
+#include "../include/Channel.hpp"
 #include <iostream>
 
 int main()
 {
+    Client c1(42);
+    Client c2(43);
+    Channel ch("#general");
+
+    c1.setNickname("lisa");
+    c2.setNickname("chester");
+
     std::cout << std::boolalpha;
-    Client c(42);
 
-    std::cout << "fd: " << c.getFd() << std::endl;
-    std::cout << "registered: " << c.isRegistered() << std::endl;
+    std::cout << "channel name: " << ch.getName() << std::endl;
+    std::cout << "c1 in channel: " << ch.hasMember(&c1) << std::endl;
 
-    c.setNickname("lisa");
-    std::cout << "after nick: " << c.isRegistered() << std::endl;
-    c.setUsername("lili");
-    std::cout << "after user: " << c.isRegistered() << std::endl;
-    c.addChannel("#general");
+    ch.addMember(&c1);
+    std::cout << "c1 in channel: " << ch.hasMember(&c1) << std::endl;
 
-    std::cout << "nickname: " << c.getNickname() << std::endl;
-    std::cout << "username: " << c.getUsername() << std::endl;
-    std::cout << "registered: " << c.isRegistered() << std::endl;
-    std::cout << "in #general: " << c.isInChannel("#general") << std::endl;
+    ch.addMember(&c2);
+    std::cout << "c2 in channel: " << ch.hasMember(&c2) << std::endl;
 
-    c.removeChannel("#general");
-    std::cout << "in #general: " << c.isInChannel("#general") << std::endl;
+    ch.removeMember(&c1);
+    std::cout << "c1 in channel: " << ch.hasMember(&c1) << std::endl;
 
-    return (0);
+    return 0;
 }
