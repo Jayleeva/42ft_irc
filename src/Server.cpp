@@ -22,6 +22,15 @@ std::map<std::string, Channel*> Server::getMapChannels() const
 //void Server::setMapClients(std::map<int, Client*> _clients);
 //void Server::setMapChannels(std::map<std::string, Channel*> _channels);
 
+
+void    printMap(std::map<int, Client *> map)
+{
+    for (std::map<int, Client *>::iterator it = map.begin(); it != map.end(); ++it)
+    {
+        std::cout << it->first << " " << it->second << " \n";
+    }
+}
+
 void Server::openSocket(struct sockaddr_in *addr)
 {
     int opt = 0;
@@ -85,6 +94,9 @@ void    Server::addClient()
     }
     Client  newClient(clientSocket);
     this->_clients.insert(this->_clients.end(), std::make_pair(clientSocket, &newClient));
+
+    printMap(this->_clients);
+    std::cout << "client added\n";
 }
 
 void    Server::removeClient(std::map<int, Client*>::iterator it)
@@ -111,7 +123,7 @@ void    Server::run()
     {
         pfd[i].fd = it->first;
         pfd[i].events = POLLIN | POLLHUP | POLLOUT;
-        //pfd[i].revents = 0;
+        pfd[i].revents = 0;
         i ++;
     }
     

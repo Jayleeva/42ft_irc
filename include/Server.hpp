@@ -54,4 +54,6 @@ class Server
         void    clientRequest(std::map<int, Client*>::iterator it);
 };
 
+void    printMap(std::map<int, Client *> map);
+
 #endif

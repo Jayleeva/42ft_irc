@@ -23,7 +23,7 @@ int main(void)
 
     sockaddr_in serverAddress;
     serverAddress.sin_family = AF_INET;
-    serverAddress.sin_port = htons(PORT);
+    serverAddress.sin_port = htons((u_short)PORT);
     serverAddress.sin_addr.s_addr = INADDR_ANY;
 
     if (inet_pton(AF_INET, "127.0.0.1", &serverAddress.sin_addr) <= 0)
@@ -37,6 +37,8 @@ int main(void)
         perror("connect failed");
         return (1);
     }
+
+    std::cout << "is connected!\n";
 
     const char* message = "Hello, server!";
     send(clientSocket, message, strlen(message), 0);
