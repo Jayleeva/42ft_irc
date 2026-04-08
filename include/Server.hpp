@@ -13,6 +13,7 @@
 #include <sys/socket.h>
 #include <netdb.h>
 #include <netinet/in.h>
+#include <arpa/inet.h>
 #include <poll.h>
 
 
@@ -31,7 +32,9 @@
 class Server
 {
     private:
-        int _socket;
+        int             _socket;
+		struct pollfd	_fds[SOMAXCONN];
+		nfds_t		    _nfd;
         std::map<int, Client*> _clients; // fd -> Client (index des clients connectés-> clients indexés par fd)
         std::map<std::string, Channel*> _channels; // nom de channel -> Channel (index des channels existants -> channels indexés par nom)
 
@@ -49,9 +52,9 @@ class Server
         void    openSocket(struct sockaddr_in *addr);
         void    closeSockets();
         void    run();
-        void    addClient(int clientSocket);// struct pollfd *fds, int *nfds);
+        void    addClient(); //struct pollfd *fd); //int clientSocket, struct pollfd *fds, int nfds);
         void    removeClient(int i); //std::map<int, Client*>::iterator it)
-        void clientRequest(struct pollfd *fds, int i);//char *buffer, int i); //std::map<int, Client*>::iterator it)
+        void clientRequest(int i); //struct pollfd *fds, int i);//char *buffer, int i); //std::map<int, Client*>::iterator it)
 };
 
 void    printMap(std::map<int, Client *> map);

@@ -33,7 +33,7 @@ void    printMap(std::map<int, Client *> map)
 
 void Server::openSocket(struct sockaddr_in *addr)
 {
-    int opt = 0;
+    int opt = 1;
     this->_socket = socket(AF_INET, SOCK_STREAM, 0);
 
     if (this->_socket < 0)
@@ -92,107 +92,122 @@ std::map<int, Client*>::iterator itoit(std::map<int, Client*> map, int i)
     return (it);
 }
 
-void    Server::addClient(int clientSocket) //struct pollfd *fds, int *nfds)
+void    Server::addClient()// struct pollfd *fds) //struct pollfd *fd) //int clientSocket, struct pollfd *fds, int nfds)
 {
-	/*socklen_t			len;
-	struct sockaddr_in	clientAddr;
+	//socklen_t			len;
+	//struct sockaddr_in	clientAddr;
 
-    int clientSocket = accept(this->_socket, (struct sockaddr*)&clientAddr, &len);
+    int clientSocket = accept(this->_socket, NULL, NULL);//(struct sockaddr*)&clientAddr, &len);
 
     if (clientSocket < 0)
     {
         perror("accept failed");
+        //return (-1);
         exit(EXIT_FAILURE);
-    }*/
+    }
 
+    this->_fds[this->_nfd].fd = clientSocket;
+    this->_fds[this->_nfd].events = POLLIN;
+    this->_nfd ++;
 
-    ///fds[nfds].fd = clientSocket;
-    //fds[nfds].events = POLLIN;
-
-
+	//char	host[INET_ADDRSTRLEN];
+	//inet_ntop(AF_INET, &clientAddr.sin_addr, host, INET_ADDRSTRLEN);
 
     Client  newClient(clientSocket);
     this->_clients.insert(this->_clients.end(), std::make_pair(clientSocket, &newClient));
 
     std::cout << "client added:\n";
     printMap(this->_clients);
+
+    //return (clientSocket);
 }
 
 void    Server::removeClient(int i) //std::map<int, Client*>::iterator it)
 {
     std::map<int, Client*>::iterator it = itoit(this->_clients, i);
 
-    close(it->first);
+    //close(it->first);
     this->_clients.erase(it);
+
+
+	close(_fds[i].fd);
+	_fds[i].fd = _fds[_nfd-1].fd;
+	_fds[i].events = POLLIN;
+	_fds[_nfd - 1].fd = -1;
+    this->_nfd --;
 }
 
-void    Server::clientRequest(struct pollfd *fds, int i) //char *buffer, int i) //std::map<int, Client*>::iterator it)
+void    Server::clientRequest(int i)//struct pollfd *fds, int i) //char *buffer, int i) //std::map<int, Client*>::iterator it)
 {
-    std::map<int, Client*>::iterator it = itoit(this->_clients, i);
+    //std::map<int, Client*>::iterator    it = itoit(this->_clients, i);
+    //std::cout << "here\n";
+    //int                                 fd = it->second->getFd();
+    int fd = this->_fds[i].fd;
 
-    int     fd = it->second->getFd();
-
-    /*ssize_t nbytes = recv(fd, buffer, sizeof(buffer), MSG_DONTWAIT);
+    char    buffer[1024];
+    ssize_t nbytes = recv(fd, buffer, sizeof(buffer), MSG_DONTWAIT);
     if (nbytes)
     {
         buffer[nbytes] = '\0';
-        std::cout << YELLOW << "Message from client " << it->first << " : " << DEFAULT << buffer << std::endl;
-    }*/
+        std::cout << YELLOW << "Message from client " << fd << " : " << DEFAULT << buffer << std::endl;
+    }
 
-                    //std::map<int, Client*>::iterator    it = itoit(this->_clients, i);
-                    //std::cout << "it->second = " << it->second << std::endl;
-                    //int                                 fd = it->second->getFd();//it->second->getFd();
+    //std::map<int, Client*>::iterator    it = itoit(this->_clients, i);
+    //std::cout << "it->second = " << it->second << std::endl;
+    //int                                 fd = it->second->getFd();//it->second->getFd();
                     
-                    std::cout << YELLOW << "Message from client " << it->first << " : " << DEFAULT;
-                    bool mustCloseClient = false;
-                    while (true)
-                    {
-                        char    buffer[1024];
-                        ssize_t nbytes = recv(fd, buffer, sizeof(buffer), MSG_DONTWAIT); //this->clientRequest(buffer, i -1);
-                        if (nbytes < 0)
-                        {
-                            std::cout << "\nnbytes < 0\n";
-                            if (errno != EWOULDBLOCK)
-                            {
-                                perror(" recv() failed");
-                                mustCloseClient = true;
-                            }
-                            break;
-                        }
-                        else if (nbytes == 0)
-                        {
-                            std::cout << "nbytes = 0\n";
-                            mustCloseClient = true;
-                            break;
-                        }
-                        std::cout << buffer;
-                    }
-                    if (mustCloseClient)
-                    {
-                        std::cout << "must close\n";
-                        close(fds[i].fd);
-                        fds[i].fd = -1;
-                    }
-                    std::cout << "broke recv loop\n";
+    /*std::cout << YELLOW << "Message from client " << it->first << " : " << DEFAULT;
+    bool mustCloseClient = false;
+    while (true)
+    {
+        char    buffer[1024];
+        ssize_t nbytes = recv(fd, buffer, sizeof(buffer), MSG_DONTWAIT); //this->clientRequest(buffer, i -1);
+        if (nbytes < 0)
+        {
+            std::cout << "\nnbytes < 0\n";
+            if (errno != EWOULDBLOCK)
+            {
+                perror(" recv() failed");
+                mustCloseClient = true;
+            }
+            break;
+        }
+        else if (nbytes == 0)
+        {
+            std::cout << "nbytes = 0\n";
+            mustCloseClient = true;
+            break;
+        }
+        std::cout << buffer;
+    }
+    if (mustCloseClient)
+    {
+        std::cout << "must close\n";
+        close(fds[i].fd);
+        fds[i].fd = -1;
+    }
+    std::cout << "broke recv loop\n";*/
 }
 
 void    Server::run()
 {
-    bool            mustCloseServ = false;
+    //bool            mustCloseServ = false;
     //bool            mustCloseClient = false;
-    struct pollfd   fds[200];
-    int             currentSize = 1;
+    //struct pollfd   fds[200];
+    
     //ssize_t         nbytes;
 
-    memset(fds, 0, sizeof(fds));
-    fds[0].events = POLLIN;
-    fds[0].fd = this->_socket;
+    memset(this->_fds, 0, sizeof(this->_fds));
+    this->_fds[0].events = POLLIN;
+    this->_fds[0].fd = this->_socket;
+    this->_nfd = 1;
 
-    while (!mustCloseServ)
+    while (true)
     {
         //std::cout << "loop entered with currentSize of " << currentSize << "\n";
     
-        int ready = poll(fds, currentSize, -1);
+        int currentSize = this->_nfd;
+        int ready = poll(this->_fds, currentSize, -1);
         if (ready < 0)
         {
             perror("poll() failed");
@@ -205,47 +220,29 @@ void    Server::run()
         }
         
         for (int i = 0; i < currentSize; i ++)
+        //for (std::map<int, Client*>::iterator it = this->_clients.begin(); it != this->_clients.end(); it ++)
         {
-            std::cout << "i = " << i << " fds[i].revents = " << fds[i].revents << " fds[i].fd = " << fds[i].fd << " currentSize = " << currentSize << std::endl;
+            std::cout << "i = " << i << " fds[i].revents = " << this->_fds[i].revents << " fds[i].fd = " << this->_fds[i].fd << " currentSize = " << currentSize << std::endl;
 
-            if (fds[i].revents & POLLIN)
+            if (this->_fds[i].revents == 0)
+                continue;
+
+            else if (this->_fds[i].revents & POLLIN)
             {
-                if (fds[i].fd == this->_socket)
+                if (this->_fds[i].fd == this->_socket)
                 {
-                    int clientSocket = 0;
-                    while (clientSocket != -1)
-                    {
-                        
-                        //socklen_t			len;
-                        //struct sockaddr_in	clientAddr;
-                        clientSocket = accept(this->_socket, NULL, NULL); //(struct sockaddr*)&clientAddr, &len);
-                        std::cout << "clientSocket = " << clientSocket << std::endl;
-                        if (clientSocket < 0)
-                        {
-                            if (errno != EWOULDBLOCK)
-                            {
-                                perror("accept() failed");
-                                mustCloseServ = true;
-                            }
-                            break;
-                        }
-                        addClient(clientSocket);
-                        fds[currentSize].fd = clientSocket;
-                        fds[currentSize].events = POLLIN;
-                        currentSize ++;
-                    }
-                    std::cout << "broke accept loop\n";
+                    addClient();
+                    break;
                 }
                 else
                 {
-                    this->clientRequest(fds, i);
+                    this->clientRequest(i);
                 }
             }
-            else if ((fds[i].revents & POLLHUP) || (fds[i].revents & POLLOUT))
+            else if ((this->_fds[i].revents & POLLHUP) || (this->_fds[i].revents & POLLOUT))
             {
-                std::cout << "remove\n";
                 this->removeClient(i -1);
-                currentSize --; // risque de changer l'ordre? normalement pas car map n'a pas de random access
+                break;
             }
             /*else
             {
