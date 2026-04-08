@@ -49,9 +49,9 @@ class Server
         void    openSocket(struct sockaddr_in *addr);
         void    closeSockets();
         void    run();
-        void    addClient(int clientSocket, struct pollfd *fds, int nfds);
+        void    addClient(int clientSocket);// struct pollfd *fds, int *nfds);
         void    removeClient(int i); //std::map<int, Client*>::iterator it)
-        ssize_t clientRequest(char *buffer, int i); //std::map<int, Client*>::iterator it)
+        void clientRequest(struct pollfd *fds, int i);//char *buffer, int i); //std::map<int, Client*>::iterator it)
 };
 
 void    printMap(std::map<int, Client *> map);
