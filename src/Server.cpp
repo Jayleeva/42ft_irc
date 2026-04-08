@@ -92,9 +92,9 @@ std::map<int, Client*>::iterator itoit(std::map<int, Client*> map, int i)
     return (it);
 }
 
-void    Server::addClient(struct pollfd *fds, int nfds)
+void    Server::addClient(int clientSocket, struct pollfd *fds, int nfds)
 {
-	socklen_t			len;
+	/*socklen_t			len;
 	struct sockaddr_in	clientAddr;
 
     int clientSocket = accept(this->_socket, (struct sockaddr*)&clientAddr, &len);
@@ -103,7 +103,7 @@ void    Server::addClient(struct pollfd *fds, int nfds)
     {
         perror("listen failed");
         exit(EXIT_FAILURE);
-    }
+    }*/
     Client  newClient(clientSocket);
     this->_clients.insert(this->_clients.end(), std::make_pair(clientSocket, &newClient));
 
@@ -122,13 +122,11 @@ void    Server::removeClient(int i) //std::map<int, Client*>::iterator it)
     this->_clients.erase(it);
 }
 
-void    Server::clientRequest(int i) //std::map<int, Client*>::iterator it)
+ssize_t    Server::clientRequest(char *buffer, int i) //std::map<int, Client*>::iterator it)
 {
     std::map<int, Client*>::iterator it = itoit(this->_clients, i);
 
     int     fd = it->second->getFd();
-
-    char    buffer[1024];
 
     /*ssize_t nbytes = recv(fd, buffer, sizeof(buffer), MSG_DONTWAIT);
     if (nbytes)
@@ -137,8 +135,10 @@ void    Server::clientRequest(int i) //std::map<int, Client*>::iterator it)
         std::cout << YELLOW << "Message from client " << it->first << " : " << DEFAULT << buffer << std::endl;
     }*/
 
-    ssize_t nbytes = recv(fd, buffer, sizeof(buffer), MSG_DONTWAIT);
-    if (nbytes < 0)
+    std::cout << YELLOW << "Message from client " << it->first << " : " << DEFAULT;
+
+    return (recv(fd, buffer, sizeof(buffer), MSG_DONTWAIT));
+    /*if (nbytes < 0)
     {
         perror("recv() failed");
         return ;
@@ -167,57 +167,117 @@ void    Server::clientRequest(int i) //std::map<int, Client*>::iterator it)
             }
             nbytes = recv(fd, buffer, sizeof(buffer), MSG_DONTWAIT);
         }
-    }
+    }*/
 }
 
 void    Server::run()
 {
+    bool            mustExit = false;
+    bool            mustClose = false;
     struct pollfd   fds[200];
     int             currentSize = 1;
+    ssize_t         nbytes;
 
     memset(fds, 0, sizeof(fds));
     fds[0].events = POLLIN;
     fds[0].fd = this->_socket;
 
-    while (true)
+    while (!mustExit)
     {
         //std::cout << "loop entered with currentSize of " << currentSize << "\n";
     
         int ready = poll(fds, currentSize, -1);
-        if (ready == -1)
+        if (ready < 0)
         {
-            perror("poll failed");
+            perror("poll() failed");
             break;
         }
-        else
+        else if (ready == 0)
         {
-            //std::cout << "poll ongoing\n";
-
-            for (int i = 0; i < currentSize; i ++)
+            perror(" poll() timed out.");
+            break;
+        }
+        
+        int i;
+        for (i = 0; i < currentSize; i ++)
+        {
+            /*if (fds[i].revents == 0)
             {
-                try
+                std::cout << "continue\n";
+                continue;
+            }*/
+
+            if (fds[i].revents & POLLIN)
+            {
+                std::cout << "i = " << i << std::endl;
+                if (fds[i].fd == this->_socket)
                 {
-                    if (fds[i].revents & POLLIN)
-                    {
-                        if (fds[i].fd == this->_socket)
+                    int newClient = 0;
+                    //while (newClient >= 0)
+                    //{
+                        newClient = accept(this->_socket, NULL, NULL);
+                        if (newClient < 0)
                         {
-                            this->addClient(fds, currentSize);
-                            currentSize ++;
+                            if (errno != EWOULDBLOCK)
+                            {
+                                perror("accept() failed");
+                                mustExit = true;
+                            }
+                            //break;
                         }
-                        else
-                            this->clientRequest(i -1);
-                    }
-                    else if ((fds[i].revents & POLLHUP) || (fds[i].revents & POLLOUT))
-                    {
-                        this->removeClient(i -1);
-                        currentSize --; // risque de changer l'ordre? normalement pas car map n'a pas de random access
-                    }
+                        this->addClient(newClient, fds, currentSize);
+                        currentSize ++;
+                    //}
                 }
-                catch (std::exception &e)
+                else
                 {
-                    printError(e.what());
+                    std::map<int, Client*>::iterator    it = itoit(this->_clients, i);
+                    int                                 fd = it->second->getFd();
+                    std::cout << YELLOW << "Message from client " << it->first << " : " << DEFAULT;
+
+                    mustClose = false;
+                    while (true)
+                    {
+                        char    buffer[1024];
+                        nbytes = recv(fd, buffer, sizeof(buffer), MSG_DONTWAIT); //this->clientRequest(buffer, i -1);
+                        if (nbytes < 0)
+                        {
+                            std::cout << "nbytes < 0\n";
+                            if (errno != EWOULDBLOCK)
+                            {
+                                perror(" recv() failed");
+                                mustClose = true;
+                            }
+                            break;
+                        }
+                        else if (nbytes == 0)
+                        {
+                            std::cout << "nbytes = 0\n";
+                            mustClose = true;
+                            break;
+                        }
+                        std::cout << buffer;
+                    }
                 }
             }
+            else if ((fds[i].revents & POLLHUP) || (fds[i].revents & POLLOUT))
+            {
+                std::cout << "hey\n";
+                this->removeClient(i -1);
+                currentSize --; // risque de changer l'ordre? normalement pas car map n'a pas de random access
+            }
+            else
+            {
+                perror("Unexpected revents.");
+                mustExit = true;
+                break;
+            }
+        }
+        if (mustClose)
+        {
+            std::cout << "must close\n";
+            close(fds[i].fd);
+            fds[i].fd = -1;
         }
     }
 }
