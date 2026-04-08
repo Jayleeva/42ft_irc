@@ -73,10 +73,14 @@ void Server::openSocket(struct sockaddr_in *addr)
 
 void    Server::closeSockets()
 {
-    for (std::map<int, Client*>::iterator it = this->_clients.begin(); it != this->_clients.end(); it ++)
+    for (size_t i = 0; i < this->_nfd; i++)
+    {
+        close(this->_fds[i].fd);
+    }
+    /*for (std::map<int, Client*>::iterator it = this->_clients.begin(); it != this->_clients.end(); it ++)
     {
         close(it->first);
-    }
+    }*/
     close(this->_socket);
 }
 
@@ -116,25 +120,28 @@ void    Server::addClient()// struct pollfd *fds) //struct pollfd *fd) //int cli
     Client  newClient(clientSocket);
     this->_clients.insert(this->_clients.end(), std::make_pair(clientSocket, &newClient));
 
-    std::cout << "client added:\n";
-    printMap(this->_clients);
+    std::cout << YELLOW << "Client " << clientSocket << " connected." << DEFAULT << std::endl;
+    //printMap(this->_clients);
 
     //return (clientSocket);
 }
 
 void    Server::removeClient(int i) //std::map<int, Client*>::iterator it)
 {
-    std::map<int, Client*>::iterator it = itoit(this->_clients, i);
+    //std::map<int, Client*>::iterator it = itoit(this->_clients, i);
 
     //close(it->first);
-    this->_clients.erase(it);
-
+    //std::cout << "here\n";
+    //this->_clients.erase(it);
 
 	close(_fds[i].fd);
+
+    std::cout << YELLOW << "Client " << _fds[i].fd << " disconnected." << DEFAULT << std::endl;
+
 	_fds[i].fd = _fds[_nfd-1].fd;
 	_fds[i].events = POLLIN;
 	_fds[_nfd - 1].fd = -1;
-    this->_nfd --;
+    this->_nfd --;    
 }
 
 void    Server::clientRequest(int i)//struct pollfd *fds, int i) //char *buffer, int i) //std::map<int, Client*>::iterator it)
@@ -151,6 +158,8 @@ void    Server::clientRequest(int i)//struct pollfd *fds, int i) //char *buffer,
         buffer[nbytes] = '\0';
         std::cout << YELLOW << "Message from client " << fd << " : " << DEFAULT << buffer << std::endl;
     }
+    if (nbytes == 0)
+        this->removeClient(i);
 
     //std::map<int, Client*>::iterator    it = itoit(this->_clients, i);
     //std::cout << "it->second = " << it->second << std::endl;
@@ -222,7 +231,7 @@ void    Server::run()
         for (int i = 0; i < currentSize; i ++)
         //for (std::map<int, Client*>::iterator it = this->_clients.begin(); it != this->_clients.end(); it ++)
         {
-            std::cout << "i = " << i << " fds[i].revents = " << this->_fds[i].revents << " fds[i].fd = " << this->_fds[i].fd << " currentSize = " << currentSize << std::endl;
+            //std::cout << "i = " << i << " fds[i].revents = " << this->_fds[i].revents << " fds[i].fd = " << this->_fds[i].fd << " currentSize = " << currentSize << std::endl;
 
             if (this->_fds[i].revents == 0)
                 continue;
@@ -251,7 +260,7 @@ void    Server::run()
                 break;
             }*/
         }
-        std::cout << "broke for loop\n";
+        //std::cout << "broke for loop\n";
     }
-    std::cout << "broke while serv on loop\n";
+    //std::cout << "broke while serv on loop\n";
 }

@@ -5,11 +5,19 @@
 #include <arpa/inet.h>
 #include <cstdio>
 #include <cstring>
+#include <cstdlib>
 #include <unistd.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 
 # define PORT 6667
+
+void	safeGetline(std::string &input)
+{
+	getline(std::cin, input);
+	if (std::cin.eof())
+		exit(0);
+}
 
 int main(void)
 {
@@ -40,10 +48,18 @@ int main(void)
 
     std::cout << "is connected!\n";
 
-    const char *message = "Hello, server!\0";
-    send(clientSocket, message, strlen(message), 0);
-
-    std::cout << "tried to send message\n";
+    std::string cmd;
+    while (true)
+    {
+		std::cout << "> Enter command :" << std::endl;
+		safeGetline(cmd);
+        if (cmd.empty())
+            continue ;
+        else if (cmd == "EXIT")
+            break;
+        else
+            send(clientSocket, cmd.c_str(), strlen(cmd.c_str()), 0);
+    }
 
     close(clientSocket);
     return (0);
