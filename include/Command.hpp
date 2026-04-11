@@ -28,6 +28,8 @@ class Command
         std::string _cmd;
 
         void pass(Message const &msg, Client &client);
+        void nick(Message const &msg, Client &client, Server &server);
+        void user(Message const &msg, Client &client);
     
     public:
         Command();

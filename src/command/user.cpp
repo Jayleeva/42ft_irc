@@ -7,3 +7,10 @@
     check that it is not already taken by another client
     save this username in the `Client` object
 */
+
+void Command::user(Message const &msg, Client &client)
+{}
+
+/*
+** à faire :fonction Realname
+*/

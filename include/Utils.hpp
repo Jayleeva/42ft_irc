@@ -7,6 +7,7 @@
 //Error messages
 #define ERR_NEEDPASS "Password required"
 #define ERR_CMD "Unknown command"
+#define ERR_SPACENICK "Nickname can't have space"
 #define ERR_NICK "This Nickname is already used"
 #define ERR_PARAMS "Not enough parameters"
 #define ERR_

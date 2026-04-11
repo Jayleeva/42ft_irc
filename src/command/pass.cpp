@@ -19,7 +19,7 @@ void Command::pass(Message const &msg, Client &client)
 
     if (isEmptyArg(arg))
     {
-        printError(ERR_NEEDPASS);
+        printError(ERR_PARAMS);
         return ;
     }
     (void)client; //à modififer par la suite
