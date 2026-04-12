@@ -9,8 +9,17 @@
 */
 
 void Command::user(Message const &msg, Client &client)
-{}
+{
+    std::string arg = getArgument(msg.getMsg());
+
+    if (isEmptyArg(arg))
+    {
+        printError(ERR_PARAMS);
+        return ;
+    }
+    (void)client; 
+}
 
 /*
-** à faire :fonction Realname
+** à faire -> fonction Realname
 */
