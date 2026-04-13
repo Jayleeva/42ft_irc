@@ -7,7 +7,6 @@
 class Client
 {
     private:
-        int _fd;
         std::string _nickname;
         std::string _username;
         bool _registered;
@@ -15,10 +14,9 @@ class Client
         std::set<std::string> _channels; // channels auxquels le client appartient
 
     public:
-        Client(int fd);
+        Client();
         ~Client();
 
-        int getFd() const;
 };
 
 #endif

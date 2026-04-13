@@ -54,7 +54,7 @@ class Server
         void    run();
         void    addClient(); //struct pollfd *fd); //int clientSocket, struct pollfd *fds, int nfds);
         void    removeClient(int i); //std::map<int, Client*>::iterator it)
-        void clientRequest(int i); //struct pollfd *fds, int i);//char *buffer, int i); //std::map<int, Client*>::iterator it)
+        void    execClient(int i); //struct pollfd *fds, int i);//char *buffer, int i); //std::map<int, Client*>::iterator it)
 };
 
 void    printMap(std::map<int, Client *> map);
