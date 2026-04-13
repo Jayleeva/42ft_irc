@@ -46,7 +46,11 @@ int main(void)
         return (1);
     }
 
-    std::cout << "is connected!\n";
+    char buffer[1024] = { 0 };
+    read(clientSocket, buffer,
+                   1024 - 1);
+    
+    printf("%s\n", buffer);
 
     std::string cmd;
     while (true)

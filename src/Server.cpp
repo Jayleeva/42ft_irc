@@ -105,6 +105,8 @@ void    Server::addClient()
     this->_clients.insert(this->_clients.end(), std::make_pair(clientSocket, &newClient));
 
     std::cout << YELLOW << "Client " << clientSocket << " connected." << DEFAULT << std::endl;
+    std::string message = "You are now connected!";
+    send(clientSocket, message.c_str(), strlen(message.c_str()), 0);
     //printMap(this->_clients);
 }
 
