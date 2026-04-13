@@ -110,24 +110,50 @@ void    Server::addClient()
     //printMap(this->_clients);
 }
 
-void    Server::removeClient(int i)
+void int_to_char(int num, char *result)
 {
-    std::map<int, Client*>::iterator it;
+    int temp = num;
+    int len = 0;
+
+    while (temp > 0) {
+        len++;
+        temp /= 10;
+    }
+
+    for (int i = len - 1; i >= 0; i--) {
+        result[i] = num % 10 + '0';
+        num /= 10;
+    }
+
+    result[len] = '\0';
+}
+
+void    Server::removeClient(nfds_t i)
+{
+    std::map<int, Client*>::iterator    it;
 
     it = this->_clients.find(_fds[i].fd);
     this->_clients.erase(it);
 
 	close(_fds[i].fd);
-
     std::cout << YELLOW << "Client " << _fds[i].fd << " disconnected." << DEFAULT << std::endl;
-
+ 
 	_fds[i].fd = _fds[_nfd-1].fd;
 	_fds[i].events = POLLIN;
 	_fds[_nfd - 1].fd = -1;
-    this->_nfd --;    
+    this->_nfd --;
+
+    char result[1024];
+    int_to_char(_fds[i].fd, result);
+    std::string message = static_cast<std::string>(result) + " disconnected\n";
+    for (nfds_t j = 0; j < _nfd -1; j ++)
+    {
+        std::cout << message;
+        //send(_fds[j].fd, message.c_str(), strlen(message.c_str()), 0);
+    }
 }
 
-void    Server::execClient(int i)
+void    Server::execClient(nfds_t i)
 {
     int fd = this->_fds[i].fd;
 
@@ -151,7 +177,7 @@ void    Server::run()
 
     while (true)
     {   
-        int currentSize = this->_nfd;
+        nfds_t currentSize = this->_nfd;
         int ready = poll(this->_fds, currentSize, -1);
         if (ready < 0)
         {
@@ -164,7 +190,7 @@ void    Server::run()
             break;
         }
         
-        for (int i = 0; i < currentSize; i ++)
+        for (nfds_t i = 0; i < currentSize; i ++)
         {
             if (this->_fds[i].revents == 0)
                 continue;

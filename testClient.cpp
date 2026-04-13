@@ -49,7 +49,6 @@ int main(void)
     char buffer[1024] = { 0 };
     read(clientSocket, buffer,
                    1024 - 1);
-    
     printf("%s\n", buffer);
 
     std::string cmd;

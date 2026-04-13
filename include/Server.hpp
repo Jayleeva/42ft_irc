@@ -6,6 +6,7 @@
 #include <map>
 
 #include <cerrno>
+#include <string>
 #include <cstring>
 #include <cstdio>
 #include <cstdlib>
@@ -53,8 +54,8 @@ class Server
         void    closeSockets();
         void    run();
         void    addClient(); //struct pollfd *fd); //int clientSocket, struct pollfd *fds, int nfds);
-        void    removeClient(int i); //std::map<int, Client*>::iterator it)
-        void    execClient(int i); //struct pollfd *fds, int i);//char *buffer, int i); //std::map<int, Client*>::iterator it)
+        void    removeClient(nfds_t i); //std::map<int, Client*>::iterator it)
+        void    execClient(nfds_t i); //struct pollfd *fds, int i);//char *buffer, int i); //std::map<int, Client*>::iterator it)
 };
 
 void    printMap(std::map<int, Client *> map);
