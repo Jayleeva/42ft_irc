@@ -25,12 +25,12 @@ void    readSocket(int clientSocket)
     char buffer[MAXBYTES] = { 0 };
     read(clientSocket, buffer,
                    1024 - 1);
-    printf("%s\n", buffer);
+    //printf("%s\n", buffer);
+    //return (buffer);
 }
 
 int main(void)
 {
-
     int clientSocket = socket(AF_INET, SOCK_STREAM, 0);
     if (clientSocket < 0)
     {
@@ -55,7 +55,22 @@ int main(void)
         return (1);
     }
 
-    readSocket(clientSocket);
+    //std::string password = readSocket(clientSocket);
+    char buffer[MAXBYTES] = { 0 };
+    read(clientSocket, buffer,
+                   1024 - 1);
+
+    std::string p;
+    while (true)
+    {
+        //readSocket(clientSocket);
+		std::cout << "> Enter password :" << std::endl;
+		safeGetline(p);
+        if (buffer == p)
+            break;
+        else
+            std::cout << "Wrong password." << std::endl;
+    }
     /*fd = server.getSocket(); // pas possible
     char    buffer[1024];
     ssize_t nbytes = recv(fd, buffer, sizeof(buffer), MSG_DONTWAIT);

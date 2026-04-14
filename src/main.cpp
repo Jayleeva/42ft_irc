@@ -16,7 +16,7 @@ int main (int argc, char **argv)
     if (argc != 3)
         return (1);
 
-    password = argv[2];
+    serv.setPassword(argv[2]);
     port = atoi(argv[1]);
 
     struct sockaddr_in addr;
