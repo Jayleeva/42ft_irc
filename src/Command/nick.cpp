@@ -15,7 +15,7 @@ void Command::nick(Message const &msg, Client &client, Server &server)
 
     if (isEmptyArg(arg))
     {
-        printError(ERR_PARAMS);
+        printError(ERR_NEEDMOREPARAMS);
         return ;
     }
 
@@ -24,16 +24,20 @@ void Command::nick(Message const &msg, Client &client, Server &server)
     {
         if (arg[i] == ' ')
         {
-            printError(ERR_SPACENICK);
+            printError(ERR_ERRONEUSNICKNAME);
             return ;
         }
         i++;
     }
-    //check if nickname already exists
-    if (server.nicknameExists(arg))
-        printError(ERR_NICK);
 
-    (void)client; //à modifier plus tard pour save le nickname
+    //check if nickname already exists
+    if (server.nicknameExists(arg)) // fonction à créer
+    {
+        printError(ERR_NICKNAMEINUSE);
+        return ;
+    }
+        
+    client.setNickname(arg);
 }
 
 /*

@@ -13,14 +13,21 @@
 */
 
 //C'est une première version de la fonction
-void Command::pass(Message const &msg, Client &client)
+void Command::pass(Message const &msg, Client &client, Server &server)
 {
     std::string arg = getArgument(msg.getMsg());
 
     if (isEmptyArg(arg))
     {
-        printError(ERR_PARAMS);
+        printError(ERR_NEEDMOREPARAMS);
         return ;
     }
+
+    if (arg != server.getPassword())
+    {
+        printError(ERR_PASSWDMISMATCH);
+        return ;
+    }
+
     (void)client; //à modififer par la suite
 }
