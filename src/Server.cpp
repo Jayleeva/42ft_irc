@@ -146,14 +146,25 @@ void    Server::execClient(nfds_t i)
 {
     int fd = this->_fds[i].fd;
 
-    char    buffer[MAXBYTES + 1];
+    char    buffer[MAXBYTES];
+    
     memset(buffer, '\0', sizeof(buffer));
     ssize_t nbytes = recv(fd, buffer, sizeof(buffer), MSG_DONTWAIT);
     if (nbytes)
     {
+        buffer[nbytes] = '\0';
         std::cout << RED << nbytes << DEFAULT << std::endl;
-        if (nbytes == MAXBYTES)
-            std::cout << RED << "Message too long." << DEFAULT << std::endl; 
+        if (nbytes)
+        {
+            for (nfds_t j = 1; j < _nfd; j ++)
+            {
+                if (j != i)
+                {
+                    std::cout << "'" << buffer << "'" << " sent to client " << _fds[j].fd << " from client " << fd << std::endl;
+                    send(_fds[j].fd, buffer, strlen(buffer), 0);
+                }
+            }
+        }
         /*std::string cmd = getCmd(buffer);
         if (cmd == "JOIN")
         {
@@ -165,18 +176,6 @@ void    Server::execClient(nfds_t i)
             }
             _channels.find(chan)._members.insert(_clients(fd));
         }*/
-        else
-        {
-            for (nfds_t j = 1; j < _nfd; j ++)
-            {
-                if (j != i)
-                {
-                    std::cout << "'" << buffer << "'" << " sent to client " << _fds[j].fd << " from client " << fd << std::endl;
-                    send(_fds[j].fd, buffer, strlen(buffer), 0);
-                }
-            }
-        }
-
     }
     if (nbytes == 0)
         this->removeClient(i);

@@ -22,7 +22,7 @@
 #include "Channel.hpp"
 
 # define QUEUE_SIZE 5
-# define MAXBYTES 4087
+# define MAXBYTES 512
 
 class Server
 {

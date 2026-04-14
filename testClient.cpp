@@ -68,7 +68,7 @@ int main(void)
     std::string cmd;
     while (true)
     {
-        readSocket(clientSocket);
+        //readSocket(clientSocket);
 		std::cout << "> Enter command :" << std::endl;
 		safeGetline(cmd);
         if (cmd.empty())
