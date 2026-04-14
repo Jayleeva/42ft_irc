@@ -2,24 +2,30 @@
 # define UTILS_HPP
 
 #include <iostream>
+#include <string>
 #include <map>
 
+//Colors
 # define DEFAULT "\001\033[0;39m\002"
 # define YELLOW "\001\033[1;93m\002"
 # define RED "\001\033[0;31m\002"
 # define GREEN "\001\033[1;32m\002"
 # define MAG  "\001\033[1;35m\002"
 
-void    printError(std::string msg);
-//void    printMap(std::map<int, Client*> map);
+//Error messages
+#define ERR_NEEDPASS "Password required"
+#define ERR_CMD "Unknown command"
+#define ERR_SPACENICK "Nickname can't have space"
+#define ERR_NICK "This Nickname is already used"
+#define ERR_PARAMS "Not enough parameters"
+#define ERR_
 
-/*template <typename T>
-void    printMap(std::map<int, T> map)
-{
-    for (std::map<int, T>::iterator it = map.begin(); it != map.end(); ++it)
-    {
-        std::cout << it->first << " " << it->second.first << " " << it->second.second << "\n";
-    }
-}*/
+//parsing functions
+std::string getCommand(const std::string& msg);
+
+//Utils functions
+bool isEmptyArg(const std::string &arg);
+std::string getArgument(const std::string& msg);
+void printError(const std::string& errorMsg);
 
 #endif
