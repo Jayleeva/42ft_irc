@@ -75,18 +75,6 @@ void    Server::closeSockets()
     close(this->_socket);
 }
 
-std::map<int, Client*>::iterator itoit(std::map<int, Client*> map, int i)
-{
-    std::map<int, Client*>::iterator it = map.begin();
-    int j = 0;
-    while (j < i)
-    {
-        it ++;
-        j ++;
-    }
-    return (it);
-}
-
 void    Server::addClient()
 {
     int clientSocket = accept(this->_socket, NULL, NULL);
@@ -132,24 +120,25 @@ void    Server::removeClient(nfds_t i)
 {
     std::map<int, Client*>::iterator    it;
 
+    char result[1024];
+    int_to_char(_fds[i].fd, result);
+
     it = this->_clients.find(_fds[i].fd);
     this->_clients.erase(it);
 
 	close(_fds[i].fd);
     std::cout << YELLOW << "Client " << _fds[i].fd << " disconnected." << DEFAULT << std::endl;
- 
-	_fds[i].fd = _fds[_nfd-1].fd;
-	_fds[i].events = POLLIN;
-	_fds[_nfd - 1].fd = -1;
-    this->_nfd --;
 
-    char result[1024];
-    int_to_char(_fds[i].fd, result);
-    std::string message = static_cast<std::string>(result) + " disconnected\n";
-    for (nfds_t j = 0; j < _nfd -1; j ++)
+	_fds[i].fd = _fds[_nfd -1].fd;
+	_fds[i].events = POLLIN;
+	_fds[_nfd -1].fd = -1;
+    _nfd --;
+
+    std::string message = static_cast<std::string>(result) + " disconnected";
+    for (nfds_t j = 1; j < _nfd; j ++)
     {
-        std::cout << message;
-        //send(_fds[j].fd, message.c_str(), strlen(message.c_str()), 0);
+        std::cout << "'" << message << "'" << " sent to client " << _fds[j].fd << std::endl;
+        send(_fds[j].fd, message.c_str(), strlen(message.c_str()), 0);
     }
 }
 
@@ -157,12 +146,37 @@ void    Server::execClient(nfds_t i)
 {
     int fd = this->_fds[i].fd;
 
-    char    buffer[1024];
+    char    buffer[MAXBYTES + 1];
+    memset(buffer, '\0', sizeof(buffer));
     ssize_t nbytes = recv(fd, buffer, sizeof(buffer), MSG_DONTWAIT);
     if (nbytes)
     {
-        buffer[nbytes] = '\0';
-        std::cout << YELLOW << "Message from client " << fd << " : " << DEFAULT << buffer << std::endl;
+        std::cout << RED << nbytes << DEFAULT << std::endl;
+        if (nbytes == MAXBYTES)
+            std::cout << RED << "Message too long." << DEFAULT << std::endl; 
+        /*std::string cmd = getCmd(buffer);
+        if (cmd == "JOIN")
+        {
+            std::string chan = getChan(buffer);
+            if (_channels.find(chan) == _channels.end())
+            {
+                Channel newchan(chan);
+                _channels.insert(_channels.end(), std::make_pair(chan, &newchan)))
+            }
+            _channels.find(chan)._members.insert(_clients(fd));
+        }*/
+        else
+        {
+            for (nfds_t j = 1; j < _nfd; j ++)
+            {
+                if (j != i)
+                {
+                    std::cout << "'" << buffer << "'" << " sent to client " << _fds[j].fd << " from client " << fd << std::endl;
+                    send(_fds[j].fd, buffer, strlen(buffer), 0);
+                }
+            }
+        }
+
     }
     if (nbytes == 0)
         this->removeClient(i);

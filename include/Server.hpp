@@ -22,13 +22,7 @@
 #include "Channel.hpp"
 
 # define QUEUE_SIZE 5
-
-/*struct pollfd 
-{
-    int   fd;         // file descriptor 
-    short events;     // requested events 
-    short revents;    // returned events 
-};*/
+# define MAXBYTES 4087
 
 class Server
 {
@@ -47,15 +41,12 @@ class Server
         std::map<int, Client*>          getMapClients() const;
         std::map<std::string, Channel*> getMapChannels() const;
 
-        //void                            setMapClients(std::map<int, Client*> _clients);
-        //void                            setMapChannels(std::map<std::string, Channel*> _channels);
-
         void    openSocket(struct sockaddr_in *addr);
         void    closeSockets();
         void    run();
-        void    addClient(); //struct pollfd *fd); //int clientSocket, struct pollfd *fds, int nfds);
-        void    removeClient(nfds_t i); //std::map<int, Client*>::iterator it)
-        void    execClient(nfds_t i); //struct pollfd *fds, int i);//char *buffer, int i); //std::map<int, Client*>::iterator it)
+        void    addClient();
+        void    removeClient(nfds_t i); 
+        void    execClient(nfds_t i);
 };
 
 void    printMap(std::map<int, Client *> map);

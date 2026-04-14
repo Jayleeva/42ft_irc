@@ -11,12 +11,21 @@
 #include <netinet/in.h>
 
 # define PORT 6667
+# define MAXBYTES 4096 
 
 void	safeGetline(std::string &input)
 {
 	getline(std::cin, input);
 	if (std::cin.eof())
 		exit(0);
+}
+
+void    readSocket(int clientSocket)
+{
+    char buffer[MAXBYTES] = { 0 };
+    read(clientSocket, buffer,
+                   1024 - 1);
+    printf("%s\n", buffer);
 }
 
 int main(void)
@@ -46,14 +55,20 @@ int main(void)
         return (1);
     }
 
-    char buffer[1024] = { 0 };
-    read(clientSocket, buffer,
-                   1024 - 1);
-    printf("%s\n", buffer);
+    readSocket(clientSocket);
+    /*fd = server.getSocket(); // pas possible
+    char    buffer[1024];
+    ssize_t nbytes = recv(fd, buffer, sizeof(buffer), MSG_DONTWAIT);
+    if (nbytes)
+    {
+        buffer[nbytes] = '\0';
+        std::cout << YELLOW << "Message from server " << fd << " : " << DEFAULT << buffer << std::endl;
+    }*/
 
     std::string cmd;
     while (true)
     {
+        readSocket(clientSocket);
 		std::cout << "> Enter command :" << std::endl;
 		safeGetline(cmd);
         if (cmd.empty())
