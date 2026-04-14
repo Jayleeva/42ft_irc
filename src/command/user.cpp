@@ -3,7 +3,7 @@
 /*
 **This command allows to choose a client username.
 **The server must:
-    check that the username¨ is not empty
+    check that the username is not empty
     check that it is not already taken by another client
     save this username in the `Client` object
 */
@@ -14,10 +14,10 @@ void Command::user(Message const &msg, Client &client)
 
     if (isEmptyArg(arg))
     {
-        printError(ERR_PARAMS);
+        printError(ERR_NEEDMOREPARAMS);
         return ;
     }
-    (void)client; 
+    client.setUsername(arg); 
 }
 
 /*

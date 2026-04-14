@@ -5,11 +5,12 @@
 #include <string>
 
 //Error messages
+#define ERR_PASSWDMISMATCH "Wrong Password"
 #define ERR_NEEDPASS "Password required"
 #define ERR_CMD "Unknown command"
-#define ERR_SPACENICK "Nickname can't have space"
-#define ERR_NICK "This Nickname is already used"
-#define ERR_PARAMS "Not enough parameters"
+#define ERR_ERRONEUSNICKNAME "Erroneus nickname"
+#define ERR_NICKNAMEINUSE "This Nickname is already used"
+#define ERR_NEEDMOREPARAMS "Not enough parameters"
 #define ERR_
 
 //parsing functions
