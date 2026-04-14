@@ -25,9 +25,9 @@ In your terminal, go in the cloned repository and type:
 make
 ````
 
-Press ``enter``. If everything worked, a new file should have been created, named "ft_irc". Execute it with a port and password (given in the "configuration.txt" file), like this:
+Press ``enter``. If everything worked, a new file should have been created, named "ft_irc". Execute it with a port and password (example given in the "configuration.txt" file), like this:
 ````
-./ft_irc port password
+./ircserv port password
 ````
 
 Press ``enter``. The server should now be running. Open the IRC client and connect it to your server using its name, its port and its password.
