@@ -14,6 +14,7 @@ class Client
         bool _registered;
         bool _hasNick;
         bool _hasUser;
+        bool _hasPass;
         std::set<std::string> _channels;
 
     public:

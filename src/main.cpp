@@ -1,21 +1,17 @@
-#include "../include/Server.hpp"
-#include "../include/utils.hpp"
-// ports possibles pour IRC : 6665 - 6669, par defaut 6667
+#include "../include/Client.hpp"
+#include "../include/Channel.hpp"
+#include <iostream>
 
-// errno 22: EINVAL Invalid argument
-// EINVAL in bind():
-//    The socket is already bound to an address.
-//    addrlen is wrong, or addr is not a valid address for this socket's domain.
-
-int main (int argc, char **argv)
+int main()
 {
-    Server          serv;
-    std::string     password;
-    int             port;
+    Client c1(42);
+    Client c2(43);
+    Channel ch("#general");
 
-    if (argc != 3)
-        return (1);
+    c1.setNickname("lisa");
+    c2.setNickname("chester");
 
+<<<<<<< HEAD
     password = argv[2];
     if (password.empty())
     {
@@ -34,20 +30,27 @@ int main (int argc, char **argv)
 		std::cout << "Invalid port number. Available ports range from 0 to 65535. Suggested port: 6667" << std::endl;
         std::exit(1);
     }
+=======
+    std::cout << std::boolalpha;
+>>>>>>> 154afa2 (méthodes pour commandes + petite correction)
 
-    struct sockaddr_in addr;
-    addr.sin_family = AF_INET;
-    addr.sin_port = htons((u_short)port); //meme resultat que ntohs...
-    addr.sin_addr.s_addr = INADDR_ANY;
-    memset(&(addr.sin_zero), 0, 8);
+    std::cout << "channel name: " << ch.getName() << std::endl;
+    std::cout << "c1 in channel: " << ch.hasMember(&c1) << std::endl;
 
+<<<<<<< HEAD
     std::cout << "recieved port : " << port << std::endl;
     std::cout << "transformed port : " << addr.sin_port << std::endl;
     std::cout << "server address : " << addr.sin_addr.s_addr << std::endl;
+=======
+    ch.addMember(&c1);
+    std::cout << "c1 in channel: " << ch.hasMember(&c1) << std::endl;
+>>>>>>> 154afa2 (méthodes pour commandes + petite correction)
 
-    serv.openSocket(&addr);
-    serv.run();
-    serv.closeSockets();
+    ch.addMember(&c2);
+    std::cout << "c2 in channel: " << ch.hasMember(&c2) << std::endl;
 
-    return (0);
+    ch.removeMember(&c1);
+    std::cout << "c1 in channel: " << ch.hasMember(&c1) << std::endl;
+
+    return 0;
 }
