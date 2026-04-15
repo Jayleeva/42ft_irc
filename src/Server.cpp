@@ -2,7 +2,17 @@
 #include "../include/utils.hpp"
 
 Server::Server() {};
-Server::~Server() {};
+Server::~Server()
+{
+    std::map<int, Client*>::iterator it;
+
+    it = _clients.begin();
+    while (it != _clients.end())
+    {
+        delete it->second;
+        it++;
+    }
+}
 
 int Server::getSocket() const
 {
@@ -94,8 +104,10 @@ void    Server::addClient()
     this->_fds[this->_nfd].events = POLLIN;
     this->_nfd ++;
 
-    Client  newClient;
-    this->_clients.insert(this->_clients.end(), std::make_pair(clientSocket, &newClient));
+    //Client  newClient;
+    //this->_clients.insert(this->_clients.end(), std::make_pair(clientSocket, &newClient));
+    Client *newClient = new Client(clientSocket);
+    this->_clients.insert(this->_clients.end(), std::make_pair(clientSocket, newClient));
 
     std::cout << YELLOW << "Client " << clientSocket << " connected." << DEFAULT << std::endl;
     std::string message = this->_password;
@@ -129,7 +141,12 @@ void    Server::removeClient(nfds_t i)
     int_to_char(_fds[i].fd, result);
 
     it = this->_clients.find(_fds[i].fd);
-    this->_clients.erase(it);
+    //this->_clients.erase(it);
+    if (it != this->_clients.end())
+    {
+        delete it->second;
+        this->_clients.erase(it);
+    }
 
 	close(_fds[i].fd);
     std::cout << YELLOW << "Client " << _fds[i].fd << " disconnected." << DEFAULT << std::endl;
@@ -232,4 +249,23 @@ void    Server::run()
             }
         }
     }
+}
+
+bool Server::nicknameExists(const std::string &nickname) const
+{
+    std::map<int, Client*>::const_iterator it;
+
+    it = _clients.begin();
+    while (it != _clients.end())
+    {
+        if (it->second->getNickname() == nickname)
+            return (true);
+        it++;
+    }
+    return (false);
+}
+
+std::string Server::getPassword() const
+{
+    return (this->_password);
 }

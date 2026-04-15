@@ -42,6 +42,7 @@ class Server
         std::map<int, Client*>          getMapClients() const;
         std::map<std::string, Channel*> getMapChannels() const;
         void                            setPassword(std::string);
+        std::string                     getPassword() const;
 
         void    openSocket(struct sockaddr_in *addr);
         void    closeSockets();
@@ -49,6 +50,7 @@ class Server
         void    addClient();
         void    removeClient(nfds_t i); 
         void    execClient(nfds_t i);
+        bool    nicknameExists(const std::string &nickname) const;
 };
 
 void    printMap(std::map<int, Client *> map);

@@ -5,13 +5,13 @@
 #include <string>
 
 #include "Message.hpp"
-#include "Utils.hpp"
+#include "utils.hpp"
 // #include "Channel.hpp"
-// #include "Client.hpp"
-// #include "Server.hpp"
+#include "Client.hpp"
+#include "Server.hpp"
 
 #define CMD_INVITE "INVITE"
-#define CMD_INVITE "PASS"
+#define CMD_PASS "PASS"
 #define CMD_JOIN "JOIN"
 #define CMD_KICK "KICK"
 #define CMD_MODE "MODE"

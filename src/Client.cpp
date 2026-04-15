@@ -2,7 +2,7 @@
 
 Client::Client() {};
 
-Client::Client(int fd) : _fd(fd), _registered(false), _hasNick(false), _hasUser(false)
+Client::Client(int fd) : _fd(fd), _registered(false), _hasNick(false), _hasUser(false), _hasPass(false)
 {
 }
 
