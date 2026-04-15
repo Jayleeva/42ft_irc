@@ -1,4 +1,4 @@
-#include "../include/Command.hpp"
+#include "../../include/Command.hpp"
 
 /*
 **This command allows to choose a client nickname.

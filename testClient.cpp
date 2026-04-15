@@ -29,6 +29,15 @@ void    readSocket(int clientSocket)
     //return (buffer);
 }
 
+std::string getPassword(char *buffer)
+{
+    std::string str = static_cast<std::string>(buffer);
+    size_t pos = str.find(": ");
+    //std::string mode = str.substr(0, pos);
+    std::string pass = str.substr(pos);
+    return (pass);
+}
+
 int main(void)
 {
     int clientSocket = socket(AF_INET, SOCK_STREAM, 0);
@@ -60,13 +69,15 @@ int main(void)
     read(clientSocket, buffer,
                    1024 - 1);
 
+    std::string password = buffer;// getPassword(buffer);
+
     std::string p;
     while (true)
     {
         //readSocket(clientSocket);
 		std::cout << "> Enter password :" << std::endl;
 		safeGetline(p);
-        if (buffer == p)
+        if (password == p)
             break;
         else
             std::cout << "Wrong password." << std::endl;

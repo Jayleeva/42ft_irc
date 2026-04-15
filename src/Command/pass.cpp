@@ -1,4 +1,4 @@
-#include "../include/Command.hpp"
+#include "../../include/Command.hpp"
 
 /*
 **This command allows authentication by providing the server password.

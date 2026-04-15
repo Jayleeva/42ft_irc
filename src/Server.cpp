@@ -82,8 +82,10 @@ void    Server::closeSockets()
 
 void    Server::addClient()
 {
-    int clientSocket = accept(this->_socket, NULL, NULL);
+    struct sockaddr_in  clientAddr;
+    socklen_t           clientLen = sizeof(clientAddr);
 
+    int clientSocket = accept(this->_socket, (struct sockaddr *)&clientAddr, &clientLen);
     if (clientSocket < 0)
     {
         perror("accept() failed");
@@ -94,10 +96,13 @@ void    Server::addClient()
     this->_fds[this->_nfd].events = POLLIN;
     this->_nfd ++;
 
-    Client  newClient;
+    Client  newClient(clientSocket);
+    newClient.setHostname(inet_ntoa(clientAddr.sin_addr));
     this->_clients.insert(this->_clients.end(), std::make_pair(clientSocket, &newClient));
 
     std::cout << YELLOW << "Client " << clientSocket << " connected." << DEFAULT << std::endl;
+
+    //(id) handshake [<option>=<valeur>,[<option>=<valeur>,...]]
     std::string message = this->_password;
     send(clientSocket, message.c_str(), strlen(message.c_str()), 0);
     //printMap(this->_clients);

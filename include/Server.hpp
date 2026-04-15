@@ -49,6 +49,8 @@ class Server
         void    addClient();
         void    removeClient(nfds_t i); 
         void    execClient(nfds_t i);
+
+        bool    nicknameExists(std::string);
 };
 
 void    printMap(std::map<int, Client *> map);

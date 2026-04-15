@@ -10,6 +10,7 @@ class Client
         int _fd;
         std::string _nickname;
         std::string _username;
+        std::string _hostname;
         bool _registered;
         bool _hasNick;
         bool _hasUser;
@@ -22,11 +23,12 @@ class Client
         int getFd() const;
         std::string getNickname() const;
         std::string getUsername() const;
+        std::string getHostname() const;
         bool isRegistered() const;
 
         void setNickname(const std::string &nickname);
         void setUsername(const std::string &username);
-
+        void setHostname(const std::string &hostname);
         void tryRegister();
 
         void addChannel(const std::string &channelName);

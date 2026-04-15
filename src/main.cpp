@@ -16,8 +16,24 @@ int main (int argc, char **argv)
     if (argc != 3)
         return (1);
 
-    serv.setPassword(argv[2]);
+    password = argv[2];
+    if (password.empty())
+    {
+        std::cout << "Password can't be empty." << std::endl;
+        std::exit(1);
+    }
+    else if (password.length() > 510)
+    {
+        std::cout << "Password can't be longer than 510 chars (UTF-8)." << std::endl;
+        std::exit(1);
+    }
+    serv.setPassword(password);
     port = atoi(argv[1]);
+	if (port < 0 || port > 65535) 
+    {
+		std::cout << "Invalid port number. Available ports range from 0 to 65535. Suggested port: 6667" << std::endl;
+        std::exit(1);
+    }
 
     struct sockaddr_in addr;
     addr.sin_family = AF_INET;

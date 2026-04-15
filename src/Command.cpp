@@ -21,4 +21,7 @@ void Command::setCmd(const std::string& cmd)
 }
 
 void execute(Message const &msg, Client &client)
-{}
+{
+    (void)msg;
+    (void)client;
+}

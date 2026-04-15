@@ -21,6 +21,12 @@ std::string Client::getUsername() const
     return _username;
 }
 
+std::string Client::getHostname() const
+{
+    return _hostname;
+}
+
+
 bool Client::isRegistered() const
 {
     return _registered;
@@ -38,6 +44,11 @@ void Client::setUsername(const std::string &username)
     _username = username;
     _hasUser = true;
     tryRegister();
+}
+
+void    Client::setHostname(const std::string &hostname)
+{
+    this->_hostname = std::string(hostname);
 }
 
 void Client::tryRegister()
