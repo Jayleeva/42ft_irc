@@ -164,7 +164,8 @@ void    Server::execClient(nfds_t i)
     {
         buffer[nbytes] = '\0';
         std::cout << RED << nbytes << DEFAULT << std::endl;
-        if (nbytes)
+        std::cout << buffer << std::endl;
+        /*if (nbytes)
         {
             for (nfds_t j = 1; j < _nfd; j ++)
             {
@@ -174,7 +175,7 @@ void    Server::execClient(nfds_t i)
                     send(_fds[j].fd, buffer, strlen(buffer), 0);
                 }
             }
-        }
+        }*/
         /*std::string cmd = getCmd(buffer);
         if (cmd == "JOIN")
         {
