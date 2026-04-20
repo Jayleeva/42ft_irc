@@ -71,6 +71,15 @@ void Server::openSocket(struct sockaddr_in *addr)
     std::cout << "is listening\n";
 }
 
+void    Server::clearClientsMap()
+{
+    for (std::map<int, Client*>::iterator it = this->_clients.begin(); it != this->_clients.end(); it ++)
+    {
+        delete (it->second);
+    }
+    this->_clients.clear();
+}
+
 void    Server::closeSockets()
 {
     for (size_t i = 0; i < this->_nfd; i++)
@@ -78,6 +87,7 @@ void    Server::closeSockets()
         close(this->_fds[i].fd);
     }
     close(this->_socket);
+    clearClientsMap();
 }
 
 void    Server::addClient()
@@ -96,9 +106,9 @@ void    Server::addClient()
     this->_fds[this->_nfd].events = POLLIN;
     this->_nfd ++;
 
-    Client  newClient(clientSocket);
-    newClient.setHostname(inet_ntoa(clientAddr.sin_addr));
-    this->_clients.insert(this->_clients.end(), std::make_pair(clientSocket, &newClient));
+    Client  *newClient = new Client(clientSocket);
+    newClient->setHostname(inet_ntoa(clientAddr.sin_addr));
+    this->_clients.insert(this->_clients.end(), std::make_pair(clientSocket, newClient));
 
     std::cout << YELLOW << "Client " << clientSocket << " connected." << DEFAULT << std::endl;
 
@@ -134,6 +144,7 @@ void    Server::removeClient(nfds_t i)
     int_to_char(_fds[i].fd, result);
 
     it = this->_clients.find(_fds[i].fd);
+    delete (it->second);
     this->_clients.erase(it);
 
 	close(_fds[i].fd);

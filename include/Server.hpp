@@ -45,6 +45,7 @@ class Server
 
         void    openSocket(struct sockaddr_in *addr);
         void    closeSockets();
+        void    clearClientsMap();
         void    run();
         void    addClient();
         void    removeClient(nfds_t i); 
