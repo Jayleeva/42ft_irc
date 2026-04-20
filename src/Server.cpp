@@ -112,9 +112,19 @@ void    Server::addClient()
 
     std::cout << YELLOW << "Client " << clientSocket << " connected." << DEFAULT << std::endl;
 
+    char    buffer[MAXBYTES];
+    
+    memset(buffer, '\0', sizeof(buffer));
+    ssize_t nbytes = recv(clientSocket, buffer, sizeof(buffer), MSG_DONTWAIT);
+    if (nbytes > 0)
+    { 
+        buffer[nbytes] = '\0';
+        std::cout << "add " << RED << nbytes << DEFAULT << std::endl;
+        std::cout << "buffer = " << buffer << std::endl;
+    }
     //(id) handshake [<option>=<valeur>,[<option>=<valeur>,...]]
-    std::string message = this->_password;
-    send(clientSocket, message.c_str(), strlen(message.c_str()), 0);
+    //std::string message = this->_password;
+    //send(clientSocket, message.c_str(), strlen(message.c_str()), 0);
     //printMap(this->_clients);
 }
 
@@ -171,11 +181,11 @@ void    Server::execClient(nfds_t i)
     
     memset(buffer, '\0', sizeof(buffer));
     ssize_t nbytes = recv(fd, buffer, sizeof(buffer), MSG_DONTWAIT);
-    if (nbytes)
+    if (nbytes > 0)
     {
         buffer[nbytes] = '\0';
-        std::cout << RED << nbytes << DEFAULT << std::endl;
-        std::cout << buffer << std::endl;
+        std::cout << "exec " << RED << nbytes << DEFAULT << std::endl;
+        std::cout << "buffer = " << buffer << std::endl;
         /*if (nbytes)
         {
             for (nfds_t j = 1; j < _nfd; j ++)
