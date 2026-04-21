@@ -22,7 +22,14 @@ void Command::setCmd(const std::string& cmd)
 
 void Command::execute(Message const &msg, Client &client, Server &server)
 {
-    (void)msg;
-    (void)client;
-    (void)server;
+    if (_cmd == CMD_PASS)
+        pass(msg, client, server);
+    else if (_cmd == CMD_NICK)
+        nick(msg, client, server);
+    else if (_cmd == CMD_USER)
+        user(msg, client, server);
+    else if (_cmd == CMD_JOIN)
+        join(msg, client, server);
+    else
+        printError(ERR_CMD);
 }
