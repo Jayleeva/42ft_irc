@@ -11,7 +11,7 @@
 #include "Server.hpp"
 
 #define CMD_INVITE "INVITE"
-#define CMD_INVITE "PASS"
+#define CMD_PASS "PASS"
 #define CMD_JOIN "JOIN"
 #define CMD_KICK "KICK"
 #define CMD_MODE "MODE"
@@ -29,7 +29,7 @@ class Command
 
         void pass(Message const &msg, Client &client, Server &server);
         void nick(Message const &msg, Client &client, Server &server);
-        void user(Message const &msg, Client &client);
+        void user(Message const &msg, Client &client, Server &server);
     
     public:
         Command();
@@ -39,7 +39,7 @@ class Command
         std::string getCmd() const;
         void setCmd(const std::string& cmd);
 
-        void execute(Message const &msg, Client &client);
+        void execute(Message const &msg, Client &client, Server &server);
 
 };
 

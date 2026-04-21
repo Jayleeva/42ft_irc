@@ -20,8 +20,9 @@ void Command::setCmd(const std::string& cmd)
     _cmd = cmd;
 }
 
-void execute(Message const &msg, Client &client)
+void Command::execute(Message const &msg, Client &client, Server &server)
 {
     (void)msg;
     (void)client;
+    (void)server;
 }

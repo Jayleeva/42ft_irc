@@ -11,7 +11,7 @@
 #define ERR_ERRONEUSNICKNAME "Erroneus nickname"
 #define ERR_NICKNAMEINUSE "This Nickname is already used"
 #define ERR_NEEDMOREPARAMS "Not enough parameters"
-#define ERR_
+#define ERR_REGISTRED "Already registered"
 
 //parsing functions
 std::string getCommand(const std::string& msg);

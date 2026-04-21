@@ -12,10 +12,14 @@
         → The client is marked as having provided the correct password.     
 */
 
-//C'est une première version de la fonction
 void Command::pass(Message const &msg, Client &client, Server &server)
 {
     std::string arg = getArgument(msg.getMsg());
+
+    size_t i = 0;
+    while (i < arg.size() && arg[i] == ' ')
+        i++;
+    arg = arg.substr(i);
 
     if (isEmptyArg(arg))
     {
@@ -23,11 +27,21 @@ void Command::pass(Message const &msg, Client &client, Server &server)
         return ;
     }
 
-    if (arg != server.getPassword())
+    size_t pos = arg.find(' ');
+    if (pos != std::string::npos)
+        arg = arg.substr(0, pos);
+
+    if (client.isRegistered())
+    {
+        printError(ERR_REGISTRED);
+        return;
+    }
+
+    if (arg != server.getPassword()) // fonction a creer
     {
         printError(ERR_PASSWDMISMATCH);
         return ;
     }
 
-    (void)client; //à modififer par la suite
+    client.tryRegister(true);
 }
