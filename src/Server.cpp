@@ -116,14 +116,8 @@ void    Server::addClient()
     this->_fds[this->_nfd].events = POLLIN;
     this->_nfd ++;
 
-<<<<<<< HEAD
     Client  *newClient = new Client(clientSocket);
     newClient->setHostname(inet_ntoa(clientAddr.sin_addr));
-=======
-    //Client  newClient;
-    //this->_clients.insert(this->_clients.end(), std::make_pair(clientSocket, &newClient));
-    Client *newClient = new Client(clientSocket);
->>>>>>> 154afa2 (méthodes pour commandes + petite correction)
     this->_clients.insert(this->_clients.end(), std::make_pair(clientSocket, newClient));
 
     std::cout << YELLOW << "Client " << clientSocket << " connected." << DEFAULT << std::endl;
@@ -170,17 +164,12 @@ void    Server::removeClient(nfds_t i)
     int_to_char(_fds[i].fd, result);
 
     it = this->_clients.find(_fds[i].fd);
-<<<<<<< HEAD
-    delete (it->second);
-    this->_clients.erase(it);
-=======
     //this->_clients.erase(it);
     if (it != this->_clients.end())
     {
         delete it->second;
         this->_clients.erase(it);
     }
->>>>>>> 154afa2 (méthodes pour commandes + petite correction)
 
 	close(_fds[i].fd);
     std::cout << YELLOW << "Client " << _fds[i].fd << " disconnected." << DEFAULT << std::endl;

@@ -51,12 +51,7 @@ class Server
         void    addClient();
         void    removeClient(nfds_t i); 
         void    execClient(nfds_t i);
-<<<<<<< HEAD
-
-        bool    nicknameExists(std::string);
-=======
         bool    nicknameExists(const std::string &nickname) const;
->>>>>>> 154afa2 (méthodes pour commandes + petite correction)
 };
 
 void    printMap(std::map<int, Client *> map);
