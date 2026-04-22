@@ -30,6 +30,8 @@ class Client
         void setNickname(const std::string &nickname);
         void setUsername(const std::string &username);
         void setHostname(const std::string &hostname);
+        bool hasPass() const;
+        void setPassValid();
         void tryRegister();
 
         void addChannel(const std::string &channelName);

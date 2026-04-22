@@ -19,12 +19,17 @@ void Command::join(Message const &msg, Client &client, Server &server)
         printError(ERR_NEEDMOREPARAMS);
         return ;
     }
+    if (!client.isRegistered())
+    {
+        printError(ERR_NOTREGISTERED);
+        return ;
+    }
 
     size_t pos = arg.find(' ');
     if (pos != std::string::npos)
         arg = arg.substr(0, pos);
     
-    std::string channelName = arg;
+    /*std::string channelName = arg;
     Channel *channel;
 
     if (server.channelExists(channelName))
@@ -32,7 +37,13 @@ void Command::join(Message const &msg, Client &client, Server &server)
     else
         channel = server.createChannel(channelName);
     
-    channel->addMember(&client);
+    channel->addMember(&client);*/
+    if (!isValidChannelName(arg))
+    {
+        printError(ERR_BADCHANNELNAME);
+        return ;
+    }
+    server.joinClientToChannel(&client, arg);
 }
 
 /*

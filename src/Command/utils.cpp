@@ -32,3 +32,24 @@ bool isEmptyArg(const std::string &arg)
  {
     std::cout << "Error: " << errorMsg << std::endl;
  }
+
+ bool isValidChannelName(const std::string &name)
+{
+    size_t i;
+
+    if (name.empty())
+        return (false);
+    if (name[0] != '#' && name[0] != '&')
+        return (false);
+    if (name.length() > 200)
+        return (false);
+
+    i = 0;
+    while (i < name.length())
+    {
+        if (name[i] == ' ' || name[i] == ',' || name[i] == 7)
+            return (false);
+        i++;
+    }
+    return (true);
+}

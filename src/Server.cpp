@@ -5,12 +5,19 @@ Server::Server() {};
 Server::~Server()
 {
     std::map<int, Client*>::iterator it;
+    std::map<std::string, Channel*>::iterator itChannel;
 
     it = _clients.begin();
     while (it != _clients.end())
     {
         delete it->second;
         it++;
+    }
+    itChannel = _channels.begin();
+    while (itChannel != _channels.end())
+    {
+        delete itChannel->second;
+        itChannel++;
     }
 }
 
@@ -292,4 +299,65 @@ bool Server::nicknameExists(const std::string &nickname) const
 std::string Server::getPassword() const
 {
     return (this->_password);
+}
+
+bool Server::channelExists(const std::string &name) const
+{
+    return (_channels.find(name) != _channels.end());
+}
+
+Channel *Server::getChannel(const std::string &name)
+{
+    std::map<std::string, Channel*>::iterator it;
+
+    it = _channels.find(name);
+    if (it != _channels.end())
+        return (it->second);
+    return (NULL);
+}
+
+Channel *Server::createChannel(const std::string &name)
+{
+    Channel *newChannel;
+
+    newChannel = new Channel(name);
+    _channels.insert(std::make_pair(name, newChannel));
+    return (newChannel);
+}
+
+void Server::joinClientToChannel(Client *client, const std::string &name)
+{
+    std::cout << "joinClientToChannel called" << std::endl;
+    Channel *channel;
+
+    if (channelExists(name))
+        channel = getChannel(name);
+    else
+        channel = createChannel(name);
+    if (!channel->hasMember(client))
+        channel->addMember(client);
+    if (!client->isInChannel(name))
+        client->addChannel(name);
+}
+
+void Server::removeClientFromChannel(Client *client, const std::string &name)
+{
+    Channel *channel;
+
+    if (!channelExists(name))
+        return;
+
+    channel = getChannel(name);
+
+    if (!channel->hasMember(client))
+        return;
+
+    channel->removeMember(client);
+    client->removeChannel(name);
+
+    if (channel->isEmpty())
+    {
+        delete channel;
+        _channels.erase(name);
+    }
 }
