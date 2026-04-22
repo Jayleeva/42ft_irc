@@ -5,12 +5,19 @@ Server::Server() {};
 Server::~Server()
 {
     std::map<int, Client*>::iterator it;
+    std::map<std::string, Channel*>::iterator itChannel;
 
     it = _clients.begin();
     while (it != _clients.end())
     {
         delete it->second;
         it++;
+    }
+    itChannel = _channels.begin();
+    while (itChannel != _channels.end())
+    {
+        delete itChannel->second;
+        itChannel++;
     }
 }
 
@@ -81,6 +88,15 @@ void Server::openSocket(struct sockaddr_in *addr)
     std::cout << "is listening\n";
 }
 
+void    Server::clearClientsMap()
+{
+    for (std::map<int, Client*>::iterator it = this->_clients.begin(); it != this->_clients.end(); it ++)
+    {
+        delete (it->second);
+    }
+    this->_clients.clear();
+}
+
 void    Server::closeSockets()
 {
     for (size_t i = 0; i < this->_nfd; i++)
@@ -88,12 +104,15 @@ void    Server::closeSockets()
         close(this->_fds[i].fd);
     }
     close(this->_socket);
+    clearClientsMap();
 }
 
 void    Server::addClient()
 {
-    int clientSocket = accept(this->_socket, NULL, NULL);
+    struct sockaddr_in  clientAddr;
+    socklen_t           clientLen = sizeof(clientAddr);
 
+    int clientSocket = accept(this->_socket, (struct sockaddr *)&clientAddr, &clientLen);
     if (clientSocket < 0)
     {
         perror("accept() failed");
@@ -104,14 +123,25 @@ void    Server::addClient()
     this->_fds[this->_nfd].events = POLLIN;
     this->_nfd ++;
 
-    //Client  newClient;
-    //this->_clients.insert(this->_clients.end(), std::make_pair(clientSocket, &newClient));
-    Client *newClient = new Client(clientSocket);
+    Client  *newClient = new Client(clientSocket);
+    newClient->setHostname(inet_ntoa(clientAddr.sin_addr));
     this->_clients.insert(this->_clients.end(), std::make_pair(clientSocket, newClient));
 
     std::cout << YELLOW << "Client " << clientSocket << " connected." << DEFAULT << std::endl;
-    std::string message = this->_password;
-    send(clientSocket, message.c_str(), strlen(message.c_str()), 0);
+
+    char    buffer[MAXBYTES];
+    
+    memset(buffer, '\0', sizeof(buffer));
+    ssize_t nbytes = recv(clientSocket, buffer, sizeof(buffer), MSG_DONTWAIT);
+    if (nbytes > 0)
+    { 
+        buffer[nbytes] = '\0';
+        std::cout << "add " << RED << nbytes << DEFAULT << std::endl;
+        std::cout << "buffer = " << buffer << std::endl;
+    }
+    //(id) handshake [<option>=<valeur>,[<option>=<valeur>,...]]
+    //std::string message = this->_password;
+    //send(clientSocket, message.c_str(), strlen(message.c_str()), 0);
     //printMap(this->_clients);
 }
 
@@ -172,11 +202,12 @@ void    Server::execClient(nfds_t i)
     
     memset(buffer, '\0', sizeof(buffer));
     ssize_t nbytes = recv(fd, buffer, sizeof(buffer), MSG_DONTWAIT);
-    if (nbytes)
+    if (nbytes > 0)
     {
         buffer[nbytes] = '\0';
-        std::cout << RED << nbytes << DEFAULT << std::endl;
-        if (nbytes)
+        std::cout << "exec " << RED << nbytes << DEFAULT << std::endl;
+        std::cout << "buffer = " << buffer << std::endl;
+        /*if (nbytes)
         {
             for (nfds_t j = 1; j < _nfd; j ++)
             {
@@ -186,7 +217,7 @@ void    Server::execClient(nfds_t i)
                     send(_fds[j].fd, buffer, strlen(buffer), 0);
                 }
             }
-        }
+        }*/
         /*std::string cmd = getCmd(buffer);
         if (cmd == "JOIN")
         {
@@ -268,4 +299,65 @@ bool Server::nicknameExists(const std::string &nickname) const
 std::string Server::getPassword() const
 {
     return (this->_password);
+}
+
+bool Server::channelExists(const std::string &name) const
+{
+    return (_channels.find(name) != _channels.end());
+}
+
+Channel *Server::getChannel(const std::string &name)
+{
+    std::map<std::string, Channel*>::iterator it;
+
+    it = _channels.find(name);
+    if (it != _channels.end())
+        return (it->second);
+    return (NULL);
+}
+
+Channel *Server::createChannel(const std::string &name)
+{
+    Channel *newChannel;
+
+    newChannel = new Channel(name);
+    _channels.insert(std::make_pair(name, newChannel));
+    return (newChannel);
+}
+
+void Server::joinClientToChannel(Client *client, const std::string &name)
+{
+    std::cout << "joinClientToChannel called" << std::endl;
+    Channel *channel;
+
+    if (channelExists(name))
+        channel = getChannel(name);
+    else
+        channel = createChannel(name);
+    if (!channel->hasMember(client))
+        channel->addMember(client);
+    if (!client->isInChannel(name))
+        client->addChannel(name);
+}
+
+void Server::removeClientFromChannel(Client *client, const std::string &name)
+{
+    Channel *channel;
+
+    if (!channelExists(name))
+        return;
+
+    channel = getChannel(name);
+
+    if (!channel->hasMember(client))
+        return;
+
+    channel->removeMember(client);
+    client->removeChannel(name);
+
+    if (channel->isEmpty())
+    {
+        delete channel;
+        _channels.erase(name);
+    }
 }

@@ -3,7 +3,6 @@
 
 #include <iostream>
 #include <string>
-#include <map>
 
 //Colors
 # define DEFAULT "\001\033[0;39m\002"
@@ -13,12 +12,15 @@
 # define MAG  "\001\033[1;35m\002"
 
 //Error messages
+#define ERR_PASSWDMISMATCH "Wrong Password"
 #define ERR_NEEDPASS "Password required"
 #define ERR_CMD "Unknown command"
-#define ERR_SPACENICK "Nickname can't have space"
-#define ERR_NICK "This Nickname is already used"
-#define ERR_PARAMS "Not enough parameters"
-#define ERR_
+#define ERR_ERRONEUSNICKNAME "Erroneus nickname"
+#define ERR_NICKNAMEINUSE "This Nickname is already used"
+#define ERR_NEEDMOREPARAMS "Not enough parameters"
+#define ERR_REGISTRED "Already registered"
+#define ERR_NOTREGISTERED "You have not registered"
+#define ERR_BADCHANNELNAME "Bad channel name"
 
 //parsing functions
 std::string getCommand(const std::string& msg);
@@ -27,5 +29,6 @@ std::string getCommand(const std::string& msg);
 bool isEmptyArg(const std::string &arg);
 std::string getArgument(const std::string& msg);
 void printError(const std::string& errorMsg);
+bool isValidChannelName(const std::string &name);
 
 #endif

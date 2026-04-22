@@ -9,8 +9,14 @@ SRC = 	main.cpp \
 		Client.cpp \
 		Channel.cpp \
 		Command.cpp \
+		Message.cpp \
+		utils.cpp \
+		Command/utils.cpp \
+		Command/pass.cpp \
+		Command/nick.cpp \
+		Command/user.cpp \
 		Command/join.cpp \
-		utils.cpp
+		Command/invite.cpp
 
 SRCS = $(addprefix $(SRC_DIR)/, $(SRC))
 

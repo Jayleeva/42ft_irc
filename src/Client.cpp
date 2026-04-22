@@ -21,9 +21,20 @@ std::string Client::getUsername() const
     return _username;
 }
 
+std::string Client::getHostname() const
+{
+    return _hostname;
+}
+
+
 bool Client::isRegistered() const
 {
     return _registered;
+}
+
+bool Client::hasPass() const
+{
+    return (_hasPass);
 }
 
 void Client::setNickname(const std::string &nickname)
@@ -40,9 +51,20 @@ void Client::setUsername(const std::string &username)
     tryRegister();
 }
 
+void Client::setPassValid()
+{
+    _hasPass = true;
+    tryRegister();
+}
+
+void    Client::setHostname(const std::string &hostname)
+{
+    this->_hostname = std::string(hostname);
+}
+
 void Client::tryRegister()
 {
-    if (_hasNick && _hasUser)
+    if (_hasNick && _hasUser && _hasPass)
         _registered = true;
 }
 

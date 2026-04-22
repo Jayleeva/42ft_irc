@@ -46,11 +46,17 @@ class Server
 
         void    openSocket(struct sockaddr_in *addr);
         void    closeSockets();
+        void    clearClientsMap();
         void    run();
         void    addClient();
         void    removeClient(nfds_t i); 
         void    execClient(nfds_t i);
         bool    nicknameExists(const std::string &nickname) const;
+        bool    channelExists(const std::string &name) const;
+        Channel *getChannel(const std::string &name);
+        Channel *createChannel(const std::string &name);
+        void    joinClientToChannel(Client *client, const std::string &name);
+        void    removeClientFromChannel(Client *client, const std::string &name);
 };
 
 void    printMap(std::map<int, Client *> map);

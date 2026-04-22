@@ -24,3 +24,8 @@ bool Channel::hasMember(Client *client) const
 {
     return (_members.find(client) != _members.end());
 }
+
+bool Channel::isEmpty() const
+{
+    return (_members.empty());
+}

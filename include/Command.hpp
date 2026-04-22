@@ -6,7 +6,7 @@
 
 #include "Message.hpp"
 #include "utils.hpp"
-// #include "Channel.hpp"
+#include "Channel.hpp"
 #include "Client.hpp"
 #include "Server.hpp"
 
@@ -20,6 +20,7 @@
 #define CMD_QUIT "QUIT"
 #define CMD_TOPIC "TOPIC"
 #define CMD_USER "USER"
+#define CMD_PART "PART"
 
 //This class is used to represent the IRC command contained in the Message.
 class Command
@@ -27,9 +28,17 @@ class Command
     private:
         std::string _cmd;
 
-        void pass(Message const &msg, Client &client);
+        void pass(Message const &msg, Client &client, Server &server);
         void nick(Message const &msg, Client &client, Server &server);
-        void user(Message const &msg, Client &client);
+        void user(Message const &msg, Client &client, Server &server);
+        void join(Message const &msg, Client &client, Server &server);
+        void invite(Message const &msg, Client &client, Server &server);
+        void kick(Message const &msg, Client &client, Server &server);
+        void topic(Message const &msg, Client &client, Server &server);
+        void mode(Message const &msg, Client &client, Server &server);
+        void privmsg(Message const &msg, Client &client, Server &server);
+        void part(Message const &msg, Client &client, Server &server);
+        void quit(Message const &msg, Client &client, Server &server);
     
     public:
         Command();
@@ -39,7 +48,7 @@ class Command
         std::string getCmd() const;
         void setCmd(const std::string& cmd);
 
-        void execute(Message const &msg, Client &client);
+        void execute(Message const &msg, Client &client, Server &server);
 
 };
 

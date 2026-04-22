@@ -33,6 +33,24 @@ Press ``enter``. If everything worked, a new file should have been created, name
 Press ``enter``. The server should now be running. Open the IRC client and connect it to your server using its name, its port and its password.
 https://docs.redhat.com/en/documentation/red_hat_fuse/7.3/html/connecting_fuse_online_to_applications_and_services/connecting-to-irc_connectors
 
+## Weechat
+Once installed, launch it with
+````
+weechat
+````
+
+Then, add the server with
+````
+/server add ircserv 0/6667
+````
+0 = the server address
+6667 = the suggested port
+
+Then, connect to it with
+````
+/connect ircserv
+````
+
 If the connection is successful, you can now use the client as if it was connected to any official server. 
 
 To test it thoroughly, open multiple clients and connect them all to the server. Every client should work normally and act as different users.

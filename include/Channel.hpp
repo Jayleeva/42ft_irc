@@ -21,6 +21,7 @@ class Channel
         void addMember(Client *client);
         void removeMember(Client *client);
         bool hasMember(Client *client) const;
+        bool isEmpty() const;
 };
 
 #endif
