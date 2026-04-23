@@ -9,7 +9,7 @@
     save this username in the `Client` object
 */
 
-void Command::user(Message const &msg, Client &client, Server &server)
+void Command::user(Message const &msg, Client &client)
 {
     std::string arg = getArgument(msg.getMsg());
 
@@ -29,5 +29,4 @@ void Command::user(Message const &msg, Client &client, Server &server)
         arg = arg.substr(0, pos);
     
     client.setUsername(arg); 
-    (void)server;
 }

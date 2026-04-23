@@ -12,7 +12,7 @@
         → The client is marked as having provided the correct password.     
 */
 
-void Command::pass(Message const &msg, Client &client, Server &server)
+void Command::pass(Message const &msg, Client &client, const std::string password)
 {
     std::string arg = getArgument(msg.getMsg());
 
@@ -37,11 +37,11 @@ void Command::pass(Message const &msg, Client &client, Server &server)
         return;
     }
 
-    if (arg != server.getPassword()) // fonction a creer
+    if (arg != password) // fonction a creer
     {
         printError(ERR_PASSWDMISMATCH);
         return ;
     }
 
-    client.tryRegister(true);
+    client.tryRegister();
 }

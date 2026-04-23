@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 
 #include "Message.hpp"
 #include "utils.hpp"
@@ -26,29 +27,29 @@
 class Command
 {
     private:
-        std::string _cmd;
+        std::vector<std::string>    _parsing;
 
-        void pass(Message const &msg, Client &client, Server &server);
-        void nick(Message const &msg, Client &client, Server &server);
-        void user(Message const &msg, Client &client, Server &server);
-        void join(Message const &msg, Client &client, Server &server);
-        void invite(Message const &msg, Client &client, Server &server);
-        void kick(Message const &msg, Client &client, Server &server);
-        void topic(Message const &msg, Client &client, Server &server);
-        void mode(Message const &msg, Client &client, Server &server);
-        void privmsg(Message const &msg, Client &client, Server &server);
-        void part(Message const &msg, Client &client, Server &server);
-        void quit(Message const &msg, Client &client, Server &server);
+        void pass(std::vector<std::string> parsing, Client &client, const std::string password);
+        void nick(std::vector<std::string> parsing, Client &client, Server &server);
+        void user(std::vector<std::string> parsing, Client &client);
+        void join(std::vector<std::string> parsing, Client &client, Server &server);
+        void invite(std::vector<std::string> parsing, Client &client, Server &server);
+        void kick(std::vector<std::string> parsing, Client &client, Server &server);
+        void topic(std::vector<std::string> parsing, Client &client, Server &server);
+        void mode(std::vector<std::string> parsing, Client &client, Server &server);
+        void privmsg(std::vector<std::string> parsing, Client &client, Server &server);
+        void part(std::vector<std::string> parsing, Client &client, Server &server);
+        void quit(std::vector<std::string> parsing, Client &client, Server &server);
     
     public:
         Command();
-        Command(const std::string& cmd);
+        Command(std::vector<std::string> parsing);
         virtual ~Command();
 
-        std::string getCmd() const;
-        void setCmd(const std::string& cmd);
+        std::vector<std::string> getParsing() const;
+        void    setParsing(std::vector<std::string> parsing);
 
-        void execute(Message const &msg, Client &client, Server &server);
+        void execute(Client &client, Server &server);
 
 };
 

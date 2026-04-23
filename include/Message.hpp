@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
-
+#include <bits/stdc++.h>
 // This class is used to represent an IRC message received from the client.
 class Message
 {

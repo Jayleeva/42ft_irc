@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include "Client.hpp"
+#include "Channel.hpp"
 
 //Colors
 # define DEFAULT "\001\033[0;39m\002"

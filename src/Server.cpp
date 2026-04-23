@@ -1,5 +1,6 @@
 #include "../include/Server.hpp"
 #include "../include/utils.hpp"
+#include "../include/Command.hpp"
 
 Server::Server() {};
 Server::~Server()
@@ -192,6 +193,26 @@ void    Server::removeClient(nfds_t i)
     }
 }
 
+Command parseCmd(std::string input)
+{
+    Command cmd;
+    std::vector<std::string>	parsing;
+	std::string			        element;
+    std::stringstream 	        ss(input);
+
+	while (getline(ss, element, ' '))
+		parsing.push_back(element);
+    
+    cmd.setParsing(parsing);
+}
+
+void Server::execCmd(std::string input, int fd)
+{
+    Command cmd = parseCmd(input);
+
+    cmd.execute(*(this->_clients.find(fd)->second), *this);
+}
+
 void    Server::execClient(nfds_t i)
 {
     int fd = this->_fds[i].fd;
@@ -203,6 +224,9 @@ void    Server::execClient(nfds_t i)
     if (nbytes > 0)
     {
         buffer[nbytes] = '\0';
+
+        execCmd(buffer, fd);
+        
         std::cout << "exec " << RED << nbytes << DEFAULT << std::endl;
         std::cout << "buffer = " << buffer << std::endl;
         /*if (nbytes)

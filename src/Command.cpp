@@ -1,37 +1,40 @@
 #include "../include/Command.hpp"
 
-Command::Command() : _cmd("")
+Command::Command()
 {}
 
-Command::Command(const std::string& cmd) : _cmd(cmd)
-{}
+Command::Command(std::vector<std::string> parsing) : _parsing(parsing)
+{
+}
 
 Command::~Command()
 {}
 
-
-std::string Command::getCmd() const
+std::vector<std::string> Command::getParsing() const
 {
-    return _cmd;
+    return _parsing;
 }
 
-void Command::setCmd(const std::string& cmd)
+void    Command::setParsing(std::vector<std::string> parsing)
 {
-    _cmd = cmd;
+    _parsing = parsing;
 }
 
-void Command::execute(Message const &msg, Client &client, Server &server)
+void Command::execute(Client &client, Server &server)
 {
+    std::string _cmd = _parsing.front();
+
     if (_cmd == CMD_PASS)
-        pass(msg, client, server);
+        pass(_parsing, client, server.getPassword());
     else if (_cmd == CMD_NICK)
-        nick(msg, client, server);
+        nick(_parsing, client, server);
     else if (_cmd == CMD_USER)
-        user(msg, client, server);
+        user(_parsing, client);
     else if (_cmd == CMD_JOIN)
-        join(msg, client, server);
+        join(_parsing, client, server);
     else if (_cmd == CMD_MODE)
-        mode(msg, client, server);
+        mode(_parsing, client, server);
     else
         printError(ERR_CMD);
 }
+

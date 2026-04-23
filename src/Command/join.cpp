@@ -5,7 +5,7 @@
    channel
 */
 
-void Command::join(Message const &msg, Client &client, Server &server)
+void Command::join(Message const &msg, Client &client, Server &server) //std::map<std::string, Channel*> channels)
 {
 	std::string arg = getArgument(msg.getMsg());
 
@@ -45,7 +45,7 @@ void Command::join(Message const &msg, Client &client, Server &server)
     }
     else
     {
-        channel = server.createChannel(channelName);
+        channel = server.createChannel(arg);
         channel->addMember(&client);
         client.setChannelStatus(channel->getName(), OPERATOR_STATUS); // par defaut, createur a statut d-operateur
     }

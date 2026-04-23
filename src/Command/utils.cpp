@@ -42,6 +42,24 @@ int   findClientByName(std::map<int, Client*> _clients, std::string name)
    return (res);
 }
 
+//This function is used to retrieve the client fd using its username. If it didn't find it, it returns -1.
+std::string   findChannel(std::map<std::string, Channel*> channels, std::string name)
+{
+   std::string  res;
+	std::map<std::string, Channel*>::iterator it;
+	for (it = channels.begin(); it != channels.end(); it ++)
+	{
+		if (it->first == name)
+      {
+			res = it->first;
+         break;
+      }
+	}
+	if (it == channels.end())
+		res = "";
+   return (res);
+}
+
  /*
  **find() : is a function to find something, if its found return the index
     if not return `npos`.
