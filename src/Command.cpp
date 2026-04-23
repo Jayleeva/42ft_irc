@@ -20,7 +20,6 @@ void Command::setCmd(const std::string& cmd)
     _cmd = cmd;
 }
 
-<<<<<<< HEAD
 void Command::execute(Message const &msg, Client &client, Server &server)
 {
     if (_cmd == CMD_PASS)
@@ -31,10 +30,8 @@ void Command::execute(Message const &msg, Client &client, Server &server)
         user(msg, client, server);
     else if (_cmd == CMD_JOIN)
         join(msg, client, server);
+    else if (_cmd == CMD_MODE)
+        mode(msg, client, server);
     else
         printError(ERR_CMD);
 }
-=======
-//void execute(Message const &msg, Client &client)
-//{}
->>>>>>> 154afa2 (méthodes pour commandes + petite correction)

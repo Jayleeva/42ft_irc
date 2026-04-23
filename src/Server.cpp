@@ -29,6 +29,12 @@ std::map<std::string, Channel*> Server::getMapChannels() const
     return (this->_channels);
 }
 
+std::string Server::getPassword() const
+{
+    return (this->_password);
+}
+
+
 void    printMap(std::map<int, Client *> map)
 {
     for (std::map<int, Client *>::iterator it = map.begin(); it != map.end(); ++it)
@@ -116,7 +122,7 @@ void    Server::addClient()
     this->_fds[this->_nfd].events = POLLIN;
     this->_nfd ++;
 
-    Client  *newClient = new Client(clientSocket);
+    Client  *newClient = new Client(this->_channels, clientSocket);
     newClient->setHostname(inet_ntoa(clientAddr.sin_addr));
     this->_clients.insert(this->_clients.end(), std::make_pair(clientSocket, newClient));
 
@@ -164,7 +170,6 @@ void    Server::removeClient(nfds_t i)
     int_to_char(_fds[i].fd, result);
 
     it = this->_clients.find(_fds[i].fd);
-    //this->_clients.erase(it);
     if (it != this->_clients.end())
     {
         delete it->second;
@@ -210,17 +215,6 @@ void    Server::execClient(nfds_t i)
                     send(_fds[j].fd, buffer, strlen(buffer), 0);
                 }
             }
-        }*/
-        /*std::string cmd = getCmd(buffer);
-        if (cmd == "JOIN")
-        {
-            std::string chan = getChan(buffer);
-            if (_channels.find(chan) == _channels.end())
-            {
-                Channel newchan(chan);
-                _channels.insert(_channels.end(), std::make_pair(chan, &newchan)))
-            }
-            _channels.find(chan)._members.insert(_clients(fd));
         }*/
     }
     if (nbytes == 0)
@@ -289,7 +283,25 @@ bool Server::nicknameExists(const std::string &nickname) const
     return (false);
 }
 
-std::string Server::getPassword() const
+Channel *Server::createChannel(const std::string &name)
 {
-    return (this->_password);
+    Channel *newChan = new Channel(name); // par defaut, tout est a false, 0 et ""
+
+    this->_channels.insert(this->_channels.end(), std::make_pair(name, newChan));
+
+    for (std::map<int, Client*>::iterator it = this->_clients.begin(); it != this->_clients.end(); it ++)
+    {
+        it->second->addChannel(name);
+    }
 }
+
+void    Server::removeChannel(const std::string &name)
+{
+    this->_channels.erase(name);
+
+    for (std::map<int, Client*>::iterator it = this->_clients.begin(); it != this->_clients.end(); it ++)
+    {
+        it->second->removeChannel(name);
+    }
+}
+

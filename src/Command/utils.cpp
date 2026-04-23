@@ -23,6 +23,25 @@ bool isEmptyArg(const std::string &arg)
         return ("");
     return (msg.substr(pos + 1));
  }
+
+//This function is used to retrieve the client fd using its username. If it didn't find it, it returns -1.
+int   findClientByName(std::map<int, Client*> _clients, std::string name)
+{
+   int   res;
+	std::map<int, Client*>::iterator it;
+	for (it = _clients.begin(); it != _clients.end(); it ++)
+	{
+		if (it->second->getUsername() == name)
+      {
+			res = it->first;
+         break;
+      }
+	}
+	if (it == _clients.end())
+		res = -1;
+   return (res);
+}
+
  /*
  **find() : is a function to find something, if its found return the index
     if not return `npos`.

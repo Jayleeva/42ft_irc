@@ -1,9 +1,15 @@
 #include "../include/Client.hpp"
+#include "../include/Channel.hpp"
+#include "../include/Server.hpp"
 
 Client::Client() {};
 
-Client::Client(int fd) : _fd(fd), _registered(false), _hasNick(false), _hasUser(false), _hasPass(false)
+Client::Client(std::map<std::string, Channel*> channels, int fd) : _fd(fd), _registered(false), _hasNick(false), _hasUser(false), _hasPass(false)
 {
+    for (std::map<std::string, Channel*>::iterator it = channels.begin(); it != channels.end(); it ++)
+    {
+        this->_channels.insert(this->_channels.end(), std::make_pair(it->first, NON_MEMBER_STATUS)); // par defaut, non membre de tous les channels
+    }
 }
 
 int Client::getFd() const
@@ -59,15 +65,20 @@ void Client::tryRegister()
 
 void Client::addChannel(const std::string &channelName)
 {
-    _channels.insert(channelName);
+    this->_channels.insert(this->_channels.end(), std::make_pair(channelName, NON_MEMBER_STATUS)); // par defaut, quand join, a  non member status
+}
+
+void Client::setChannelStatus(const std::string &channelName, int status)
+{
+    this->_channels.find(channelName)->second = status;
 }
 
 void Client::removeChannel(const std::string &channelName)
 {
-    _channels.erase(channelName);
+    this->_channels.erase(channelName);
 }
 
-bool Client::isInChannel(const std::string &channelName) const
+int Client::getChannelStatus(const std::string &channelName) const
 {
-    return (_channels.find(channelName) != _channels.end());
+    return (this->_channels.find(channelName)->second);
 }

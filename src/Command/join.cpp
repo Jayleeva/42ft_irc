@@ -28,11 +28,28 @@ void Command::join(Message const &msg, Client &client, Server &server)
     Channel *channel;
 
     if (server.channelExists(channelName))
+    {
         channel = server.getChannel(channelName);
+        if (client.getChannelStatus(channelName) == KICKED_STATUS)
+        {
+            printError("kicked from channel");
+            return;
+        }
+        if (client.getChannelStatus(channelName) == MEMBER_STATUS || client.getChannelStatus(channelName) == OPERATOR_STATUS)
+        {
+            printError("already joined channel");
+            return;
+        }
+        channel->addMember(&client);
+        client.setChannelStatus(channel->getName(), MEMBER_STATUS); // par defaut, a le statut de membre
+    }
     else
+    {
         channel = server.createChannel(channelName);
-    
-    channel->addMember(&client);
+        channel->addMember(&client);
+        client.setChannelStatus(channel->getName(), OPERATOR_STATUS); // par defaut, createur a statut d-operateur
+    }
+
 }
 
 /*
