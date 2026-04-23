@@ -32,13 +32,13 @@ class Command
         void nick(Message const &msg, Client &client, Server &server);
         void user(Message const &msg, Client &client, Server &server);
         void join(Message const &msg, Client &client, Server &server);
-        void invite(Message const &msg, Client &client, Server &server);
-        void kick(Message const &msg, Client &client, Server &server);
-        void topic(Message const &msg, Client &client, Server &server);
-        void mode(Message const &msg, Client &client, Server &server);
-        void privmsg(Message const &msg, Client &client, Server &server);
         void part(Message const &msg, Client &client, Server &server);
-        void quit(Message const &msg, Client &client, Server &server);
+        // void invite(Message const &msg, Client &client, Server &server);
+        // void kick(Message const &msg, Client &client, Server &server);
+        // void topic(Message const &msg, Client &client, Server &server);
+        // void mode(Message const &msg, Client &client, Server &server);
+        // void privmsg(Message const &msg, Client &client, Server &server);
+        // void quit(Message const &msg, Client &client, Server &server);
     
     public:
         Command();

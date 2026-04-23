@@ -19,6 +19,7 @@
 #define ERR_REGISTRED "Already registered"
 #define ERR_NOTREGISTERED "You have not registered"
 #define ERR_BADCHANNELNAME "Bad channel name"
+#define ERR_NOTEXTTOSEND "No text to send"
 
 //Colors
 # define DEFAULT "\001\033[0;39m\002"

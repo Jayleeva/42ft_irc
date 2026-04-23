@@ -29,6 +29,14 @@ void Command::join(Message const &msg, Client &client, Server &server)
     if (pos != std::string::npos)
         arg = arg.substr(0, pos);
     
+    if (!isValidChannelName(arg))
+    {
+        printError(ERR_BADCHANNELNAME);
+        return ;
+    }
+    server.joinClientToChannel(&client, arg);
+}
+
     /*std::string channelName = arg;
     Channel *channel;
 
@@ -38,20 +46,3 @@ void Command::join(Message const &msg, Client &client, Server &server)
         channel = server.createChannel(channelName);
     
     channel->addMember(&client);*/
-    if (!isValidChannelName(arg))
-    {
-        printError(ERR_BADCHANNELNAME);
-        return ;
-    }
-    server.joinClientToChannel(&client, arg);
-}
-
-/*
-Server - Channels :
-
-- bool channelExists
-- getChannel
-- createChannel
-- joinClientToChannel
-- removeClientFromChannelgetPassword()
-*/

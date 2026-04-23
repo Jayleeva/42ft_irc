@@ -20,12 +20,10 @@ int main(int argc, char **argv)
         return (1);
     }
 
-
     password = argv[2];
     if (password.empty())
     {
         std::cout << "Password can't be empty." << std::endl;
-    std::cout << std::boolalpha;
         return (1);
     }
     if (password.length() > 510)
@@ -42,8 +40,6 @@ int main(int argc, char **argv)
         return (1);
     }
 
-    ch.addMember(&c1);
-    std::cout << "c1 in channel: " << ch.hasMember(&c1) << std::endl;
     memset(&addr, 0, sizeof(addr));
     addr.sin_family = AF_INET;
     addr.sin_port = htons(port);

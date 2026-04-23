@@ -22,6 +22,15 @@ void Command::setCmd(const std::string& cmd)
 
 void Command::execute(Message const &msg, Client &client, Server &server)
 {
+    if (_cmd != CMD_PASS && _cmd != CMD_NICK && _cmd != CMD_USER)
+    {
+        if (!client.isRegistered())
+        {
+            printError(ERR_NOTREGISTERED);
+            return;
+        }
+    }
+
     if (_cmd == CMD_PASS)
         pass(msg, client, server);
     else if (_cmd == CMD_NICK)
@@ -30,6 +39,8 @@ void Command::execute(Message const &msg, Client &client, Server &server)
         user(msg, client, server);
     else if (_cmd == CMD_JOIN)
         join(msg, client, server);
+    else if (_cmd == CMD_PART)
+        part(msg, client, server);
     else
         printError(ERR_CMD);
 }
