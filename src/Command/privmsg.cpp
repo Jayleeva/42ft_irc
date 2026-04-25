@@ -3,10 +3,11 @@
 /*
 ** PRIVMSG is used to send private messages between users.  <receiver>
    is the nickname of the receiver of the message.  <receiver> can also
-   be a list of names or channels separated with commas
+   be a list of names or channels separated with commas.
+   Parameters: <receiver>{,<receiver>} <text to be sent>
 */
 
-void privmsg(Message const &msg, Client &client, Server &server)
+void Command::privmsg(Message const &msg, Client &client, Server &server)
 {
     std::string arg = getArgument(msg.getMsg());
 
@@ -23,5 +24,54 @@ void privmsg(Message const &msg, Client &client, Server &server)
 
     size_t pos = arg.find(' ');
     if (pos != std::string::npos)
-        arg = arg.substr(0, pos);
+    {
+        printError(ERR_NEEDMOREPARAMS);
+        return ;
+    }
+    
+    std::string target = arg.substr(0, pos);
+    std::string message = arg.substr(pos + 1);
+
+    //message
+    i = 0;
+    while (i < message.size() && message[i] == ' ')
+        i++;
+    message = message.substr(i);
+
+    if (message.empty())
+    {
+        printError(ERR_NOTEXTTOSEND);
+        return ;
+    }
+
+    //channel
+    if (target[0] == '#')
+    {
+        Channel *channel = server.getChannel(target);
+        if (!channel)  
+        {
+            printError(ERR_NOSUCHCHANNEL);
+            return ;
+        }
+        if (!channel->hasMember(&client))
+        {   
+            printError(ERR_CANNOTSENDTOCHAN);
+            return ;
+        }
+        //fonction pour envoyer message à tous les membres du channel
+        //sauf le sender à créer dans Server
+    }
+
+    //user
+    else
+    {
+        Client *targetClient = server.getClientByNick(target); //fonction à créer
+        if (!targetClient)
+        {
+            printError(ERR_NOSUCHNICK);
+            return ;
+        }
+
+        server.sendMessageToClient(*targetClient, message); //fonction à créer
+    }
 }

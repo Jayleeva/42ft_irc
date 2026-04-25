@@ -17,7 +17,7 @@ class Message
         ~Message();
 
         //read and modify _msg
-        std::string getMsg() const;
+        const std::string getMsg() const;
         void setMsg(const std::string& msg);
 
 };

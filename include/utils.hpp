@@ -20,6 +20,9 @@
 #define ERR_NOTREGISTERED "You have not registered"
 #define ERR_BADCHANNELNAME "Bad channel name"
 #define ERR_NOTEXTTOSEND "No text to send"
+#define ERR_NOSUCHCHANNEL "No such channel"
+#define ERR_CANNOTSENDTOCHAN "Cannot send to channel"
+#define ERR_NOSUCHNICK "No such nickname"
 
 //Colors
 # define DEFAULT "\001\033[0;39m\002"
