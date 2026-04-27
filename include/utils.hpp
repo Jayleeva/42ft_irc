@@ -22,6 +22,14 @@
 #define ERR_NEEDMOREPARAMS "Not enough parameters"
 #define ERR_REGISTRED "Already registered"
 
+#define ERR_NOSUCHCHANNEL "No such channel"
+#define ERR_CHANNELISFULL "Channel is full"
+#define ERR_BADCHANNELKEY "Bad channel key"
+#define ERR_INVITEONLYCHAN "Invite only"
+#define ERR_BANNEDFROMCHAN "Banned from channel"
+#define ERR_NOOPERHOST "Not an operator"
+#define ERR_NOTONCHANNEL "Not on channel"
+
 //parsing functions
 std::string getCommand(const std::string& msg);
 

@@ -46,7 +46,21 @@ Then, add the server with
 0 = the server address
 6667 = the suggested port
 
-Then, connect to it with
+Then, activate the SASL with
+````
+/set irc.server.ircserv.addresses "irc.ircserv.chat/6667"
+/set irc.server.ircserv.ssl on
+````
+
+Then, configure the SASL with
+````
+/set irc.server.ircserv.sasl_mechanism plain
+/set irc.server.ircserv.sasl_username <username>
+/set irc.server.ircserv.sasl_password <password>
+/save
+````
+
+Then, connect to the server with
 ````
 /connect ircserv
 ````

@@ -15,12 +15,12 @@ void Command::mode(std::vector<std::string> parsing, Client &client, Server &ser
     std::string check = findChannel(server.getMapChannels(), channelName);
     if (!check.empty())
 	{
-		printError("channel does not exist");
+		printError(ERR_NOSUCHCHANNEL);
 		return;
 	}
 	if (client.getChannelStatus(channelName) != OPERATOR_STATUS)
 	{
-		printError("not an operator, cannot use /mode command");
+		printError(ERR_NOOPERHOST);
 		return;
 	}
 
@@ -93,7 +93,7 @@ void Command::mode(std::vector<std::string> parsing, Client &client, Server &ser
 		}
 		else
 		{
-			printError("flag does not exist");
+			printError(ERR_CMD);
 			return;
 		}
 		it ++;
