@@ -42,7 +42,7 @@ int   findClientByName(std::map<int, Client*> _clients, std::string name)
    return (res);
 }
 
-//This function is used to retrieve the client fd using its username. If it didn't find it, it returns -1.
+//This function is used to retrieve the client fd using its username. If it didn't find it, it returns "".
 std::string   findChannel(std::map<std::string, Channel*> channels, std::string name)
 {
    std::string  res;

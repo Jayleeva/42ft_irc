@@ -5,7 +5,6 @@
 #include <string>
 #include <vector>
 
-#include "Message.hpp"
 #include "utils.hpp"
 #include "Channel.hpp"
 #include "Client.hpp"
@@ -33,7 +32,7 @@ class Command
         void nick(std::vector<std::string> parsing, Client &client, Server &server);
         void user(std::vector<std::string> parsing, Client &client);
         void join(std::vector<std::string> parsing, Client &client, Server &server);
-        void invite(std::vector<std::string> parsing, Client &client, Server &server);
+        void invite(std::vector<std::string> parsing, Server &server);
         void kick(std::vector<std::string> parsing, Client &client, Server &server);
         void topic(std::vector<std::string> parsing, Client &client, Server &server);
         void mode(std::vector<std::string> parsing, Client &client, Server &server);

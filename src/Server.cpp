@@ -204,6 +204,7 @@ Command parseCmd(std::string input)
 		parsing.push_back(element);
     
     cmd.setParsing(parsing);
+    return (cmd);
 }
 
 void Server::execCmd(std::string input, int fd)
@@ -317,6 +318,7 @@ Channel *Server::createChannel(const std::string &name)
     {
         it->second->addChannel(name);
     }
+    return (newChan);
 }
 
 void    Server::removeChannel(const std::string &name)

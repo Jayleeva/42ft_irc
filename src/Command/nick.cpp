@@ -9,20 +9,14 @@
     save this nickname in the `Client` object
 */
 
-void Command::nick(Message const &msg, Client &client, Server &server)
+void Command::nick(std::vector<std::string> parsing, Client &client, Server &server)
 {
-    std::string arg = getArgument(msg.getMsg());
-
-    size_t i = 0;
-    while (i < arg.size() && arg[i] == ' ')
-        i++;
-    arg = arg.substr(i);
-
-    if (isEmptyArg(arg))
+    if (parsing.size() < 2)
     {
         printError(ERR_NEEDMOREPARAMS);
         return ;
     }
+    std::string arg = *(parsing.begin() + 1);
 
     for (size_t j = 0; j < arg.size(); j++)
     {

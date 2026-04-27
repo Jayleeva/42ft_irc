@@ -11,6 +11,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <unistd.h>
+#include <sstream>
 #include <sys/socket.h>
 #include <netdb.h>
 #include <netinet/in.h>
@@ -52,7 +53,7 @@ class Server
         void    removeClient(nfds_t i); 
         void    execClient(nfds_t i);
 
-        void Server::execCmd(std::string input, int fd);
+        void    execCmd(std::string input, int fd);
 
         bool    nicknameExists(const std::string &nickname) const;
         bool    channelExists(const std::string &name) const;

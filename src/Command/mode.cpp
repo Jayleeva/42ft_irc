@@ -6,13 +6,14 @@ void Command::mode(std::vector<std::string> parsing, Client &client, Server &ser
 
 	if (parsing.size() < 3)
 	{
-		printError("missing parameters");
+		printError(ERR_NEEDMOREPARAMS);
 		return;
 	}
 
 	it ++;
 	std::string channelName = *it;
-	if (!server.channelExists(channelName))
+    std::string check = findChannel(server.getMapChannels(), channelName);
+    if (!check.empty())
 	{
 		printError("channel does not exist");
 		return;
@@ -51,7 +52,7 @@ void Command::mode(std::vector<std::string> parsing, Client &client, Server &ser
 				it ++;
 				if (it == parsing.end())
 				{
-					printError("new key missing");
+					printError(ERR_NEEDMOREPARAMS);
 					return;
 				}
 				std::string key = *it;
@@ -63,7 +64,7 @@ void Command::mode(std::vector<std::string> parsing, Client &client, Server &ser
 			it ++;
 			if (it == parsing.end())
 			{
-				printError("target missing");
+				printError(ERR_NEEDMOREPARAMS);
 				return;
 			}
 			std::string targetName = *it;
@@ -83,7 +84,7 @@ void Command::mode(std::vector<std::string> parsing, Client &client, Server &ser
 				it ++;
 				if (it == parsing.end())
 				{
-					printError("new limit missing");
+					printError(ERR_NEEDMOREPARAMS);
 					return;
 				}
 				std::string limit = *it;

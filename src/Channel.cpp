@@ -14,6 +14,7 @@ std::string Channel::getName() const
     return _name;
 }
 
+
 t_access Channel::getAccess() const
 {
     return _access;
@@ -41,7 +42,12 @@ void    Channel::setKey(std::string key)
     else
         this->_access.hasKey = false;
 }
-        
+
+t_topic     Channel::getTopic() const
+{
+    return (this->_topic);
+}
+
 void    Channel::setTopic(t_topic topic)
 {
     this->_topic = topic;

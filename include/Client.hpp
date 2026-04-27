@@ -4,6 +4,7 @@
 #include <string>
 #include <set>
 #include <map>
+#include "Channel.hpp"
 
 # define NON_MEMBER_STATUS 0
 # define MEMBER_STATUS 1
@@ -26,7 +27,7 @@ class Client
 
     public:
         Client();
-        Client::Client(std::map<std::string, Channel*> channels, int fd);
+        Client(std::map<std::string, Channel*> channels, int fd);
 
         int getFd() const;
         std::string getNickname() const;

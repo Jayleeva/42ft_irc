@@ -35,6 +35,9 @@ void Command::execute(Client &client, Server &server)
     else if (_cmd == CMD_MODE)
         mode(_parsing, client, server);
     else
+    {
+        std::cout << "cmd = " << _cmd << std::endl;
         printError(ERR_CMD);
+    }
 }
 

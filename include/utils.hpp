@@ -30,4 +30,5 @@ bool isEmptyArg(const std::string &arg);
 std::string getArgument(const std::string& msg);
 void printError(const std::string& errorMsg);
 int findClientByName(std::map<int, Client*> _clients, std::string name);
+std::string   findChannel(std::map<std::string, Channel*> channels, std::string name);
 #endif

@@ -5,31 +5,19 @@
    channel
 */
 
-void Command::join(Message const &msg, Client &client, Server &server) //std::map<std::string, Channel*> channels)
+void Command::join(std::vector<std::string> parsing, Client &client, Server &server)
 {
-	std::string arg = getArgument(msg.getMsg());
-
-    size_t i = 0;
-    while (i < arg.size() && arg[i] == ' ')
-        i++;
-    arg = arg.substr(i);
-
-    if (isEmptyArg(arg))
+    if (parsing.size() < 2)
     {
         printError(ERR_NEEDMOREPARAMS);
         return ;
     }
-
-    size_t pos = arg.find(' ');
-    if (pos != std::string::npos)
-        arg = arg.substr(0, pos);
+	std::string channelName = *(parsing.begin() + 1);
     
-    std::string channelName = arg;
     Channel *channel;
-
-    if (server.channelExists(channelName))
+    std::string check = findChannel(server.getMapChannels(), channelName);
+    if (!check.empty())
     {
-        channel = server.getChannel(channelName);
         if (client.getChannelStatus(channelName) == KICKED_STATUS)
         {
             printError("kicked from channel");
@@ -40,12 +28,13 @@ void Command::join(Message const &msg, Client &client, Server &server) //std::ma
             printError("already joined channel");
             return;
         }
+        channel = server.getMapChannels().find(channelName)->second;
         channel->addMember(&client);
-        client.setChannelStatus(channel->getName(), MEMBER_STATUS); // par defaut, a le statut de membre
+        client.setChannelStatus(channelName, MEMBER_STATUS); // par defaut, a le statut de membre
     }
     else
     {
-        channel = server.createChannel(arg);
+        channel = server.createChannel(channelName);
         channel->addMember(&client);
         client.setChannelStatus(channel->getName(), OPERATOR_STATUS); // par defaut, createur a statut d-operateur
     }
