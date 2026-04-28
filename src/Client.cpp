@@ -1,8 +1,20 @@
 #include "../include/Client.hpp"
 
-Client::Client() {};
+Client::Client()
+	: _fd(-1),
+	  _registered(false),
+	  _hasNick(false),
+	  _hasUser(false),
+	  _hasPass(false)
+{
+}
 
-Client::Client(int fd) : _fd(fd), _registered(false), _hasNick(false), _hasUser(false), _hasPass(false)
+Client::Client(int fd)
+    : _fd(fd),
+      _registered(false),
+      _hasNick(false),
+      _hasUser(false),
+      _hasPass(false)
 {
 }
 
@@ -11,17 +23,17 @@ int Client::getFd() const
     return _fd;
 }
 
-std::string Client::getNickname() const
+const std::string& Client::getNickname() const
 {
     return _nickname;
 }
 
-std::string Client::getUsername() const
+const std::string& Client::getUsername() const
 {
     return _username;
 }
 
-std::string Client::getHostname() const
+const std::string& Client::getHostname() const
 {
     return _hostname;
 }
@@ -59,7 +71,7 @@ void Client::setPassValid()
 
 void    Client::setHostname(const std::string &hostname)
 {
-    this->_hostname = std::string(hostname);
+    _hostname = hostname;
 }
 
 void Client::tryRegister()
@@ -70,15 +82,21 @@ void Client::tryRegister()
 
 void Client::addChannel(const std::string &channelName)
 {
+    if (channelName.empty())
+		return ;
     _channels.insert(channelName);
 }
 
 void Client::removeChannel(const std::string &channelName)
 {
+    if (channelName.empty())
+		return ;
     _channels.erase(channelName);
 }
 
 bool Client::isInChannel(const std::string &channelName) const
 {
+    if (channelName.empty())
+		return false;
     return (_channels.find(channelName) != _channels.end());
 }

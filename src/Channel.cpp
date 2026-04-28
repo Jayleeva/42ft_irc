@@ -1,17 +1,26 @@
 #include "../include/Channel.hpp"
 #include "../include/Client.hpp"
 
-Channel::Channel(const std::string &name) : _name(name), _hasTopic(false), _inviteOnly(false), _topicRestricted(false)
+Channel::Channel(const std::string &name)
+	: _name(name),
+	  _hasTopic(false),
+	  _inviteOnly(false),
+	  _topicRestricted(false),
+	  _hasUserLimit(false),
+	  _userLimit(0),
+      _hasKey(false)
 {
 }
 
-std::string Channel::getName() const
+const std::string& Channel::getName() const
 {
     return _name;
 }
 
 void Channel::addMember(Client *client)
 {
+    if (!client)
+		return ;
     _members.insert(client);
 }
 
@@ -26,6 +35,8 @@ void Channel::removeMember(Client *client)
 
 bool Channel::hasMember(Client *client) const
 {
+    if (!client)
+		return false;
     return (_members.find(client) != _members.end());
 }
 
@@ -117,6 +128,67 @@ bool Channel::isOperator(Client *client) const
 	if (!client)
 		return false;
 	if (_operators.find(client) != _operators.end())
+		return true;
+	return false;
+}
+
+void Channel::setUserLimit(int limit)
+{
+	if (limit <= 0)
+		return;
+	_userLimit = limit;
+	_hasUserLimit = true;
+}
+
+int Channel::getUserLimit() const
+{
+	return _userLimit;
+}
+
+void Channel::removeUserLimit()
+{
+	_hasUserLimit = false;
+	_userLimit = 0;
+}
+
+bool Channel::hasUserLimit() const
+{
+	return _hasUserLimit;
+}
+
+bool Channel::isFull() const
+{
+	if (!_hasUserLimit)
+		return false;
+	if ((int)_members.size() >= _userLimit)
+		return true;
+	return false;
+}
+
+bool Channel::hasKey() const
+{
+	return _hasKey;
+}
+
+void Channel::setKey(const std::string &key)
+{
+	if (key.empty())
+		return ;
+	_key = key;
+	_hasKey = true;
+}
+
+void Channel::removeKey()
+{
+	_key.clear();
+	_hasKey = false;
+}
+
+bool Channel::checkKey(const std::string &key) const
+{
+	if (!_hasKey)
+		return true;
+	if (_key == key)
 		return true;
 	return false;
 }
