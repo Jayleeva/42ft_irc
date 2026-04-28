@@ -1,5 +1,6 @@
 #include "../include/Channel.hpp"
 #include "../include/Client.hpp"
+#include "../include/utils.hpp"
 
 Channel::Channel(const std::string &name) : _name(name)
 {
@@ -14,7 +15,7 @@ std::string Channel::getName() const
     return _name;
 }
 
-std::set<Client*>   Channel::getMembers() const
+std::vector<Client*>   Channel::getMembers() const
 {
     return _members;
 }
@@ -71,15 +72,18 @@ void    Channel::setRestricted(bool restricted)
     this->_topic.restricted = restricted;
 }
 
-std::string getAllMembers(std::string channel, std::set<Client*> members)
+std::string getAllMembers(std::vector<Client*> members)
 {
     std::string tmp = "[@|+]";
-    std::string res = channel + " :[" + tmp;
-    for (std::set<Client*>::iterator it = members.begin(); it != members.end(); it ++)
+    std::string res = " :[" + tmp;
+    for (std::vector<Client*>::iterator it = members.begin(); it != members.end(); it ++)
     {
-        res += *it->getNickname();
-        if (it + 1)
+        res += (*it)->getNickname();
+        if (it + 1 != members.end())
+        {
+            res += " ";
             res += tmp;
+        }
     }
     res += "]";
     return (res);
@@ -87,23 +91,34 @@ std::string getAllMembers(std::string channel, std::set<Client*> members)
 
 void Channel::addMember(Client *client)
 {
-    _members.insert(client);
+    _members.insert(_members.end(), client);
     
     std::string msg;
     msg = _name + " :" +  _topic.subject;
     send(client->getFd(), msg.c_str(), strlen(msg.c_str()), 0);
-    msg = getAllMembers(_name, _members);
+    msg = _name + getAllMembers(_members);
     send(client->getFd(), msg.c_str(), strlen(msg.c_str()), 0);
 }
 
 void Channel::removeMember(Client *client)
 {
-    _members.erase(client);
+    std::vector<Client*>::iterator it = find(_members.begin(), _members.end(), client);
+    if (it != _members.end())
+    {
+        printError("member does not exist");
+        return ;
+    }
+    _members.erase(it);
 }
 
-bool Channel::hasMember(Client *client) const
+bool Channel::hasMember(Client *client)
 {
-    return (_members.find(client) != _members.end());
+    std::vector<Client*>::iterator it = find(_members.begin(), _members.end(), client);
+    if (it != _members.end())
+    {
+        return (true);
+    }
+    return (false);
 }
 
 void Channel::addOperator(Client *client)

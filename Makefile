@@ -8,8 +8,8 @@ SRC = 	main.cpp \
 		Server.cpp \
 		Client.cpp \
 		Channel.cpp \
+		utils.cpp \
 		Command.cpp \
-		Command/utils.cpp \
 		Command/pass.cpp \
 		Command/nick.cpp \
 		Command/user.cpp \

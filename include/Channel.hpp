@@ -3,7 +3,9 @@
 
 #include <string>
 #include <set>
+#include <vector>
 #include <sys/socket.h>
+#include <bits/stdc++.h>
 #include <string.h>
 
 class Client;
@@ -26,7 +28,7 @@ class Channel
 {
     private:
         std::string _name;
-        std::set<Client*> _members;
+        std::vector<Client*> _members;
         std::set<Client*> _operators;
         std::set<Client*> _kickbanned;
         t_access    _access;
@@ -36,7 +38,7 @@ class Channel
         Channel(const std::string &name);
     
         std::string getName() const;
-        std::set<Client*>   getMembers() const;
+        std::vector<Client*>   getMembers() const;
         std::set<Client*>   getOperators() const;  
 
         t_access    getAccess() const;
@@ -56,7 +58,7 @@ class Channel
 
         void addMember(Client *client);
         void removeMember(Client *client);
-        bool hasMember(Client *client) const;
+        bool hasMember(Client *client);
 
         void addOperator(Client *client);
         void removeOperator(Client *client);
