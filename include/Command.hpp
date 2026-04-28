@@ -10,22 +10,23 @@
 #include "Client.hpp"
 #include "Server.hpp"
 
+#define CMD_CAP "CAP"       
 //authenticate, set nickname, set username
-#define CMD_PASS "/auth" //?
-#define CMD_USER "/set irc.server.ircserv.username" // ?
-#define CMD_NICK "/nick"
+#define CMD_PASS "PASS"         // "/auth" ?
+#define CMD_USER "USER"         // "/set irc.server.ircserv.username" ?
+#define CMD_NICK "NICK"         // "/nick"
 
 //join a channel, send and receive private msg
-#define CMD_JOIN "/join"
-#define CMD_PRIVMSG "/query"
+#define CMD_JOIN "JOIN"         //"/join"
+#define CMD_PRIVMSG "PRIVMSG"   // "/query"
 
-#define CMD_PART "/part" // pas demandé; QUIT et DISCONNECT gérés par le client par signaux
+#define CMD_PART "PART"         // "/part" // pas demandé; QUIT et DISCONNECT gérés par le client par signaux
 
 //operators only
-#define CMD_KICK "/kick"
-#define CMD_INVITE "/invite"
-#define CMD_TOPIC "/topic"
-#define CMD_MODE "/mode"
+#define CMD_KICK "KICK"         // "/kick"
+#define CMD_INVITE "INVITE"     // "/invite"
+#define CMD_TOPIC "TOPIC"       // "/topic"
+#define CMD_MODE "MODE"         // "/mode"
 
 
 //This class is used to represent the IRC command contained in the Message.

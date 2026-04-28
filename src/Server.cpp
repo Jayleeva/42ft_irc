@@ -130,7 +130,6 @@ void    Server::addClient()
     std::cout << YELLOW << "Client " << clientSocket << " connected." << DEFAULT << std::endl;
 
     char    buffer[MAXBYTES];
-    
     memset(buffer, '\0', sizeof(buffer));
     ssize_t nbytes = recv(clientSocket, buffer, sizeof(buffer), MSG_DONTWAIT);
     if (nbytes > 0)
@@ -244,6 +243,7 @@ void    Server::execClient(nfds_t i)
         
         std::cout << "exec " << RED << nbytes << DEFAULT << std::endl;
         std::cout << "buffer = " << buffer << std::endl;
+
         /*if (nbytes)
         {
             for (nfds_t j = 1; j < _nfd; j ++)
