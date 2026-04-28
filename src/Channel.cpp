@@ -71,9 +71,29 @@ void    Channel::setRestricted(bool restricted)
     this->_topic.restricted = restricted;
 }
 
+std::string getAllMembers(std::string channel, std::set<Client*> members)
+{
+    std::string tmp = "[@|+]";
+    std::string res = channel + " :[" + tmp;
+    for (std::set<Client*>::iterator it = members.begin(); it != members.end(); it ++)
+    {
+        res += *it->getNickname();
+        if (it + 1)
+            res += tmp;
+    }
+    res += "]";
+    return (res);
+}
+
 void Channel::addMember(Client *client)
 {
     _members.insert(client);
+    
+    std::string msg;
+    msg = _name + " :" +  _topic.subject;
+    send(client->getFd(), msg.c_str(), strlen(msg.c_str()), 0);
+    msg = getAllMembers(_name, _members);
+    send(client->getFd(), msg.c_str(), strlen(msg.c_str()), 0);
 }
 
 void Channel::removeMember(Client *client)

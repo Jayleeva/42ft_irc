@@ -3,6 +3,8 @@
 
 #include <string>
 #include <set>
+#include <sys/socket.h>
+#include <string.h>
 
 class Client;
 

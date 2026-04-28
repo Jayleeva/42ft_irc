@@ -22,13 +22,9 @@ void    Command::setParsing(std::vector<std::string> parsing)
 
 void sendWelcome(std::vector<std::string> _parsing, Client &client)
 {
-    (void)_parsing;
     std::string cap = *(_parsing.begin() + 1) + " " + *(_parsing.begin() + 2);
-    //std::string nickName = *(_parsing.begin());
-    //std::string userName = *(_parsing.begin());
-    //std::string hostName = *(_parsing.begin());
 
-    std::string welcome = ":ircserv 001 " + cap; //" " + nickName + " " + userName; //+ "[!" + userName + "@" + hostName + "]";
+    std::string welcome = ":ircserv 001 " + cap;
     std::cout << welcome << std::endl;
     send(client.getFd(), welcome.c_str(), strlen(welcome.c_str()), 0);
 }
@@ -45,6 +41,8 @@ void Command::execute(Client &client, Server &server)
 
     if (_cmd == CMD_CAP)
         sendWelcome(_parsing, client);
+    else if (_cmd == CMD_PING)
+        pong(client);
     else if (_cmd == CMD_PASS)
         pass(_parsing, client, server.getPassword());
     else if (_cmd == CMD_NICK)
@@ -55,8 +53,6 @@ void Command::execute(Client &client, Server &server)
         join(_parsing, client, server);
     else if (_cmd == CMD_MODE)
         mode(_parsing, client, server);
-    else if (_cmd == "PING")
-        pong(client);
     else
     {
         std::cout << "cmd = " << _cmd << std::endl;

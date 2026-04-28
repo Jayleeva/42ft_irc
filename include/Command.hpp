@@ -10,7 +10,8 @@
 #include "Client.hpp"
 #include "Server.hpp"
 
-#define CMD_CAP "CAP"       
+#define CMD_CAP "CAP"
+#define CMD_PING "PING"
 //authenticate, set nickname, set username
 #define CMD_PASS "PASS"         // "/auth" ?
 #define CMD_USER "USER"         // "/set irc.server.ircserv.username" ?

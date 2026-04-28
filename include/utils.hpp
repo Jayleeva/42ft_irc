@@ -30,6 +30,10 @@
 #define ERR_NOOPERHOST "Not an operator"
 #define ERR_NOTONCHANNEL "Not on channel"
 
+//Return messages
+#define RPL_NAMREPLY "<channel> :[[@|+]<nick> [[@|+]<nick> [...]]]"
+#define RPL_TOPIC "<channel> :<topic>"
+
 //parsing functions
 std::string getCommand(const std::string& msg);
 

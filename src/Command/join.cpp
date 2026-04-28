@@ -25,9 +25,22 @@ void Command::join(std::vector<std::string> parsing, Client &client, Server &ser
         }
         /*if (channel->HasBanKicked(&client))
         {
-            printError("kicked from channel");
+            printError(ERR_BANNEDFROMCHAN);
             return;
         }*/
+        if (channel->getAccess().hasKey)
+        {
+            if (parsing.size() < 3)
+            {
+                printError(ERR_NEEDMOREPARAMS);
+                return ;
+            }
+            if (*(parsing.begin() + 2) != channel->getAccess().key)
+            {
+                printError(ERR_BADCHANNELKEY);
+                return ;
+            }
+        }
     }
     else
     {
