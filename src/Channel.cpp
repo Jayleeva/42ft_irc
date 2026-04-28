@@ -1,6 +1,5 @@
 #include "../include/Channel.hpp"
 #include "../include/Client.hpp"
-#include "../include/utils.hpp"
 
 Channel::Channel(const std::string &name) : _name(name)
 {
@@ -15,7 +14,7 @@ std::string Channel::getName() const
     return _name;
 }
 
-std::vector<Client*>   Channel::getMembers() const
+std::set<Client*>   Channel::getMembers() const
 {
     return _members;
 }
@@ -72,18 +71,21 @@ void    Channel::setRestricted(bool restricted)
     this->_topic.restricted = restricted;
 }
 
-std::string getAllMembers(std::vector<Client*> members)
+std::string getAllMembers(std::set<Client*> members)
 {
     std::string tmp = "[@|+]";
     std::string res = " :[" + tmp;
-    for (std::vector<Client*>::iterator it = members.begin(); it != members.end(); it ++)
+    size_t         i = 0;
+    for (std::set<Client*>::iterator it = members.begin(); it != members.end(); it ++)
     {
-        res += (*it)->getNickname();
-        if (it + 1 != members.end())
+        std::string nickName = (*it)->getNickname();
+        res += nickName;
+        if (i + 1 <= members.size())
         {
             res += " ";
             res += tmp;
         }
+        i ++;
     }
     res += "]";
     return (res);
@@ -91,7 +93,7 @@ std::string getAllMembers(std::vector<Client*> members)
 
 void Channel::addMember(Client *client)
 {
-    _members.insert(_members.end(), client);
+    _members.insert(client);
     
     std::string msg;
     msg = _name + " :" +  _topic.subject;
@@ -102,23 +104,12 @@ void Channel::addMember(Client *client)
 
 void Channel::removeMember(Client *client)
 {
-    std::vector<Client*>::iterator it = find(_members.begin(), _members.end(), client);
-    if (it != _members.end())
-    {
-        printError("member does not exist");
-        return ;
-    }
-    _members.erase(it);
+    _members.erase(client);
 }
 
-bool Channel::hasMember(Client *client)
+bool Channel::hasMember(Client *client) const
 {
-    std::vector<Client*>::iterator it = find(_members.begin(), _members.end(), client);
-    if (it != _members.end())
-    {
-        return (true);
-    }
-    return (false);
+    return (_members.find(client) != _members.end());
 }
 
 void Channel::addOperator(Client *client)
