@@ -325,12 +325,16 @@ bool Server::nicknameExists(const std::string &nickname) const
 Channel *Server::createChannel(const std::string &name)
 {
     Channel *newChan = new Channel(name); // par defaut, tout est a false, 0 et ""
+    newChan->setSubject(name);
 
     this->_channels.insert(this->_channels.end(), std::make_pair(name, newChan));
 
+    std::string trimmedName = newChan->getName().substr(1, strlen(newChan->getName().c_str()));
+    std::string msg = trimmedName + " :" +  newChan->getTopic().subject; // essayer d'enlever la diese
     for (std::map<int, Client*>::iterator it = this->_clients.begin(); it != this->_clients.end(); it ++)
     {
         it->second->addChannel(name);
+        send(it->second->getFd(), msg.c_str(), strlen(msg.c_str()), 0);
     }
     return (newChan);
 }

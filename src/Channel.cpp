@@ -96,8 +96,6 @@ void Channel::addMember(Client *client)
     _members.insert(client);
     
     std::string msg;
-    msg = _name + " :" +  _topic.subject;
-    send(client->getFd(), msg.c_str(), strlen(msg.c_str()), 0);
     msg = _name + getAllMembers(_members);
     send(client->getFd(), msg.c_str(), strlen(msg.c_str()), 0);
 }
