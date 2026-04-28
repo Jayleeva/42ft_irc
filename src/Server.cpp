@@ -333,7 +333,10 @@ void Server::joinClientToChannel(Client *client, const std::string &name)
     if (channelExists(name))
         channel = getChannel(name);
     else
+    {
         channel = createChannel(name);
+        channel->addOperator(client);
+    }
     if (!channel->hasMember(client))
         channel->addMember(client);
     if (!client->isInChannel(name))

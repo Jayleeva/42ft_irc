@@ -9,20 +9,38 @@ class Client;
 class Channel
 {
     private:
-        std::string _name;
-        std::set<Client*> _members;
-        std::set<Client*> _operators;
+        std::string         _name;
+        std::set<Client*>   _members;
+        std::set<Client*>   _operators;
+        std::set<Client*>   _invited;
+        std::string         _topic;
+        bool                _hasTopic;
+        bool                _inviteOnly;
+        bool                _topicRestricted;
 
     public:
         Channel(const std::string &name);
 
         std::string getName() const;
+        const std::set<Client*>& getMembers() const;
+        const std::string& getTopic() const;
 
         void addMember(Client *client);
         void removeMember(Client *client);
         bool hasMember(Client *client) const;
         bool isEmpty() const;
-        const std::set<Client*>& getMembers() const;
+        bool isInvited(Client *client) const;
+        void invite(Client *client);
+        void removeInvite(Client *client);
+        void setTopic(const std::string &topic);
+        bool hasTopic() const;
+        bool isInviteOnly() const;
+        void setInviteOnly(bool status);
+        bool isTopicRestricted() const;
+        void setTopicRestricted(bool status);
+        void addOperator(Client *client);
+        void removeOperator(Client *client);
+        bool isOperator(Client *client) const;
 };
 
 #endif
