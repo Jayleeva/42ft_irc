@@ -29,3 +29,8 @@ bool Channel::isEmpty() const
 {
     return (_members.empty());
 }
+
+const std::set<Client*>& Channel::getMembers() const
+{
+    return (_members);
+}

@@ -22,6 +22,7 @@ class Channel
         void removeMember(Client *client);
         bool hasMember(Client *client) const;
         bool isEmpty() const;
+        const std::set<Client*>& getMembers() const;
 };
 
 #endif

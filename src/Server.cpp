@@ -361,3 +361,38 @@ void Server::removeClientFromChannel(Client *client, const std::string &name)
         _channels.erase(name);
     }
 }
+
+Client *Server::getClientByNick(const std::string &nickname)
+{
+    std::map<int, Client*>::iterator it;
+
+    it = _clients.begin();
+    while (it != _clients.end())
+    {
+        if (it->second->getNickname() == nickname)
+            return (it->second);
+        it++;
+    }
+    return (NULL);
+}
+
+void Server::sendMessageToClient(Client *target, const std::string &message)
+{
+    if (!target)
+        return;
+    send(target->getFd(), message.c_str(), message.length(), 0);
+}
+
+void Server::sendMessageToChannel(Client *sender, Channel *channel, const std::string &message)
+{
+    std::set<Client*>::const_iterator it;
+    const std::set<Client*> &members = channel->getMembers();
+
+    it = members.begin();
+    while (it != members.end())
+    {
+        if (*it != sender)
+            send((*it)->getFd(), message.c_str(), message.length(), 0);
+        it++;
+    }
+}
