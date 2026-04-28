@@ -34,7 +34,7 @@ class Command
         void join(Message const &msg, Client &client, Server &server);
         void part(Message const &msg, Client &client, Server &server);
         void privmsg(Message const &msg, Client &client, Server &server);
-        // void invite(Message const &msg, Client &client, Server &server);
+        void invite(Message const &msg, Client &client, Server &server);
         // void kick(Message const &msg, Client &client, Server &server);
         // void topic(Message const &msg, Client &client, Server &server);
         // void mode(Message const &msg, Client &client, Server &server);

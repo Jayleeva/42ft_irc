@@ -8,35 +8,44 @@
 			Verify that channel et nickname exists
 			Send an invitation
 */
-// void Command::invite(Message const &msg, Client &client, Server &server)
-// {    
-// 	std::string arg = getArgument(msg.getMsg());
+void Command::invite(Message const &msg, Client &client, Server &server)
+{    
+	std::string arg = getArgument(msg.getMsg());
 
-//     size_t i = 0;
-//     while (i < arg.size() && arg[i] == ' ')
-//         i++;
-//     arg = arg.substr(i);
+    if (isEmptyArg(arg))
+    {
+        printError(ERR_NEEDMOREPARAMS);
+        return ;
+    }
 
-//     if (isEmptyArg(arg))
-//     {
-//         printError(ERR_NEEDMOREPARAMS);
-//         return ;
-//     }
+	std::string nickname = getTarget(arg);
+	std::string channelName = getMessage(arg);
 
-// 	size_t pos = arg.find(' ');
-// 	if (pos == std::string::npos)
-// 	{
-// 		printError(ERR_NEEDMOREPARAMS);
-// 		return ;
-// 	}
+	if (channelName.empty())
+	{
+		printError(ERR_NEEDMOREPARAMS);
+		return ;
+	}
 
-// 	std::string nickname = arg.substr(0, pos);
-// 	std::string channelName = arg.substr(pos + 1);
+	Channel *channel = server.getChannel(channelName);
+	if (!channel)
+	{
+		printError(ERR_NOSUCHCHANNEL);
+		return;
+	}
 
-// 	i = 0;
-// 	while (i < channelName.size() && channelName[i] == ' ')
-// 		i++;
-// 	channelName = channelName.substr(i);
-// }
+	if (!channel->hasMember(&client))
+	{
+		printError(ERR_NO);
+		return;
+	}
+
+	Client *tagetClient = server.getClientbyNick(nickname);
+	if(!tagetClient)
+	{
+		printError(ERR_NOSUCHNICK);
+		return;
+	}
+}
 
 // A finir plus tard
