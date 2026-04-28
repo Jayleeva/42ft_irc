@@ -14,6 +14,15 @@ std::string Channel::getName() const
     return _name;
 }
 
+std::set<Client*>   Channel::getMembers() const
+{
+    return _members;
+}
+
+std::set<Client*>   Channel::getOperators() const
+{
+    return _operators;
+}
 
 t_access Channel::getAccess() const
 {
@@ -75,4 +84,19 @@ void Channel::removeMember(Client *client)
 bool Channel::hasMember(Client *client) const
 {
     return (_members.find(client) != _members.end());
+}
+
+void Channel::addOperator(Client *client)
+{
+    _operators.insert(client);
+}
+
+void Channel::removeOperator(Client *client)
+{
+    _operators.erase(client);
+}
+
+bool Channel::hasOperator(Client *client) const
+{
+    return (_operators.find(client) != _operators.end());
 }

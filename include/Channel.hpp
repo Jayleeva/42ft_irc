@@ -26,13 +26,17 @@ class Channel
         std::string _name;
         std::set<Client*> _members;
         std::set<Client*> _operators;
+        std::set<Client*> _kickbanned;
         t_access    _access;
         t_topic     _topic;
-        
+
     public:
         Channel(const std::string &name);
     
         std::string getName() const;
+        std::set<Client*>   getMembers() const;
+        std::set<Client*>   getOperators() const;  
+
         t_access    getAccess() const;
         //bool        getOnInvite() const;
         //int         getUserLimit() const;
@@ -51,6 +55,10 @@ class Channel
         void addMember(Client *client);
         void removeMember(Client *client);
         bool hasMember(Client *client) const;
+
+        void addOperator(Client *client);
+        void removeOperator(Client *client);
+        bool hasOperator(Client *client) const;
 
 };
 

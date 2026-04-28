@@ -12,19 +12,18 @@ void Command::mode(std::vector<std::string> parsing, Client &client, Server &ser
 
 	it ++;
 	std::string channelName = *it;
-    std::string check = findChannel(server.getMapChannels(), channelName);
-    if (!check.empty())
+    if (channelExists(server.getMapChannels(), channelName) == false)
 	{
 		printError(ERR_NOSUCHCHANNEL);
 		return;
 	}
-	if (client.getChannelStatus(channelName) != OPERATOR_STATUS)
+	Channel *chan = server.getMapChannels().find(channelName)->second;
+	if (chan->hasOperator(&client) == false)
 	{
 		printError(ERR_NOOPERHOST);
 		return;
 	}
 
-	Channel *chan = server.getMapChannels().find(channelName)->second;
 	it ++;
 	std::string flag = *it;
 	while (it != parsing.end())
@@ -70,10 +69,10 @@ void Command::mode(std::vector<std::string> parsing, Client &client, Server &ser
 			std::string targetName = *it;
 			int fd = findClientByName(server.getMapClients(), targetName);
 			Client *target = server.getMapClients().find(fd)->second;
-			if (target->getChannelStatus(channelName) == OPERATOR_STATUS)
-				target->setChannelStatus(channelName, MEMBER_STATUS);
+			if (chan->hasOperator(target))
+				chan->getOperators().erase(target);
 			else
-				target->setChannelStatus(channelName, OPERATOR_STATUS);
+				chan->getOperators().insert(target);
 		}
 		else if (flag == "-l")
 		{

@@ -42,22 +42,18 @@ int   findClientByName(std::map<int, Client*> _clients, std::string name)
    return (res);
 }
 
-//This function is used to retrieve the client fd using its username. If it didn't find it, it returns "".
-std::string   findChannel(std::map<std::string, Channel*> channels, std::string name)
+//This function is used to. If it didn't find it, it returns "".
+bool  channelExists(std::map<std::string, Channel*> channels, std::string name)
 {
-   std::string  res;
 	std::map<std::string, Channel*>::iterator it;
 	for (it = channels.begin(); it != channels.end(); it ++)
 	{
 		if (it->first == name)
       {
-			res = it->first;
-         break;
+         return true;
       }
 	}
-	if (it == channels.end())
-		res = "";
-   return (res);
+	return (false);
 }
 
  /*
