@@ -22,6 +22,12 @@ void Command::setCmd(const std::string& cmd)
 
 void Command::execute(Message const &msg, Client &client, Server &server)
 {
+    if (_cmd.empty())
+    {
+        printError(ERR_CMD);
+        return;
+    }
+    
     if (_cmd != CMD_PASS && _cmd != CMD_NICK && _cmd != CMD_USER)
     {
         if (!client.isRegistered())

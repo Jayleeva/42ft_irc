@@ -9,21 +9,13 @@
 void Command::part(Message const &msg, Client &client, Server &server)
 {
     std::string arg = getArgument(msg.getMsg());
+    std::string channel = getTarget(arg);
 
-    size_t i = 0;
-    while (i < arg.size() && arg[i] == ' ')
-        i++;
-    arg = arg.substr(i);
-
-    if (isEmptyArg(arg))
+    if (isEmptyArg(channel))
     {
         printError(ERR_NEEDMOREPARAMS);
         return ;
     }
-
-    size_t pos = arg.find(' ');
-    if (pos != std::string::npos)
-        arg = arg.substr(0, pos);
     
-    server.removeClientFromChannel(&client, arg);
+    server.removeClientFromChannel(&client, channel);
 }

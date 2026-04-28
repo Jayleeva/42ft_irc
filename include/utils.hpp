@@ -34,8 +34,8 @@
 //parsing functions
 std::string getCommand(const std::string& msg);
 std::string getArgument(const std::string& msg);
-// std::string getTarget(const std::string& args); //à faire
-// std::string getMessage(const std::string& args); //à faire
+std::string getTarget(const std::string& args);
+std::string getMessage(const std::string& args);
 
 //Utils functions
 bool isEmptyArg(const std::string &arg);

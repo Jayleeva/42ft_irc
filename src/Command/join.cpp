@@ -8,13 +8,9 @@
 void Command::join(Message const &msg, Client &client, Server &server)
 {
 	std::string arg = getArgument(msg.getMsg());
+    std::string channel = getTarget(arg);
 
-    size_t i = 0;
-    while (i < arg.size() && arg[i] == ' ')
-        i++;
-    arg = arg.substr(i);
-
-    if (isEmptyArg(arg))
+    if (isEmptyArg(channel))
     {
         printError(ERR_NEEDMOREPARAMS);
         return ;
@@ -24,17 +20,13 @@ void Command::join(Message const &msg, Client &client, Server &server)
         printError(ERR_NOTREGISTERED);
         return ;
     }
-
-    size_t pos = arg.find(' ');
-    if (pos != std::string::npos)
-        arg = arg.substr(0, pos);
     
-    if (!isValidChannelName(arg))
+    if (!isValidChannelName(channel))
     {
         printError(ERR_BADCHANNELNAME);
         return ;
     }
-    server.joinClientToChannel(&client, arg);
+    server.joinClientToChannel(&client, channel);
 }
 
     /*std::string channelName = arg;

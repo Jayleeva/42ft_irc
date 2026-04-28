@@ -12,42 +12,34 @@
 void Command::nick(Message const &msg, Client &client, Server &server)
 {
     std::string arg = getArgument(msg.getMsg());
+    std::string nickname = getTarget(arg);
 
-    size_t i = 0;
-    while (i < arg.size() && arg[i] == ' ')
-        i++;
-    arg = arg.substr(i);
-
-    if (isEmptyArg(arg))
+    if (isEmptyArg(nickname))
     {
         printError(ERR_NEEDMOREPARAMS);
         return ;
     }
 
-    for (size_t j = 0; j < arg.size(); j++)
+    for (size_t j = 0; j < nickname.size(); j++)
     {
-        if (arg[j] == ' ' || arg[j] == '\t')
+        if (nickname[j] == ' ' || nickname[j] == '\t')
         {
             printError(ERR_ERRONEUSNICKNAME);
             return ;
         }
     }
 
-    if (arg[0] == '#' || arg[0] == '&')
+    if (nickname[0] == '#' || nickname[0] == '&')
     {
         printError(ERR_ERRONEUSNICKNAME);
         return;
     }
 
-    if (server.nicknameExists(arg) && arg != client.getNickname())
+    if (server.nicknameExists(nickname) && nickname != client.getNickname())
     {
         printError(ERR_NICKNAMEINUSE);
         return ;
     }
         
-    client.setNickname(arg);
+    client.setNickname(nickname);
 }
-
-/*
-**bool nicknameExists(std::string nick) : à faire dans server ou ici ?
-*/

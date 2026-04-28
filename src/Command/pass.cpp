@@ -15,22 +15,15 @@
 void Command::pass(Message const &msg, Client &client, Server &server)
 {
     std::cout << "PASS handler called" << std::endl;
+
     std::string arg = getArgument(msg.getMsg());
+    std::string password = getTarget(arg);
 
-    size_t i = 0;
-    while (i < arg.size() && arg[i] == ' ')
-        i++;
-    arg = arg.substr(i);
-
-    if (isEmptyArg(arg))
+    if (isEmptyArg(password))
     {
         printError(ERR_NEEDMOREPARAMS);
         return ;
     }
-
-    size_t pos = arg.find(' ');
-    if (pos != std::string::npos)
-        arg = arg.substr(0, pos);
 
     if (client.isRegistered())
     {
@@ -38,7 +31,7 @@ void Command::pass(Message const &msg, Client &client, Server &server)
         return;
     }
 
-    if (arg != server.getPassword()) // fonction a creer
+    if (password != server.getPassword())
     {
         printError(ERR_PASSWDMISMATCH);
         return ;

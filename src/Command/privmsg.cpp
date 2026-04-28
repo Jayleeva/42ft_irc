@@ -11,33 +11,16 @@ void Command::privmsg(Message const &msg, Client &client, Server &server)
 {
     std::string arg = getArgument(msg.getMsg());
 
-    size_t i = 0;
-    while (i < arg.size() && arg[i] == ' ')
-        i++;
-    arg = arg.substr(i);
-
     if (isEmptyArg(arg))
     {
         printError(ERR_NEEDMOREPARAMS);
         return ;
     }
 
-    size_t pos = arg.find(' ');
-    if (pos != std::string::npos)
-    {
-        printError(ERR_NEEDMOREPARAMS);
-        return ;
-    }
-    
-    std::string target = arg.substr(0, pos);
-    std::string message = arg.substr(pos + 1);
+    std::string target = getTarget(arg);
+    std::string message = getMessage(arg);
 
     //message
-    i = 0;
-    while (i < message.size() && message[i] == ' ')
-        i++;
-    message = message.substr(i);
-
     if (message.empty())
     {
         printError(ERR_NOTEXTTOSEND);
@@ -65,13 +48,13 @@ void Command::privmsg(Message const &msg, Client &client, Server &server)
     //user
     else
     {
-        Client *targetClient = server.getClientByNick(target); //fonction à créer
+        Client *targetClient = server.getClientByNick(target);
         if (!targetClient)
         {
             printError(ERR_NOSUCHNICK);
             return ;
         }
 
-        server.sendMessageToClient(*targetClient, message); //fonction à créer
+        server.sendMessageToClient(*targetClient, message);
     }
 }

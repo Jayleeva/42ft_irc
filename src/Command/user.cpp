@@ -12,22 +12,14 @@
 void Command::user(Message const &msg, Client &client, Server &server)
 {
     std::string arg = getArgument(msg.getMsg());
+    std::string username = getTarget(arg);
 
-    size_t i = 0;
-    while (i < arg.size() && arg[i] == ' ')
-        i++;
-    arg = arg.substr(i);
-
-    if (isEmptyArg(arg))
+    if (isEmptyArg(username))
     {
         printError(ERR_NEEDMOREPARAMS);
         return ;
     }
-
-    size_t pos = arg.find(' ');
-    if (pos != std::string::npos)
-        arg = arg.substr(0, pos);
     
-    client.setUsername(arg); 
+    client.setUsername(username); 
     (void)server;
 }
