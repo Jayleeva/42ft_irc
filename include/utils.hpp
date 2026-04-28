@@ -23,6 +23,12 @@
 #define ERR_NOSUCHCHANNEL "No such channel"
 #define ERR_CANNOTSENDTOCHAN "Cannot send to channel"
 #define ERR_NOSUCHNICK "No such nickname"
+#define ERR_NOTONCHANNEL "You're not on that channel"
+#define ERR_CHANOPRIVSNEEDED "You're not channel operator"
+
+//Commands replies
+#define RPL_TOPIC "332"
+#define RPL_NOTOPIC "331"
 
 //Colors
 # define DEFAULT "\001\033[0;39m\002"
@@ -41,5 +47,6 @@ std::string getMessage(const std::string& args);
 bool isEmptyArg(const std::string &arg);
 void printError(const std::string& errorMsg);
 bool isValidChannelName(const std::string &name);
+//void sendReply(), fonction à faire
 
 #endif

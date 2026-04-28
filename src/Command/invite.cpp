@@ -28,15 +28,15 @@ void Command::invite(Message const &msg, Client &client, Server &server)
 	}
 
 	Channel *channel = server.getChannel(channelName);
-	if (!channel)
-	{
-		printError(ERR_NOSUCHCHANNEL);
-		return;
-	}
+	// if (!channel)
+	// {
+	// 	printError(ERR_NOSUCHCHANNEL);
+	// 	return;
+	// }
 
 	if (!channel->hasMember(&client))
 	{
-		printError(ERR_NO);
+		printError(ERR_NOTONCHANNEL);
 		return;
 	}
 
@@ -48,4 +48,7 @@ void Command::invite(Message const &msg, Client &client, Server &server)
 	}
 }
 
-// A finir plus tard
+//ERR_NOSUCHNICK : le nickname n’existe pas
+//ERR_NOTONCHANNEL : celui qui invite n’est pas dans le channel
+//ERR_USERONCHANNEL : la personne invitée est déjà dans le channel
+//ERR_CHANOPRIVSNEEDED : celui qui invite n’est pas opérateur du channel
