@@ -163,6 +163,19 @@ void int_to_char(int num, char *result)
     result[len] = '\0';
 }
 
+void    Server::removeFromAllChannels(Client *client)
+{
+    for (std::map<std::string, Channel*>::iterator it = _channels.begin(); it != _channels.end(); it ++)
+    {
+        if (it->second->hasMember(client))
+        {
+            if (it->second->hasOperator(client))
+                it->second->removeOperator(client);
+            it->second->removeMember(client);
+        }
+    }
+}
+
 void    Server::removeClient(nfds_t i)
 {
     std::map<int, Client*>::iterator    it;
@@ -173,6 +186,7 @@ void    Server::removeClient(nfds_t i)
     it = this->_clients.find(_fds[i].fd);
     if (it != this->_clients.end())
     {
+        removeFromAllChannels(it->second);
         delete it->second;
         this->_clients.erase(it);
     }

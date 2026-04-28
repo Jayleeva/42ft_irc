@@ -50,7 +50,8 @@ class Server
         void    clearClientsMap();
         void    run();
         void    addClient();
-        void    removeClient(nfds_t i); 
+        void    removeClient(nfds_t i);
+        void    removeFromAllChannels(Client *client);
         void    execClient(nfds_t i);
 
         void    execCmd(std::string input, int fd);
