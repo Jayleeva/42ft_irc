@@ -28,10 +28,6 @@
 #define CMD_MODE "/mode"
 
 
-
-
-
-
 //This class is used to represent the IRC command contained in the Message.
 class Command
 {
@@ -42,13 +38,12 @@ class Command
         void nick(std::vector<std::string> parsing, Client &client, Server &server);
         void user(std::vector<std::string> parsing, Client &client);
         void join(std::vector<std::string> parsing, Client &client, Server &server);
-        void invite(std::vector<std::string> parsing, Server &server);
+        void invite(std::vector<std::string> parsing, Client &client, Server &server);
         void kick(std::vector<std::string> parsing, Client &client, Server &server);
         void topic(std::vector<std::string> parsing, Client &client, Server &server);
         void mode(std::vector<std::string> parsing, Client &client, Server &server);
         void privmsg(std::vector<std::string> parsing, Client &client, Server &server);
         void part(std::vector<std::string> parsing, Client &client, Server &server);
-        void quit(std::vector<std::string> parsing, Client &client, Server &server);
     
     public:
         Command();

@@ -8,7 +8,7 @@
 			Verify that channel et nickname exists
 			Send an invitation
 */
-void Command::invite(std::vector<std::string> parsing, Server &server)
+void Command::invite(std::vector<std::string> parsing, Client &client, Server &server)
 {
 	if (parsing.size() < 2)
     {
@@ -16,15 +16,20 @@ void Command::invite(std::vector<std::string> parsing, Server &server)
         return ;
     }
 
+	(void)client; // verifier si le client qui fait la demande est operateur de la channel
+
 	std::string nickname = *(parsing.begin() + 1);
 	std::string channelName = *(parsing.begin() + 2);
 
+    if (channelExists(server.getMapChannels(), channelName) == false)
+	{
+		printError(ERR_NOSUCHCHANNEL);
+		return;
+	}
+	Channel *chan = server.getMapChannels().find(channelName)->second;
+
 	int fd = findClientByName(server.getMapClients(), nickname);
 	Client *target = server.getMapClients().find(fd)->second;
-	target->addChannel(channelName);
 
-	Channel *chan = server.getMapChannels().find(channelName)->second;
 	chan->addMember(target);
 }
-
-// A finir plus tard

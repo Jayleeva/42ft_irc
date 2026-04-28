@@ -19,7 +19,6 @@ SRC = 	main.cpp \
 		Command/kick.cpp \
 		Command/part.cpp \
 		Command/privmsg.cpp \
-		Command/quit.cpp \
 		Command/topic.cpp \
 		
 

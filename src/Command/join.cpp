@@ -18,24 +18,23 @@ void Command::join(std::vector<std::string> parsing, Client &client, Server &ser
     if (channelExists(server.getMapChannels(), channelName) == true)
     {
         channel = server.getMapChannels().find(channelName)->second;
-        if (channel->hasMember(&client) || channel->hasOperator(&client))
+        if (channel->hasMember(&client))
         {
             printError("already joined channel");
             return;
         }
-        /*if (client.getChannelStatus(channelName) == KICKED_STATUS)
+        /*if (channel->HasBanKicked(&client))
         {
             printError("kicked from channel");
             return;
         }*/
-        channel->addMember(&client);
     }
     else
     {
         channel = server.createChannel(channelName);
         channel->addOperator(&client);
     }
-
+    channel->addMember(&client);
 }
 
 /*
