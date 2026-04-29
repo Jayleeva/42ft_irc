@@ -73,8 +73,7 @@ void    Channel::setRestricted(bool restricted)
 
 std::string getAllMembers(std::set<Client*> members)
 {
-    std::string tmp = "[@|+]";
-    std::string res = " :[" + tmp;
+    std::string res = " :[" + RPL_NAMRPLY;
     size_t         i = 0;
     for (std::set<Client*>::iterator it = members.begin(); it != members.end(); it ++)
     {
@@ -83,7 +82,7 @@ std::string getAllMembers(std::set<Client*> members)
         if (i + 1 <= members.size())
         {
             res += " ";
-            res += tmp;
+            res += RPL_NAMRPLY;
         }
         i ++;
     }
@@ -97,6 +96,8 @@ void Channel::addMember(Client *client)
     
     std::string msg;
     msg = _name + getAllMembers(_members);
+    send(client->getFd(), msg.c_str(), strlen(msg.c_str()), 0);
+    msg = _name + RPL_ENDOFNAMES;
     send(client->getFd(), msg.c_str(), strlen(msg.c_str()), 0);
 }
 

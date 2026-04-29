@@ -20,7 +20,7 @@ void Command::mode(std::vector<std::string> parsing, Client &client, Server &ser
 	Channel *chan = server.getMapChannels().find(channelName)->second;
 	if (chan->hasOperator(&client) == false)
 	{
-		printError(ERR_NOOPERHOST);
+		printError(ERR_CHANOPRIVSNEEDED);
 		return;
 	}
 
@@ -34,6 +34,7 @@ void Command::mode(std::vector<std::string> parsing, Client &client, Server &ser
 				chan->setOnInvite(false);
 			else
 				chan->setOnInvite(true);
+			//sendChannelRPL(chan, RPL_CHANNELMODEIS, client);
 		}
 		else if (flag == "-t")
 		{
@@ -41,6 +42,7 @@ void Command::mode(std::vector<std::string> parsing, Client &client, Server &ser
 				chan->setRestricted(false);
 			else
 				chan->setRestricted(true);
+			//sendChannelRPL(chan, RPL_CHANNELMODEIS, client);
 		}
 		else if (flag == "-k")
 		{
@@ -57,6 +59,7 @@ void Command::mode(std::vector<std::string> parsing, Client &client, Server &ser
 				std::string key = *it;
 				chan->setKey(key);
 			}
+			//sendChannelRPL(chan, RPL_CHANNELMODEIS, client);
 		}
 		else if (flag == "-o")
 		{
@@ -73,6 +76,8 @@ void Command::mode(std::vector<std::string> parsing, Client &client, Server &ser
 				chan->getOperators().erase(target);
 			else
 				chan->getOperators().insert(target);
+			//sendChannelRPL(chan, RPL_, client);
+			//sendChannelRPL(chan, RPL_, target); //send to target ?
 		}
 		else if (flag == "-l")
 		{
@@ -89,10 +94,11 @@ void Command::mode(std::vector<std::string> parsing, Client &client, Server &ser
 				std::string limit = *it;
 				chan->setUserLimit(atoi(limit.c_str()));
 			}
+			//sendChannelRPL(chan, RPL_CHANNELMODEIS, client);
 		}
 		else
 		{
-			printError(ERR_CMD);
+			printError(ERR_UMODEUNKNOWNFLAG);
 			return;
 		}
 		it ++;

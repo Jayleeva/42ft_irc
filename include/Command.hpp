@@ -12,22 +12,23 @@
 
 #define CMD_CAP "CAP"
 #define CMD_PING "PING"
+
 //authenticate, set nickname, set username
 #define CMD_PASS "PASS"         // "/auth" ?
 #define CMD_USER "USER"         // "/set irc.server.ircserv.username" ?
-#define CMD_NICK "NICK"         // "/nick"
+#define CMD_NICK "NICK"         // "/nick <nickname>"
 
 //join a channel, send and receive private msg
-#define CMD_JOIN "JOIN"         //"/join"
-#define CMD_PRIVMSG "PRIVMSG"   // "/query"
+#define CMD_JOIN "JOIN"         // "/join <channel>"
+#define CMD_PRIVMSG "PRIVMSG"   // "/query <nickname>"
 
-#define CMD_PART "PART"         // "/part" // pas demandé; QUIT et DISCONNECT gérés par le client par signaux
+#define CMD_PART "PART"         // "/part <channel>" // pas demandé; QUIT et DISCONNECT gérés par le client par signaux
 
 //operators only
-#define CMD_KICK "KICK"         // "/kick"
-#define CMD_INVITE "INVITE"     // "/invite"
-#define CMD_TOPIC "TOPIC"       // "/topic"
-#define CMD_MODE "MODE"         // "/mode"
+#define CMD_KICK "KICK"         // "/kick <channel> <nickname>"
+#define CMD_INVITE "INVITE"     // "/invite <channel> <nickname>"
+#define CMD_TOPIC "TOPIC"       // "/topic <channel> [<newtopic>]"
+#define CMD_MODE "MODE"         // "/mode <channel> <flag> [<arg>]" -- si pas de flag, montre juste les param actuels?
 
 
 //This class is used to represent the IRC command contained in the Message.

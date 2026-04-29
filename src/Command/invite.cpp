@@ -1,7 +1,7 @@
 #include "../../include/Command.hpp"
 
 /*
-**This function allows a cllient to invite another client into a channel
+**This function allows a client to invite another client into a channel
 ** The command does :
 			Retrieve the arguments
 			Extract nickname and channel
@@ -31,5 +31,10 @@ void Command::invite(std::vector<std::string> parsing, Client &client, Server &s
 	int fd = findClientByName(server.getMapClients(), nickname);
 	Client *target = server.getMapClients().find(fd)->second;
 
+	if (chan->hasMember(target))
+	{
+		printError(ERR_USERONCHANNEL);
+		return;
+	}
 	chan->addMember(target);
 }

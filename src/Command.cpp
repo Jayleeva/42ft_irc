@@ -24,7 +24,7 @@ void sendWelcome(std::vector<std::string> _parsing, Client &client)
 {
     std::string cap = *(_parsing.begin() + 1) + " " + *(_parsing.begin() + 2);
 
-    std::string welcome = ":ircserv 001 " + cap;
+    std::string welcome = RPL_WELCOME + cap;
     std::cout << welcome << std::endl;
     send(client.getFd(), welcome.c_str(), strlen(welcome.c_str()), 0);
 }
@@ -55,8 +55,7 @@ void Command::execute(Client &client, Server &server)
         mode(_parsing, client, server);
     else
     {
-        std::cout << "cmd = " << _cmd << std::endl;
-        printError(ERR_CMD);
+        printError(_cmd + ERR_UNKNOWNCOMMAND);
     }
 }
 

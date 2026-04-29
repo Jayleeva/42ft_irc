@@ -20,7 +20,6 @@ void Command::join(std::vector<std::string> parsing, Client &client, Server &ser
         channel = server.getMapChannels().find(channelName)->second;
         if (channel->hasMember(&client))
         {
-            printError("already joined channel");
             return;
         }
         /*if (channel->HasBanKicked(&client))
@@ -44,7 +43,7 @@ void Command::join(std::vector<std::string> parsing, Client &client, Server &ser
     }
     else
     {
-        channel = server.createChannel(channelName);
+        channel = server.createChannel(channelName, &client);
         channel->addOperator(&client);
     }
     channel->addMember(&client);

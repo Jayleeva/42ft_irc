@@ -24,7 +24,7 @@ void Command::pass(std::vector<std::string> parsing, Client &client, const std::
 
     if (client.isRegistered())
     {
-        printError(ERR_REGISTRED);
+        printError(ERR_ALREADYREGISTRED);
         return;
     }
 

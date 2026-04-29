@@ -22,9 +22,8 @@ class Client
         bool _hasNick;
         bool _hasUser;
         bool _hasPass;
-        //std::set<std::string> _channels;
-        std::map<std::string, int> _channels; // besoin de stocker toutes les channels existantes et de preciser le statut du client dans chaque channel
-
+        std::set<std::string> _channels;
+    
     public:
         Client();
         Client(std::map<std::string, Channel*> channels, int fd);
@@ -41,9 +40,7 @@ class Client
         void tryRegister();
 
         void addChannel(const std::string &channelName);
-        void setChannelStatus(const std::string &channelName, int status);
         void removeChannel(const std::string &channelName);
-        int getChannelStatus(const std::string &channelName) const;
 };
 
 #endif

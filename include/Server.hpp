@@ -59,7 +59,7 @@ class Server
         bool    nicknameExists(const std::string &nickname) const;
         bool    channelExists(const std::string &name) const;
 
-        Channel *createChannel(const std::string &name);
+        Channel *createChannel(const std::string &name, Client *client);
         Channel *getChannel(const std::string &name) const;
         void    removeChannel(const std::string &name);
 };

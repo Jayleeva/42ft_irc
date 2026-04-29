@@ -42,7 +42,7 @@ int   findClientByName(std::map<int, Client*> _clients, std::string name)
    return (res);
 }
 
-//This function is used to. If it didn't find it, it returns "".
+//This function is used to check if a channel exists.
 bool  channelExists(std::map<std::string, Channel*> channels, std::string name)
 {
 	std::map<std::string, Channel*>::iterator it;
@@ -61,7 +61,13 @@ bool  channelExists(std::map<std::string, Channel*> channels, std::string name)
     if not return `npos`.
  */
 
- void printError(const std::string& errorMsg)
- {
-    std::cout << "Error: " << errorMsg << std::endl;
- }
+void printError(const std::string& errorMsg)
+{
+   std::cout << "Error: " << errorMsg << std::endl;
+}
+
+void sendChannelRPL(Channel *chan, std::string RPL, Client &client)
+{
+    std::string msg = chan->getName() + RPL;
+    send(client.getFd(), msg.c_str(), strlen(msg.c_str()), 0);
+}

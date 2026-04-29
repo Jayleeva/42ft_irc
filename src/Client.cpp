@@ -8,7 +8,7 @@ Client::Client(std::map<std::string, Channel*> channels, int fd) : _fd(fd), _reg
 {
     for (std::map<std::string, Channel*>::iterator it = channels.begin(); it != channels.end(); it ++)
     {
-        this->_channels.insert(this->_channels.end(), std::make_pair(it->first, NON_MEMBER_STATUS)); // par defaut, non membre de tous les channels
+        this->_channels.insert(it->first);
     }
 }
 
@@ -65,20 +65,10 @@ void Client::tryRegister()
 
 void Client::addChannel(const std::string &channelName)
 {
-    this->_channels.insert(this->_channels.end(), std::make_pair(channelName, NON_MEMBER_STATUS)); // par defaut, quand join, a  non member status
-}
-
-void Client::setChannelStatus(const std::string &channelName, int status)
-{
-    this->_channels.find(channelName)->second = status;
+    this->_channels.insert(channelName);
 }
 
 void Client::removeChannel(const std::string &channelName)
 {
     this->_channels.erase(channelName);
-}
-
-int Client::getChannelStatus(const std::string &channelName) const
-{
-    return (this->_channels.find(channelName)->second);
 }
