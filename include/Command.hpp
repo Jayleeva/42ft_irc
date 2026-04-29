@@ -23,7 +23,7 @@
 #define CMD_PRIVMSG "PRIVMSG"   // "/query <nickname>"
 
 #define CMD_PART "PART"         // "/part <channel>" // pas demandé; QUIT et DISCONNECT gérés par le client par signaux
-
+#define CMD_QUIT "QUIT"
 //operators only
 #define CMD_KICK "KICK"         // "/kick <channel> <nickname>"
 #define CMD_INVITE "INVITE"     // "/invite <channel> <nickname>"

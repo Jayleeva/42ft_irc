@@ -35,6 +35,18 @@ void    pong(Client &client)
     send(client.getFd(), pong.c_str(), strlen(pong.c_str()), 0);
 }
 
+void    printParsing(std::vector<std::string> parsing)
+{
+    std::cout << "parsing = ";
+    for (std::vector<std::string>::iterator it = parsing.begin(); it != parsing.end(); it++)
+    {
+        std::cout << *it;
+        if (it + 1 != parsing.end())
+            std::cout << " ";
+    }
+    std::cout << std::endl;
+}
+
 void Command::execute(Client &client, Server &server)
 {
     std::string _cmd = _parsing.front();
@@ -53,6 +65,8 @@ void Command::execute(Client &client, Server &server)
         join(_parsing, client, server);
     else if (_cmd == CMD_MODE)
         mode(_parsing, client, server);
+    else if (_cmd == CMD_QUIT)
+        return ;
     else
     {
         printError(_cmd + ERR_UNKNOWNCOMMAND);

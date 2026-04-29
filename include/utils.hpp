@@ -6,6 +6,9 @@
 #include "Client.hpp"
 #include "Channel.hpp"
 
+class Client;
+class Channel;
+
 //Colors
 # define DEFAULT "\001\033[0;39m\002"
 # define YELLOW "\001\033[1;93m\002"

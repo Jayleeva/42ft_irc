@@ -11,6 +11,8 @@
 # define OPERATOR_STATUS 2 
 # define KICKED_STATUS 3
 
+class Channel;
+
 class Client
 {
     private:

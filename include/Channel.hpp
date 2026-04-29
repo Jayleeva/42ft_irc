@@ -7,6 +7,8 @@
 #include <sys/socket.h>
 #include <string.h>
 
+#include "utils.hpp"
+
 class Client;
 
 typedef struct s_access

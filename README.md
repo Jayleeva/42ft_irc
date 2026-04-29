@@ -67,7 +67,12 @@ Then, connect to the server with
 
 If the connection is successful, you can now use the client as if it was connected to any official server. 
 
-To test it thoroughly, open multiple clients and connect them all to the server. Every client should work normally and act as different users.
+To test it thoroughly, open multiple clients and connect them all to the server. Every client should work normally and act as different users. 
+
+To launch another client, use:
+````
+weechat --dir <newclientname>
+````
 
 ## Things you can try:
 - authenticate

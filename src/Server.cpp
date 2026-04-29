@@ -328,9 +328,10 @@ Channel *Server::createChannel(const std::string &name, Client *client)
 
     this->_channels.insert(this->_channels.end(), std::make_pair(name, newChan));
 
+    (void)client;
     //std::string trimmedName = newChan->getName().substr(1, strlen(newChan->getName().c_str())); // essayer d'enlever la diese
-    std::string msg = name + RPL_NOTOPIC;
-    send(client->getFd(), msg.c_str(), strlen(msg.c_str()), 0);
+    /*std::string msg = " " + name + RPL_NOTOPIC; // find right command
+    send(client->getFd(), msg.c_str(), strlen(msg.c_str()), 0);*/
     return (newChan);
 }
 

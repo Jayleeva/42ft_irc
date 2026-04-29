@@ -21,6 +21,7 @@
 
 #include "Client.hpp"
 #include "Channel.hpp"
+#include "utils.hpp"
 
 # define QUEUE_SIZE 5
 # define MAXBYTES 512
