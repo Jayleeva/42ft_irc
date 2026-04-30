@@ -41,24 +41,11 @@ weechat
 
 Then, add the server with
 ````
-/server add ircserv 0/6667
+/server add ircserv 0/6667 password
 ````
-0 = the server address
+0 = the server's address
 6667 = the suggested port
-
-Then, activate the SASL with
-````
-/set irc.server.ircserv.addresses "irc.ircserv.chat/6667"
-/set irc.server.ircserv.ssl on
-````
-
-Then, configure the SASL with
-````
-/set irc.server.ircserv.sasl_mechanism plain
-/set irc.server.ircserv.sasl_username <username>
-/set irc.server.ircserv.sasl_password <password>
-/save
-````
+password = the server's password
 
 Then, connect to the server with
 ````
