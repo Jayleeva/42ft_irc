@@ -1,12 +1,8 @@
 #include "../../include/Command.hpp"
 
 /*
-**This command allows to choose a client nickname.
-**The server must:
-    check that the nickname is not empty
-    check if there is no invalid char
-    check that it is not already taken by another client
-    save this nickname in the `Client` object
+**NICK message is used to give user a nickname or change the previous one.
+**NICK <nickname>
 */
 
 void Command::nick(Message const &msg, Client &client, Server &server)

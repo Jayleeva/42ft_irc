@@ -18,8 +18,8 @@ void Command::invite(Message const &msg, Client &client, Server &server)
         return ;
     }
 
-	std::string nickname = getTarget(arg);
-	std::string channelName = getMessage(arg);
+    std::string channelName = getTarget(arg);
+	std::string nickname = getMessage(arg);
 
 	if (isEmptyArg(channelName))
 	{
@@ -54,12 +54,12 @@ void Command::invite(Message const &msg, Client &client, Server &server)
 		return;
 	}
 
-	if (channel->hasMember(targetClient))
+	if (!channel->hasMember(targetClient))
 	{
 		printError(ERR_USERONCHANNEL);
 		return;
 	}
 
-	channel->addInvite(targetClient)
+	channel->addInvite(targetClient);
 	//RPL_INVITING à ajouter
 }

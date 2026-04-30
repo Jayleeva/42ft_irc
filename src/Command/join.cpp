@@ -49,3 +49,5 @@ void Command::join(Message const &msg, Client &client, Server &server)
     if (channel)
         channel->removeInvited(&client);
 }
+
+//ERR_BANNEDFROMCHAN

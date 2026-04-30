@@ -4,7 +4,7 @@
 ** PRIVMSG is used to send private messages between users.  <receiver>
    is the nickname of the receiver of the message.  <receiver> can also
    be a list of names or channels separated with commas.
-   Parameters: <receiver>{,<receiver>} <text to be sent>
+**PRIVMSG <receiver>{,<receiver>} <text to be sent>
 */
 
 void Command::privmsg(Message const &msg, Client &client, Server &server)
@@ -21,7 +21,7 @@ void Command::privmsg(Message const &msg, Client &client, Server &server)
     std::string message = getMessage(arg);
 
     //message
-    if (message.empty())
+    if (isEmptyArg(message))
     {
         printError(ERR_NOTEXTTOSEND);
         return ;
