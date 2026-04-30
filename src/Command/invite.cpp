@@ -21,18 +21,19 @@ void Command::invite(Message const &msg, Client &client, Server &server)
 	std::string nickname = getTarget(arg);
 	std::string channelName = getMessage(arg);
 
-	if (channelName.empty())
+	if (isEmptyArg(channelName))
 	{
 		printError(ERR_NEEDMOREPARAMS);
 		return ;
 	}
 
 	Channel *channel = server.getChannel(channelName);
-	// if (!channel)
-	// {
-	// 	printError(ERR_NOSUCHCHANNEL);
-	// 	return;
-	// }
+
+	if (!channel)
+	{
+		printError(ERR_NOSUCHCHANNEL);
+		return;
+	}
 
 	if (!channel->hasMember(&client))
 	{
@@ -40,15 +41,25 @@ void Command::invite(Message const &msg, Client &client, Server &server)
 		return;
 	}
 
-	Client *tagetClient = server.getClientbyNick(nickname);
-	if(!tagetClient)
+	if (channel->isInviteOnly() && !channel->isOperator(&client))
+	{
+		printError(ERR_CHANOPRIVSNEEDED);
+		return;
+	}
+
+	Client *targetClient = server.getClientbyNick(nickname);
+	if(!targetClient)
 	{
 		printError(ERR_NOSUCHNICK);
 		return;
 	}
-}
 
-//ERR_NOSUCHNICK : le nickname n’existe pas
-//ERR_NOTONCHANNEL : celui qui invite n’est pas dans le channel
-//ERR_USERONCHANNEL : la personne invitée est déjà dans le channel
-//ERR_CHANOPRIVSNEEDED : celui qui invite n’est pas opérateur du channel
+	if (channel->hasMember(targetClient))
+	{
+		printError(ERR_USERONCHANNEL);
+		return;
+	}
+
+	channel->addInvite(targetClient)
+	//RPL_INVITING à ajouter
+}

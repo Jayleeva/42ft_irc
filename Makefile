@@ -18,7 +18,8 @@ SRC = 	main.cpp \
 		Command/user.cpp \
 		Command/join.cpp \
 		Command/part.cpp \
-		Command/privmsg.cpp
+		Command/privmsg.cpp \
+		Command/invite.cpp
 
 SRCS = $(addprefix $(SRC_DIR)/, $(SRC))
 

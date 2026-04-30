@@ -49,6 +49,8 @@ void Command::execute(Message const &msg, Client &client, Server &server)
         part(msg, client, server);
     else if (_cmd == CMD_PRIVMSG)
         privmsg(msg, client, server);
+    else if (_cmd == CMD_INVITE)
+        invite(msg, client, server);
     else
         printError(ERR_CMD);
 }

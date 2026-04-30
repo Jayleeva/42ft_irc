@@ -8,9 +8,9 @@
 void Command::join(Message const &msg, Client &client, Server &server)
 {
 	std::string arg = getArgument(msg.getMsg());
-    std::string channel = getTarget(arg);
+    std::string channelName = getTarget(arg);
 
-    if (isEmptyArg(channel))
+    if (isEmptyArg(channelName))
     {
         printError(ERR_NEEDMOREPARAMS);
         return ;
@@ -21,20 +21,31 @@ void Command::join(Message const &msg, Client &client, Server &server)
         return ;
     }
     
-    if (!isValidChannelName(channel))
+    if (!isValidChannelName(channelName))
     {
         printError(ERR_BADCHANNELNAME);
         return ;
     }
-    server.joinClientToChannel(&client, channel);
-}
 
-    /*std::string channelName = arg;
-    Channel *channel;
-
-    if (server.channelExists(channelName))
-        channel = server.getChannel(channelName);
+    Channel *channel = server.getChannel(channelName);
+    
+    if (channel)
+    {
+        if (channel->hasMember(&client))
+            return;
+            
+        if (channel->isInviteOnly() && !channel->isInvited(&client))
+        {
+            printError(ERR_INVITEONLYCHAN);
+            return;
+        }
+    }
     else
         channel = server.createChannel(channelName);
-    
-    channel->addMember(&client);*/
+
+    server.joinClientToChannel(&client, channelName);
+
+    channel = server.getChannel(channelName);
+    if (channel)
+        channel->removeInvited(&client);
+}
