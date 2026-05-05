@@ -33,3 +33,4 @@ void Command::execute(Message const &msg, Client &client, Server &server)
     else
         printError(ERR_CMD);
 }
+

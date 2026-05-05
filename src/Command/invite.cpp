@@ -8,7 +8,7 @@
 			Verify that channel et nickname exists
 			Send an invitation
 */
-/*void Command::invite(Message const &msg, Client &client, Server &server)
+void Command::invite(Message const &msg, Client &client, Server &server)
 {    
 	std::string arg = getArgument(msg.getMsg());
 
@@ -37,6 +37,6 @@
 	while (i < channelName.size() && channelName[i] == ' ')
 		i++;
 	channelName = channelName.substr(i);
-}*/
+}
 
 // A finir plus tard
