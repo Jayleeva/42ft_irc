@@ -72,9 +72,6 @@ class Channel;
 std::string     getCommand(const std::string& msg);
 
 //Utils functions
-bool            isEmptyArg(const std::string &arg);
-std::string     getArgument(const std::string& msg);
 void            printError(const std::string& errorMsg);
-int             findClientByName(std::map<int, Client*> _clients, std::string name);
 bool 			isValidChannelName(const std::string &name);
 #endif

@@ -22,24 +22,6 @@ std::string getCommand(const std::string& msg)
     return msg.substr(start, i - start);
 }
 
- //This function is used to retrieve the argument of the string
- std::string getArgument(const std::string& msg)
- {
-    size_t i = 0;
-    while (i < msg.size() && msg[i] == ' ')
-        i++;
-    
-    while (i < msg.size() && msg[i] != ' ')
-        i++;
-    
-    while (i < msg.size() && msg[i] == ' ')
-        i++;
-    
-    if (i >= msg.size())
-        return "";
-    
-    return msg.substr(i);
- }
  
  //This function extract the target of the string
  std::string getTarget(const std::string& args)

@@ -444,11 +444,13 @@ Client *Server::getClientByNick(const std::string &nickname)
     return (NULL);
 }
 
-void Server::sendMessageToClient(Client *target, const std::string &message)
+void Server::sendMessageToClient(Client *sender, Client *target, const std::string &message)
 {
     if (!target)
         return;
-    send(target->getFd(), message.c_str(), message.length(), 0);
+    
+    std::string msg = sender->getNickname() + " PRIVMSG :" + message; // NOTE: pour que le client du destinataire lui affiche qui lui a envoye le message?
+    send(target->getFd(), msg.c_str(), msg.length(), 0);
 }
 
 void Server::sendMessageToChannel(Client *sender, Channel *channel, const std::string &message)
@@ -456,6 +458,7 @@ void Server::sendMessageToChannel(Client *sender, Channel *channel, const std::s
     std::set<Client*>::const_iterator it;
     const std::set<Client*> &members = channel->getMembers();
 
+    std::string msg = sender->getNickname() + " PRIVMSG :" + message; // NOTE: pour que le client du destinataire lui affiche qui lui a envoye le message?
     it = members.begin();
     while (it != members.end())
     {

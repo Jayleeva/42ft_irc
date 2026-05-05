@@ -70,8 +70,7 @@ void Command::mode(std::vector<std::string> parsing, Client &client, Server &ser
 				return;
 			}
 			std::string targetName = *it;
-			int fd = findClientByName(server.getMapClients(), targetName);
-			Client *target = server.getMapClients().find(fd)->second;
+			Client *target = server.getClientByNick(targetName);
 			if (chan->isOperator(target))
 				chan->removeOperator(target);
 			else
