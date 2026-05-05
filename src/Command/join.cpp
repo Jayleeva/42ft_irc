@@ -29,7 +29,7 @@ void Command::join(Message const &msg, Client &client, Server &server)
 
     Channel *channel = server.getChannel(channelName);
     
-    if (channel)
+    /*if (channel)
     {
         if (channel->hasMember(&client))
             return;
@@ -39,9 +39,7 @@ void Command::join(Message const &msg, Client &client, Server &server)
             printError(ERR_INVITEONLYCHAN);
             return;
         }
-    }
-    else
-        channel = server.createChannel(channelName);
+    }*/
 
     server.joinClientToChannel(&client, channelName);
 
@@ -49,5 +47,3 @@ void Command::join(Message const &msg, Client &client, Server &server)
     if (channel)
         channel->removeInvited(&client);
 }
-
-//ERR_BANNEDFROMCHAN

@@ -39,15 +39,18 @@ int main(int argc, char **argv)
         std::cout << "Invalid port number. Available ports range from 0 to 65535. Suggested port: 6667" << std::endl;
         return (1);
     }
+    std::cout << std::boolalpha;
 
     memset(&addr, 0, sizeof(addr));
     addr.sin_family = AF_INET;
     addr.sin_port = htons(port);
     addr.sin_addr.s_addr = INADDR_ANY;
 
-    std::cout << "received port : " << port << std::endl;
-    std::cout << "transformed port : " << addr.sin_port << std::endl;
-    std::cout << "server address : " << addr.sin_addr.s_addr << std::endl;
+    ch.addMember(&c1);
+    std::cout << "c1 in channel: " << ch.hasMember(&c1) << std::endl;
+
+    ch.addMember(&c2);
+    std::cout << "c2 in channel: " << ch.hasMember(&c2) << std::endl;
 
     serv.openSocket(&addr);
     serv.run();

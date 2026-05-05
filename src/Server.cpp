@@ -329,15 +329,24 @@ void Server::joinClientToChannel(Client *client, const std::string &name)
 {
     std::cout << "joinClientToChannel called" << std::endl;
     Channel *channel;
-
+      
     if (channelExists(name))
         channel = getChannel(name);
     else
+    {
         channel = createChannel(name);
+        channel->addOperator(client);
+    }
     if (!channel->hasMember(client))
         channel->addMember(client);
     if (!client->isInChannel(name))
         client->addChannel(name);
+  
+     if (channel->isInviteOnly() && !channel->isInvited(&client))
+      {
+            printError(ERR_INVITEONLYCHAN);
+            return;
+        }
 }
 
 void Server::removeClientFromChannel(Client *client, const std::string &name)
@@ -359,5 +368,40 @@ void Server::removeClientFromChannel(Client *client, const std::string &name)
     {
         delete channel;
         _channels.erase(name);
+    }
+}
+
+Client *Server::getClientByNick(const std::string &nickname)
+{
+    std::map<int, Client*>::iterator it;
+
+    it = _clients.begin();
+    while (it != _clients.end())
+    {
+        if (it->second->getNickname() == nickname)
+            return (it->second);
+        it++;
+    }
+    return (NULL);
+}
+
+void Server::sendMessageToClient(Client *target, const std::string &message)
+{
+    if (!target)
+        return;
+    send(target->getFd(), message.c_str(), message.length(), 0);
+}
+
+void Server::sendMessageToChannel(Client *sender, Channel *channel, const std::string &message)
+{
+    std::set<Client*>::const_iterator it;
+    const std::set<Client*> &members = channel->getMembers();
+
+    it = members.begin();
+    while (it != members.end())
+    {
+        if (*it != sender)
+            send((*it)->getFd(), message.c_str(), message.length(), 0);
+        it++;
     }
 }
