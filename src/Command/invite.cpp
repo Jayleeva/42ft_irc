@@ -8,7 +8,7 @@
 			Verify that channel et nickname exists
 			Send an invitation
 */
-void Command::invite(std::vector<std::string> parsing, Client &client, Server &server)
+void Command::invite(std::vector<std::string> parsing, Client &client, Server &server) // NOTE : faire comme pour join, une methode dans server par ex?
 {
 	if (parsing.size() < 2)
     {
@@ -16,12 +16,10 @@ void Command::invite(std::vector<std::string> parsing, Client &client, Server &s
         return ;
     }
 
-	(void)client; // verifier si le client qui fait la demande est operateur de la channel
-
 	std::string nickname = *(parsing.begin() + 1);
 	std::string channelName = *(parsing.begin() + 2);
 
-    if (channelExists(server.getMapChannels(), channelName) == false)
+    if (server.channelExists(channelName) == false)
 	{
 		printError(ERR_NOSUCHCHANNEL);
 		return;
@@ -29,23 +27,17 @@ void Command::invite(std::vector<std::string> parsing, Client &client, Server &s
 
 	Channel *channel = server.getChannel(channelName);
 
-	if (!channel)
-	{
-		printError(ERR_NOSUCHCHANNEL);
-		return;
-	}
-
-	if (!channel->hasMember(&client))
-	{
-		printError(ERR_NOTONCHANNEL);
-		return;
-	}
-
-	if (channel->isInviteOnly() && !channel->isOperator(&client))
+	if (!channel->isOperator(&client))
 	{
 		printError(ERR_CHANOPRIVSNEEDED);
 		return;
 	}
+
+	/*if (!channel->hasMember(&client)) 	// NOTE : ne peut pas etre operateur de la channel si n'en est pas membre
+	{
+		printError(ERR_NOTONCHANNEL);
+		return;
+	}*/
 
 	Client *targetClient = server.getClientByNick(nickname);
 	if(!targetClient)

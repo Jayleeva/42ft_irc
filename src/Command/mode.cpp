@@ -12,7 +12,7 @@ void Command::mode(std::vector<std::string> parsing, Client &client, Server &ser
 
 	it ++;
 	std::string channelName = *it;
-    if (channelExists(server.getMapChannels(), channelName) == false)
+    if (server.channelExists(channelName) == false)
 	{
 		printError(ERR_NOSUCHCHANNEL);
 		return;

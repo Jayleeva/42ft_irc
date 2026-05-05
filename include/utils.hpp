@@ -54,6 +54,8 @@ class Channel;
 #define ERR_USERNOTINCHANNEL " :They aren't on that channel"
 #define ERR_USERONCHANNEL " :is already on channel"
 
+#define ERR_NOTEXTTOSEND " :No text to send"
+#define ERR_CANNOTSENDTOCHAN "<channel name> :Cannot send to channel"
 //Return messages
 #define RPL_WELCOME ":ircserv 001 " // to confirm connection
 
@@ -74,6 +76,5 @@ bool            isEmptyArg(const std::string &arg);
 std::string     getArgument(const std::string& msg);
 void            printError(const std::string& errorMsg);
 int             findClientByName(std::map<int, Client*> _clients, std::string name);
-bool            channelExists(std::map<std::string, Channel*> channels, std::string name);
 bool 			isValidChannelName(const std::string &name);
 #endif

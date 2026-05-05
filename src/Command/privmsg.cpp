@@ -7,25 +7,34 @@
 **PRIVMSG <receiver>{,<receiver>} <text to be sent>
 */
 
-void Command::privmsg(Message const &msg, Client &client, Server &server)
+std::string    rebuildMessage(std::vector<std::string>::iterator it, std::vector<std::string>::iterator ite)
 {
-    std::string arg = getArgument(msg.getMsg());
+    std::string res = "";
 
-    if (isEmptyArg(arg))
+    for (it; it != ite; it ++)
+    {
+        res.append(*it);
+    }
+    return (res);
+}
+
+void Command::privmsg(std::vector<std::string> parsing, Client &client, Server &server)
+{
+    if (parsing.size() < 2)
     {
         printError(ERR_NEEDMOREPARAMS);
         return ;
     }
-
-    std::string target = getTarget(arg);
-    std::string message = getMessage(arg);
-
-    //message
-    if (isEmptyArg(message))
+    if (parsing.size() < 3)
     {
         printError(ERR_NOTEXTTOSEND);
         return ;
     }
+    std::vector<std::string>::iterator it = parsing.begin() + 1;
+
+    std::string target = *it; // peut y en avoir plusieurs, faire un getline avec ',' en separateur
+    it ++; // incrementer du nombre de target
+    std::string message = rebuildMessage(it, parsing.end()); 
 
     //channel
     if (target[0] == '#')
@@ -55,6 +64,6 @@ void Command::privmsg(Message const &msg, Client &client, Server &server)
             return ;
         }
 
-        server.sendMessageToClient(*targetClient, message);
+        server.sendMessageToClient(targetClient, message); // NOTE: *targetClient
     }
 }

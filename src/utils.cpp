@@ -42,19 +42,6 @@ int   findClientByName(std::map<int, Client*> _clients, std::string name)
    return (res);
 }
 
-//This function is used to check if a channel exists.
-bool  channelExists(std::map<std::string, Channel*> channels, std::string name)
-{
-	std::map<std::string, Channel*>::iterator it;
-	for (it = channels.begin(); it != channels.end(); it ++)
-	{
-		if (it->first == name)
-      {
-         return true;
-      }
-	}
-	return (false);
-}
 
  /*
  **find() : is a function to find something, if its found return the index

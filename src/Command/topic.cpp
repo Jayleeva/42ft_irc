@@ -12,19 +12,19 @@ void Command::topic(std::vector<std::string> parsing, Client &client, Server &se
 
 	it ++;
 	std::string channelName = *it;
-    if (channelExists(server.getMapChannels(), channelName) == false)
+    if (server.channelExists(channelName) == false)
 	{
 		printError(ERR_NOSUCHCHANNEL);
 		return;
 	}
 	Channel *chan = server.getMapChannels().find(channelName)->second;
-	if (chan->hasOperator(&client) == false)
+	if (chan->isOperator(&client) == false)
 	{
 		printError(ERR_CHANOPRIVSNEEDED);
 		return;
 	}
 
 	it ++;
-	std::string newSubject = *it;
-	chan->setSubject(newSubject);
+	std::string newTopic = *it;
+	chan->setTopic(newTopic);
 }
