@@ -19,6 +19,4 @@ void Command::join(std::vector<std::string> parsing, Client &client, Server &ser
         key = *(parsing.begin() + 2);
   
     server.joinClientToChannel(&client, channelName, key);
-
-
 }

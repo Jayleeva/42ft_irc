@@ -11,20 +11,6 @@
 
 class Client;
 
-typedef struct s_access
-{
-    bool        inviteOnly;
-    int         userLimit; // si set a 0, pas de limite
-    bool        hasKey;
-    std::string key;
-}               t_access;
-
-typedef struct s_topic
-{
-    std::string subject;
-    bool        restricted;
-}               t_topic;
-
 class Channel
 {
     private:
@@ -58,11 +44,12 @@ class Channel
         void invite(Client *client);
         void removeInvite(Client *client);
 
-        void setTopic(const std::string &topic);
-        bool hasTopic() const;
-
         bool isInviteOnly() const;
         void setInviteOnly(bool status);
+        bool checkInvite(Client *client) const; // NOTE
+
+        void setTopic(const std::string &topic);
+        bool hasTopic() const;
 
         bool isTopicRestricted() const;
         void setTopicRestricted(bool status);

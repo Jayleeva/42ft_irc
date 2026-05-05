@@ -373,17 +373,17 @@ void Server::joinClientToChannel(Client *client, const std::string &name, const 
     if (channelExists(name))
     {
         channel = getChannel(name);
-        if (channel->isInviteOnly() && !channel->isInvited(client)) // NOTE: faire une generale checkInvite? comme checkKey? voire une encore plus generale checkAccess et qui appelle checkInvite, checkLimit, checkKey?
+        if (!channel->checkInvite(client)) // NOTE: faire une encore plus generale checkAccess et qui appelle checkInvite, isFull, checkKey?
         {
             printError(ERR_INVITEONLYCHAN);
             return;
         }
-        if (!channel->checkKey(key))
+        if (!channel->checkKey(key))    // NOTE
         {
             printError(ERR_BADCHANNELKEY);
             return;
         }
-        if (channel->hasUserLimit() && channel->getNumberUsers() == channel->getUserLimit())
+        if (channel->isFull())    // NOTE
         {
             printError(ERR_CHANNELISFULL);
             return;
@@ -391,7 +391,7 @@ void Server::joinClientToChannel(Client *client, const std::string &name, const 
     }
     else
     {
-        if (!isValidChannelName(name))
+        if (!isValidChannelName(name))    // NOTE
         {
             printError(ERR_BADCHANNELNAME);
             return ;
@@ -403,7 +403,7 @@ void Server::joinClientToChannel(Client *client, const std::string &name, const 
     if (!channel->hasMember(client))
     {
         channel->addMember(client);
-        if (channel->isInvited(client))
+        if (channel->isInvited(client))    // NOTE
             channel->removeInvite(client);
     }
 }

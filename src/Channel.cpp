@@ -17,63 +17,6 @@ const std::string& Channel::getName() const
     return _name;
 }
 
-std::set<Client*>   Channel::getMembers() const
-{
-    return _members;
-}
-
-std::set<Client*>   Channel::getOperators() const
-{
-    return _operators;
-}
-
-t_access Channel::getAccess() const
-{
-    return _access;
-}
-
-void Channel::setAccess(t_access access)
-{
-    this->_access = access;
-}
-void Channel::setOnInvite(bool inviteOnly)
-{
-    this->_access.inviteOnly = inviteOnly;
-}
-
-void    Channel::setUserLimit(int userLimit)
-{
-    this->_access.userLimit = userLimit;
-}
-
-void    Channel::setKey(std::string key)
-{
-    this->_access.key = key;
-    if (!key.empty())
-        this->_access.hasKey = true;
-    else
-        this->_access.hasKey = false;
-}
-
-t_topic     Channel::getTopic() const
-{
-    return (this->_topic);
-}
-
-void    Channel::setTopic(t_topic topic)
-{
-    this->_topic = topic;
-}
-
-void    Channel::setSubject(std::string subject)
-{
-    this->_topic.subject = subject;
-}
-void    Channel::setRestricted(bool restricted)
-{
-    this->_topic.restricted = restricted;
-}
-
 std::string getAllMembers(std::set<Client*> members)
 {
     std::string res = " :[";
@@ -168,6 +111,23 @@ void Channel::removeInvite(Client *client)
 	_invited.erase(client);
 }
 
+bool Channel::isInviteOnly() const
+{
+	return _inviteOnly;
+}
+
+void Channel::setInviteOnly(bool status)
+{
+	_inviteOnly = status;
+}
+
+bool Channel::checkInvite(Client *client) const	// NOTE
+{
+	if (isInviteOnly() && !isInvited(client))
+		return (false);
+	return (true);
+}
+
 void Channel::setTopic(const std::string &topic)
 {
 	_topic = topic;
@@ -182,16 +142,6 @@ const std::string& Channel::getTopic() const
 bool Channel::hasTopic() const
 {
 	return _hasTopic;
-}
-
-bool Channel::isInviteOnly() const
-{
-	return _inviteOnly;
-}
-
-void Channel::setInviteOnly(bool status)
-{
-	_inviteOnly = status;
 }
 
 bool Channel::isTopicRestricted() const
@@ -230,7 +180,10 @@ bool Channel::isOperator(Client *client) const
 void Channel::setUserLimit(int limit)
 {
 	if (limit <= 0)
+	{
+		printError(ERR_UNKNOWNMODE); // NOTE: ?
 		return;
+	}
 	_userLimit = limit;
 	_hasUserLimit = true;
 }

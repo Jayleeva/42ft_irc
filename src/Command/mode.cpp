@@ -17,8 +17,8 @@ void Command::mode(std::vector<std::string> parsing, Client &client, Server &ser
 		printError(ERR_NOSUCHCHANNEL);
 		return;
 	}
-	Channel *chan = server.getMapChannels().find(channelName)->second;
-	if (chan->hasOperator(&client) == false)
+	Channel *chan = server.getChannel(channelName);
+	if (chan->isOperator(&client) == false)
 	{
 		printError(ERR_CHANOPRIVSNEEDED);
 		return;
@@ -30,23 +30,23 @@ void Command::mode(std::vector<std::string> parsing, Client &client, Server &ser
 	{
 		if (flag == "-i")
 		{
-			if (chan->getAccess().inviteOnly == true)
-				chan->setOnInvite(false);
+			if (chan->isInviteOnly())
+				chan->setInviteOnly(false);
 			else
-				chan->setOnInvite(true);
+				chan->setInviteOnly(true);
 			//sendChannelRPL(chan, RPL_CHANNELMODEIS, client);
 		}
 		else if (flag == "-t")
 		{
-			if (chan->getTopic().restricted == true)
-				chan->setRestricted(false);
+			if (chan->isTopicRestricted())
+				chan->setTopicRestricted(false);
 			else
-				chan->setRestricted(true);
+				chan->setTopicRestricted(true);
 			//sendChannelRPL(chan, RPL_CHANNELMODEIS, client);
 		}
 		else if (flag == "-k")
 		{
-			if (chan->getAccess().hasKey == true)
+			if (chan->hasKey() == true)
 				chan->setKey("");
 			else
 			{
@@ -72,17 +72,17 @@ void Command::mode(std::vector<std::string> parsing, Client &client, Server &ser
 			std::string targetName = *it;
 			int fd = findClientByName(server.getMapClients(), targetName);
 			Client *target = server.getMapClients().find(fd)->second;
-			if (chan->hasOperator(target))
-				chan->getOperators().erase(target);
+			if (chan->isOperator(target))
+				chan->removeOperator(target);
 			else
-				chan->getOperators().insert(target);
+				chan->addOperator(target);
 			//sendChannelRPL(chan, RPL_, client);
 			//sendChannelRPL(chan, RPL_, target); //send to target ?
 		}
 		else if (flag == "-l")
 		{
-			if (chan->getAccess().userLimit > 0)
-				chan->setUserLimit(0);
+			if (chan->hasUserLimit())
+				chan->removeUserLimit();
 			else
 			{
 				it ++;

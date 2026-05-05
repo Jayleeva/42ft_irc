@@ -47,7 +47,7 @@ void Command::invite(std::vector<std::string> parsing, Client &client, Server &s
 		return;
 	}
 
-	Client *targetClient = server.getClientbyNick(nickname);
+	Client *targetClient = server.getClientByNick(nickname);
 	if(!targetClient)
 	{
 		printError(ERR_NOSUCHNICK);
@@ -60,6 +60,6 @@ void Command::invite(std::vector<std::string> parsing, Client &client, Server &s
 		return;
 	}
 
-	channel->addInvite(targetClient);
+	channel->invite(targetClient);
 	//RPL_INVITING à ajouter
 }

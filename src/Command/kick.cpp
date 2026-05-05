@@ -6,7 +6,7 @@ from  a channel.
 ** KICK <channel> <user>
 */
 
-void Command::kick(Message const &msg, Client &client, Server &server)
+void Command::kick(std::vector<std::string> parsing, Client &client, Server &server)
 {
     std::string arg = getArgument(msg.getMsg());
 
