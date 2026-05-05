@@ -12,7 +12,7 @@ Message::~Message()
 {}
 
 //Allow to read the message
-std::string Message::getMsg() const
+const std::string Message::getMsg() const
 {
 	return _msg;
 }

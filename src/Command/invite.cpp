@@ -12,31 +12,54 @@ void Command::invite(Message const &msg, Client &client, Server &server)
 {    
 	std::string arg = getArgument(msg.getMsg());
 
-    size_t i = 0;
-    while (i < arg.size() && arg[i] == ' ')
-        i++;
-    arg = arg.substr(i);
-
     if (isEmptyArg(arg))
     {
         printError(ERR_NEEDMOREPARAMS);
         return ;
     }
 
-	size_t pos = arg.find(' ');
-	if (pos == std::string::npos)
+    std::string channelName = getTarget(arg);
+	std::string nickname = getMessage(arg);
+
+	if (isEmptyArg(channelName))
 	{
 		printError(ERR_NEEDMOREPARAMS);
 		return ;
 	}
 
-	std::string nickname = arg.substr(0, pos);
-	std::string channelName = arg.substr(pos + 1);
+	Channel *channel = server.getChannel(channelName);
 
-	i = 0;
-	while (i < channelName.size() && channelName[i] == ' ')
-		i++;
-	channelName = channelName.substr(i);
+	if (!channel)
+	{
+		printError(ERR_NOSUCHCHANNEL);
+		return;
+	}
+
+	if (!channel->hasMember(&client))
+	{
+		printError(ERR_NOTONCHANNEL);
+		return;
+	}
+
+	if (channel->isInviteOnly() && !channel->isOperator(&client))
+	{
+		printError(ERR_CHANOPRIVSNEEDED);
+		return;
+	}
+
+	Client *targetClient = server.getClientbyNick(nickname);
+	if(!targetClient)
+	{
+		printError(ERR_NOSUCHNICK);
+		return;
+	}
+
+	if (!channel->hasMember(targetClient))
+	{
+		printError(ERR_USERONCHANNEL);
+		return;
+	}
+
+	channel->addInvite(targetClient);
+	//RPL_INVITING à ajouter
 }
-
-// A finir plus tard

@@ -329,7 +329,7 @@ void Server::joinClientToChannel(Client *client, const std::string &name)
 {
     std::cout << "joinClientToChannel called" << std::endl;
     Channel *channel;
-
+      
     if (channelExists(name))
         channel = getChannel(name);
     else
@@ -341,6 +341,12 @@ void Server::joinClientToChannel(Client *client, const std::string &name)
         channel->addMember(client);
     if (!client->isInChannel(name))
         client->addChannel(name);
+  
+     if (channel->isInviteOnly() && !channel->isInvited(&client))
+      {
+            printError(ERR_INVITEONLYCHAN);
+            return;
+        }
 }
 
 void Server::removeClientFromChannel(Client *client, const std::string &name)

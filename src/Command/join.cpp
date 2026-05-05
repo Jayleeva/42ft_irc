@@ -8,13 +8,9 @@
 void Command::join(Message const &msg, Client &client, Server &server)
 {
 	std::string arg = getArgument(msg.getMsg());
+    std::string channelName = getTarget(arg);
 
-    size_t i = 0;
-    while (i < arg.size() && arg[i] == ' ')
-        i++;
-    arg = arg.substr(i);
-
-    if (isEmptyArg(arg))
+    if (isEmptyArg(channelName))
     {
         printError(ERR_NEEDMOREPARAMS);
         return ;
@@ -24,34 +20,30 @@ void Command::join(Message const &msg, Client &client, Server &server)
         printError(ERR_NOTREGISTERED);
         return ;
     }
-
-    size_t pos = arg.find(' ');
-    if (pos != std::string::npos)
-        arg = arg.substr(0, pos);
     
-    /*std::string channelName = arg;
-    Channel *channel;
-
-    if (server.channelExists(channelName))
-        channel = server.getChannel(channelName);
-    else
-        channel = server.createChannel(channelName);
-    
-    channel->addMember(&client);*/
-    if (!isValidChannelName(arg))
+    if (!isValidChannelName(channelName))
     {
         printError(ERR_BADCHANNELNAME);
         return ;
     }
-    server.joinClientToChannel(&client, arg);
+
+    Channel *channel = server.getChannel(channelName);
+    
+    /*if (channel)
+    {
+        if (channel->hasMember(&client))
+            return;
+            
+        if (channel->isInviteOnly() && !channel->isInvited(&client))
+        {
+            printError(ERR_INVITEONLYCHAN);
+            return;
+        }
+    }*/
+
+    server.joinClientToChannel(&client, channelName);
+
+    channel = server.getChannel(channelName);
+    if (channel)
+        channel->removeInvited(&client);
 }
-
-/*
-Server - Channels :
-
-- bool channelExists
-- getChannel
-- createChannel
-- joinClientToChannel
-- removeClientFromChannelgetPassword()
-*/
