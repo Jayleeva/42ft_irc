@@ -1,12 +1,8 @@
 #include "../../include/Command.hpp"
 
 /*
-**This command allows to choose a client nickname.
-**The server must:
-    check that the nickname is not empty
-    check if there is no invalid char
-    check that it is not already taken by another client
-    save this nickname in the `Client` object
+**NICK message is used to give user a nickname or change the previous one.
+**NICK <nickname>
 */
 
 void   printCurrentNicknames(Server &server)
@@ -24,33 +20,28 @@ void Command::nick(std::vector<std::string> parsing, Client &client, Server &ser
         printError(ERR_NEEDMOREPARAMS);
         return ;
     }
-    std::string arg = *(parsing.begin() + 1);
+    std::string nickname = *(parsing.begin() + 1);
 
-    for (size_t j = 0; j < arg.size(); j++)
+    for (size_t j = 0; j < nickname.size(); j++)
     {
-        if (arg[j] == ' ' || arg[j] == '\t')
+        if (nickname[j] == ' ' || nickname[j] == '\t')
         {
             printError(ERR_ERRONEUSNICKNAME);
             return ;
         }
     }
 
-    if (arg[0] == '#' || arg[0] == '&')
+    if (nickname[0] == '#' || nickname[0] == '&')
     {
         printError(ERR_ERRONEUSNICKNAME);
         return;
     }
 
-    if (server.nicknameExists(arg) && arg != client.getNickname())
+    if (server.nicknameExists(nickname) && nickname != client.getNickname())
     {
         printError(ERR_NICKNAMEINUSE);
         return ;
     }
         
-    client.setNickname(arg);
-    //printCurrentNicknames(server);
+    client.setNickname(nickname);
 }
-
-/*
-**bool nicknameExists(std::string nick) : à faire dans server ou ici ?
-*/

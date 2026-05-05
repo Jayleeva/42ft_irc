@@ -12,49 +12,37 @@ void Command::join(std::vector<std::string> parsing, Client &client, Server &ser
         printError(ERR_NEEDMOREPARAMS);
         return ;
     }
-	std::string channelName = *(parsing.begin() + 1);
+    std::string channelName = *(parsing.begin() + 1);
+
+    if (!client.isRegistered())
+    {
+        printError(ERR_NOTREGISTRED);
+        return ;
+    }
     
-    Channel *channel;
-    if (channelExists(server.getMapChannels(), channelName) == true)
+    if (!isValidChannelName(channelName))
     {
-        channel = server.getMapChannels().find(channelName)->second;
+        printError(ERR_BADCHANNELNAME);
+        return ;
+    }
+
+    Channel *channel = server.getChannel(channelName);
+    
+    /*if (channel)
+    {
         if (channel->hasMember(&client))
+            return;
+            
+        if (channel->isInviteOnly() && !channel->isInvited(&client))
         {
+            printError(ERR_INVITEONLYCHAN);
             return;
         }
-        /*if (channel->HasBanKicked(&client))
-        {
-            printError(ERR_BANNEDFROMCHAN);
-            return;
-        }*/
-        if (channel->getAccess().hasKey)
-        {
-            if (parsing.size() < 3)
-            {
-                printError(ERR_NEEDMOREPARAMS);
-                return ;
-            }
-            if (*(parsing.begin() + 2) != channel->getAccess().key)
-            {
-                printError(ERR_BADCHANNELKEY);
-                return ;
-            }
-        }
-    }
-    else
-    {
-        channel = server.createChannel(channelName, &client);
-        channel->addOperator(&client);
-    }
-    channel->addMember(&client);
+    }*/
+
+    server.joinClientToChannel(&client, channelName);
+
+    channel = server.getChannel(channelName);
+    if (channel)
+        channel->removeInvite(&client);
 }
-
-/*
-Server - Channels :
-
-- bool channelExists
-- getChannel
-- createChannel
-- joinClientToChannel
-- removeClientFromChannelgetPassword()
-*/

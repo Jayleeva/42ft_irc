@@ -26,15 +26,40 @@ void Command::invite(std::vector<std::string> parsing, Client &client, Server &s
 		printError(ERR_NOSUCHCHANNEL);
 		return;
 	}
-	Channel *chan = server.getMapChannels().find(channelName)->second;
 
-	int fd = findClientByName(server.getMapClients(), nickname);
-	Client *target = server.getMapClients().find(fd)->second;
+	Channel *channel = server.getChannel(channelName);
 
-	if (chan->hasMember(target))
+	if (!channel)
+	{
+		printError(ERR_NOSUCHCHANNEL);
+		return;
+	}
+
+	if (!channel->hasMember(&client))
+	{
+		printError(ERR_NOTONCHANNEL);
+		return;
+	}
+
+	if (channel->isInviteOnly() && !channel->isOperator(&client))
+	{
+		printError(ERR_CHANOPRIVSNEEDED);
+		return;
+	}
+
+	Client *targetClient = server.getClientbyNick(nickname);
+	if(!targetClient)
+	{
+		printError(ERR_NOSUCHNICK);
+		return;
+	}
+
+	if (!channel->hasMember(targetClient))
 	{
 		printError(ERR_USERONCHANNEL);
 		return;
 	}
-	chan->addMember(target);
+
+	channel->addInvite(targetClient);
+	//RPL_INVITING à ajouter
 }

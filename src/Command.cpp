@@ -57,6 +57,23 @@ void Command::execute(Client &client, Server &server)
         pong(client);
     else if (_cmd == CMD_PASS)
         pass(_parsing, client, server.getPassword());
+    if (_cmd.empty())
+    {
+        printError(ERR_CMD);
+        return;
+    }
+    
+    if (_cmd != CMD_PASS && _cmd != CMD_NICK && _cmd != CMD_USER)
+    {
+        if (!client.isRegistered())
+        {
+            printError(ERR_NOTREGISTERED);
+            return;
+        }
+    }
+
+    if (_cmd == CMD_PASS)
+        pass(msg, client, server);
     else if (_cmd == CMD_NICK)
         nick(_parsing, client, server);
     else if (_cmd == CMD_USER)
@@ -67,6 +84,14 @@ void Command::execute(Client &client, Server &server)
         mode(_parsing, client, server);
     else if (_cmd == CMD_TOPIC)
         topic(_parsing, client, server);
+    else if (_cmd == CMD_PART)
+        part(_cmd, client, server);
+    else if (_cmd == CMD_PRIVMSG)
+        privmsg(_cmd, client, server);
+    else if (_cmd == CMD_INVITE)
+        invite(_cmd, client, server);
+    else if (_cmd == CMD_KICK)
+        kick(_cmd, client, server);
     else if (_cmd == CMD_QUIT)
         return ;
     else
@@ -74,4 +99,3 @@ void Command::execute(Client &client, Server &server)
         printError(_cmd + ERR_UNKNOWNCOMMAND);
     }
 }
-

@@ -16,6 +16,13 @@ class Channel;
 # define GREEN "\001\033[1;32m\002"
 # define MAG  "\001\033[1;35m\002"
 
+//Colors
+# define DEFAULT "\001\033[0;39m\002"
+# define YELLOW "\001\033[1;93m\002"
+# define RED "\001\033[0;31m\002"
+# define GREEN "\001\033[1;32m\002"
+# define MAG  "\001\033[1;35m\002"
+
 //Error messages
 #define ERR_NOTREGISTRED " :You have not registered"
 #define ERR_ALREADYREGISTRED " :You may not reregister"
@@ -29,6 +36,8 @@ class Channel;
 #define ERR_NONICKNAMEGIVEN " :No nickname given"
 #define ERR_UMODEUNKNOWNFLAG " :Unknown MODE flag"
 #define ERR_UNKNOWNMODE " :is unknown mode char to me"
+
+#define ERR_BADCHANNELNAME " : Bad channel name"
 
 #define ERR_NOTONCHANNEL " :You're not on that channel"
 #define ERR_NOSUCHCHANNEL " :No such channel"
@@ -66,4 +75,5 @@ std::string     getArgument(const std::string& msg);
 void            printError(const std::string& errorMsg);
 int             findClientByName(std::map<int, Client*> _clients, std::string name);
 bool            channelExists(std::map<std::string, Channel*> channels, std::string name);
+bool 			isValidChannelName(const std::string &name);
 #endif

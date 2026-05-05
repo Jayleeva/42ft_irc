@@ -31,14 +31,17 @@ class Client
         Client(std::map<std::string, Channel*> channels, int fd);
 
         int getFd() const;
-        std::string getNickname() const;
-        std::string getUsername() const;
-        std::string getHostname() const;
+        const std::string& getNickname() const;
+        const std::string& getUsername() const;
+        const std::string& getHostname() const;
         bool isRegistered() const;
 
         void setNickname(const std::string &nickname);
         void setUsername(const std::string &username);
         void setHostname(const std::string &hostname);
+        
+        bool hasPass() const;
+        void setPassValid();
         void tryRegister();
 
         void addChannel(const std::string &channelName);

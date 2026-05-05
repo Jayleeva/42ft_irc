@@ -9,6 +9,7 @@ SRC = 	main.cpp \
 		Client.cpp \
 		Channel.cpp \
 		utils.cpp \
+		parsing.cpp \
 		Command.cpp \
 		Command/pass.cpp \
 		Command/nick.cpp \
