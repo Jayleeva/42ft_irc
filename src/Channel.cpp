@@ -268,7 +268,10 @@ bool Channel::hasKey() const
 void Channel::setKey(const std::string &key)
 {
 	if (key.empty())
+	{
+		_hasKey = false;
 		return ;
+	}
 	_key = key;
 	_hasKey = true;
 }

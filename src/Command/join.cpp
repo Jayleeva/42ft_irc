@@ -14,35 +14,11 @@ void Command::join(std::vector<std::string> parsing, Client &client, Server &ser
     }
     std::string channelName = *(parsing.begin() + 1);
 
-    if (!client.isRegistered())
-    {
-        printError(ERR_NOTREGISTRED);
-        return ;
-    }
-    
-    if (!isValidChannelName(channelName))
-    {
-        printError(ERR_BADCHANNELNAME);
-        return ;
-    }
+    std::string key = "";
+    if  (parsing.size() >= 2)
+        key = *(parsing.begin() + 2);
+  
+    server.joinClientToChannel(&client, channelName, key);
 
-    Channel *channel = server.getChannel(channelName);
-    
-    /*if (channel)
-    {
-        if (channel->hasMember(&client))
-            return;
-            
-        if (channel->isInviteOnly() && !channel->isInvited(&client))
-        {
-            printError(ERR_INVITEONLYCHAN);
-            return;
-        }
-    }*/
 
-    server.joinClientToChannel(&client, channelName);
-
-    channel = server.getChannel(channelName);
-    if (channel)
-        channel->removeInvite(&client);
 }

@@ -60,8 +60,8 @@ class Server
         bool    nicknameExists(const std::string &nickname) const;
         bool    channelExists(const std::string &name) const;
         Channel *getChannel(const std::string &name);
-        Channel *createChannel(const std::string &name);
-        void    joinClientToChannel(Client *client, const std::string &name);
+        Channel *createChannel(const std::string &name, const std::string key);
+        void    joinClientToChannel(Client *client, const std::string &name, const std::string key);
         void    removeClientFromChannel(Client *client, const std::string &name);
         Client  *getClientByNick(const std::string &nickname);
         void    sendMessageToClient(Client *target, const std::string &message);

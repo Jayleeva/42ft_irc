@@ -175,7 +175,7 @@ void    Server::removeFromAllChannels(Client *client)
     {
         if (it->second->hasMember(client))
         {
-            if (it->second->hasOperator(client))
+            if (it->second->isOperator(client))
                 it->second->removeOperator(client);
             it->second->removeMember(client);
         }
@@ -329,10 +329,10 @@ bool Server::nicknameExists(const std::string &nickname) const
     return (false);
 }
 
-Channel *Server::createChannel(const std::string &name, Client *client)
+/*Channel *Server::createChannel(const std::string &name, Client *client)   //NOTE: deja un createchannel + celui-ci ne fait que retourner un password?
 {
     return (this->_password);
-}
+}*/
 
 bool Server::channelExists(const std::string &name) const
 {
@@ -349,37 +349,63 @@ Channel *Server::getChannel(const std::string &name)
     return (NULL);
 }
 
-Channel *Server::createChannel(const std::string &name)
+Channel *Server::createChannel(const std::string &name, const std::string key)
 {
     Channel *newChannel;
 
     newChannel = new Channel(name);
     _channels.insert(std::make_pair(name, newChannel));
+    newChannel->setKey(key);
     return (newChannel);
 }
 
-void Server::joinClientToChannel(Client *client, const std::string &name)
+void Server::joinClientToChannel(Client *client, const std::string &name, const std::string key)
 {
     std::cout << "joinClientToChannel called" << std::endl;
     Channel *channel;
-      
-    if (channelExists(name))
-        channel = getChannel(name);
-    else
+
+    if (!client->isRegistered())
     {
-        channel = createChannel(name);
-        channel->addOperator(client);
+        printError(ERR_NOTREGISTRED);
+        return ;
     }
-    if (!channel->hasMember(client))
-        channel->addMember(client);
-    if (!client->isInChannel(name))
-        client->addChannel(name);
-  
-     if (channel->isInviteOnly() && !channel->isInvited(&client))
-      {
+    
+    if (channelExists(name))
+    {
+        channel = getChannel(name);
+        if (channel->isInviteOnly() && !channel->isInvited(client)) // NOTE: faire une generale checkInvite? comme checkKey? voire une encore plus generale checkAccess et qui appelle checkInvite, checkLimit, checkKey?
+        {
             printError(ERR_INVITEONLYCHAN);
             return;
         }
+        if (!channel->checkKey(key))
+        {
+            printError(ERR_BADCHANNELKEY);
+            return;
+        }
+        if (channel->hasUserLimit() && channel->getNumberUsers() == channel->getUserLimit())
+        {
+            printError(ERR_CHANNELISFULL);
+            return;
+        }
+    }
+    else
+    {
+        if (!isValidChannelName(name))
+        {
+            printError(ERR_BADCHANNELNAME);
+            return ;
+        }
+        channel = createChannel(name, key);
+        channel->addOperator(client);
+    }
+
+    if (!channel->hasMember(client))
+    {
+        channel->addMember(client);
+        if (channel->isInvited(client))
+            channel->removeInvite(client);
+    }
 }
 
 void Server::removeClientFromChannel(Client *client, const std::string &name)

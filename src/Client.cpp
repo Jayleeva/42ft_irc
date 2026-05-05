@@ -98,9 +98,9 @@ void Client::removeChannel(const std::string &channelName)
     _channels.erase(channelName);
 }
 
-bool Client::isInChannel(const std::string &channelName) const
+/*bool Client::isInChannel(const std::string &channelName) const    //NOTE: plus besoin car chaque client n'a pas de liste
 {
     if (channelName.empty())
 		return false;
     return (_channels.find(channelName) != _channels.end());
-}
+}*/
