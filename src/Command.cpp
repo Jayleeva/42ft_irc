@@ -65,6 +65,8 @@ void Command::execute(Client &client, Server &server)
         join(_parsing, client, server);
     else if (_cmd == CMD_MODE)
         mode(_parsing, client, server);
+    else if (_cmd == CMD_TOPIC)
+        topic(_parsing, client, server);
     else if (_cmd == CMD_QUIT)
         return ;
     else
