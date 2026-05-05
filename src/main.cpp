@@ -11,7 +11,6 @@ int main()
     c1.setNickname("lisa");
     c2.setNickname("chester");
 
-<<<<<<< HEAD
     password = argv[2];
     if (password.empty())
     {
@@ -30,21 +29,13 @@ int main()
 		std::cout << "Invalid port number. Available ports range from 0 to 65535. Suggested port: 6667" << std::endl;
         std::exit(1);
     }
-=======
     std::cout << std::boolalpha;
->>>>>>> 154afa2 (méthodes pour commandes + petite correction)
 
     std::cout << "channel name: " << ch.getName() << std::endl;
     std::cout << "c1 in channel: " << ch.hasMember(&c1) << std::endl;
 
-<<<<<<< HEAD
-    std::cout << "recieved port : " << port << std::endl;
-    std::cout << "transformed port : " << addr.sin_port << std::endl;
-    std::cout << "server address : " << addr.sin_addr.s_addr << std::endl;
-=======
     ch.addMember(&c1);
     std::cout << "c1 in channel: " << ch.hasMember(&c1) << std::endl;
->>>>>>> 154afa2 (méthodes pour commandes + petite correction)
 
     ch.addMember(&c2);
     std::cout << "c2 in channel: " << ch.hasMember(&c2) << std::endl;

@@ -52,6 +52,14 @@ class Server
         void    removeClient(nfds_t i); 
         void    execClient(nfds_t i);
         bool    nicknameExists(const std::string &nickname) const;
+        bool    channelExists(const std::string &name) const;
+        Channel *getChannel(const std::string &name);
+        Channel *createChannel(const std::string &name);
+        void    joinClientToChannel(Client *client, const std::string &name);
+        void    removeClientFromChannel(Client *client, const std::string &name);
+        Client  *getClientByNick(const std::string &nickname);
+        void    sendMessageToClient(Client *target, const std::string &message);
+        void    sendMessageToChannel(Client *sender, Channel *channel, const std::string &message);
 };
 
 void    printMap(std::map<int, Client *> map);

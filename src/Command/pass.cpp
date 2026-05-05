@@ -14,6 +14,7 @@
 
 void Command::pass(Message const &msg, Client &client, Server &server)
 {
+    std::cout << "PASS handler called" << std::endl;
     std::string arg = getArgument(msg.getMsg());
 
     size_t i = 0;
@@ -43,5 +44,5 @@ void Command::pass(Message const &msg, Client &client, Server &server)
         return ;
     }
 
-    client.tryRegister(true);
+    client.setPassValid();
 }
