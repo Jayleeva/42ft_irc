@@ -69,7 +69,7 @@ class Server
         void    sendMessageToClient(Client *sender, Client *target, const std::string &message);
         void    sendMessageToChannel(Client *sender, Channel *channel, const std::string &message);
 
-        void    sendCap(std::vector<std::string> _parsing, Client &client);
+        void    sendCap(Client &client);
         void    sendWelcome(Client &client);
         void    pong(std::vector<std::string> _parsing, Client &client);
 };

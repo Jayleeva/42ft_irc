@@ -47,7 +47,7 @@ void Command::execute(Client &client, Server &server)
         if (*(_parsing.begin() + 1) == "END\r\n")
             server.sendWelcome(client);
         else
-            server.sendCap(_parsing, client);
+            server.sendCap(client);
     }
     else if (_cmd == CMD_PASS)
         pass(_parsing, client, server.getPassword());   ///NOTE
@@ -56,6 +56,7 @@ void Command::execute(Client &client, Server &server)
     else if (_cmd == CMD_USER)
     {
         user(_parsing, client);
+        //server.sendCap(client);
         server.sendWelcome(client);
     }
     else if (_cmd == CMD_JOIN)

@@ -148,7 +148,7 @@ void    Server::addClient()
     { 
         buffer[nbytes] = '\0';
         std::cout << "add " << RED << nbytes << DEFAULT << std::endl;
-        std::cout << "buffer = " << buffer << std::endl;
+        std::cout << "< " << buffer << std::endl;
     }
     //(id) handshake [<option>=<valeur>,[<option>=<valeur>,...]]
     //std::string message = this->_password;
@@ -254,7 +254,7 @@ void    Server::execClient(nfds_t i)
         execCmd(buffer, fd);
         
         std::cout << "exec " << RED << nbytes << DEFAULT << std::endl;
-        std::cout << "buffer = " << buffer << std::endl;
+        std::cout << "< " << buffer << std::endl;
 
         /*if (nbytes)
         {
@@ -473,23 +473,23 @@ void Server::sendMessageToChannel(Client *sender, Channel *channel, const std::s
     }
 }
 
-void Server::sendCap(std::vector<std::string> _parsing, Client &client)
+void Server::sendCap(Client &client)
 {
     std::string cap = "CAP * LS :" + _name;
-    (void)_parsing;
+    std::cout << "> " << cap << std::endl;
     send(client.getFd(), cap.c_str(), strlen(cap.c_str()), 0);
 }
 
 void Server::sendWelcome(Client &client)
 {
     std::string welcome = ":"  + _name + " 001 " + client.getNickname();
-    std::cout << welcome << std::endl;
+    std::cout << "> " << welcome << std::endl;
     send(client.getFd(), welcome.c_str(), strlen(welcome.c_str()), 0);
 }
 
 void    Server::pong(std::vector<std::string> _parsing, Client &client)
 {
     std::string pong = "PONG " + *(_parsing.begin() + 1);
-    std::cout << pong << std::endl;
+    std::cout << "> " << pong << std::endl;
     send(client.getFd(), pong.c_str(), strlen(pong.c_str()), 0);
 }
