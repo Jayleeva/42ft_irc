@@ -20,20 +20,6 @@ void    Command::setParsing(std::vector<std::string> parsing)
     _parsing = parsing;
 }
 
-void sendWelcome(std::vector<std::string> _parsing, Client &client)
-{
-    std::string cap = *(_parsing.begin() + 1) + " " + *(_parsing.begin() + 2);
-
-    std::string welcome = RPL_WELCOME + cap;
-    std::cout << welcome << std::endl;
-    send(client.getFd(), welcome.c_str(), strlen(welcome.c_str()), 0);
-}
-
-void    pong(Client &client)
-{
-    std::string pong = "PONG"; 
-    send(client.getFd(), pong.c_str(), strlen(pong.c_str()), 0);
-}
 
 void    printParsing(std::vector<std::string> parsing)
 {
@@ -51,33 +37,27 @@ void Command::execute(Client &client, Server &server)
 {
     std::string _cmd = _parsing.front();
 
-    if (_cmd == CMD_CAP)
-        sendWelcome(_parsing, client);
-    else if (_cmd == CMD_PING)
-        pong(client);
-    else if (_cmd == CMD_PASS)
-        pass(_parsing, client, server.getPassword());
     if (_cmd.empty())
     {
         printError(ERR_UNKNOWNCOMMAND);
         return;
     }
-    
-    if (_cmd != CMD_PASS && _cmd != CMD_NICK && _cmd != CMD_USER)
+    if (_cmd == CMD_CAP)
     {
-        if (!client.isRegistered())
-        {
-            printError(ERR_NOTREGISTRED);
-            return;
-        }
+        if (*(_parsing.begin() + 1) == "END\r\n")
+            server.sendWelcome(client);
+        else
+            server.sendCap(_parsing, client);
     }
-
-    if (_cmd == CMD_PASS)
+    else if (_cmd == CMD_PASS)
         pass(_parsing, client, server.getPassword());   ///NOTE
     else if (_cmd == CMD_NICK)
         nick(_parsing, client, server);
     else if (_cmd == CMD_USER)
+    {
         user(_parsing, client);
+        server.sendWelcome(client);
+    }
     else if (_cmd == CMD_JOIN)
         join(_parsing, client, server);
     else if (_cmd == CMD_MODE)
@@ -92,6 +72,8 @@ void Command::execute(Client &client, Server &server)
         invite(_parsing, client, server);
     else if (_cmd == CMD_KICK)
         kick(_parsing, client, server);
+    else if (_cmd == CMD_PING)
+        server.pong(_parsing, client);
     else if (_cmd == CMD_QUIT)
         return ;
     else

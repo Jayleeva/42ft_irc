@@ -34,7 +34,7 @@ void Command::nick(std::vector<std::string> parsing, Client &client, Server &ser
     if (nickname[0] == '#' || nickname[0] == '&')
     {
         printError(ERR_ERRONEUSNICKNAME);
-        return;
+        return ;
     }
 
     if (server.nicknameExists(nickname) && nickname != client.getNickname())
@@ -44,4 +44,6 @@ void Command::nick(std::vector<std::string> parsing, Client &client, Server &ser
     }
         
     client.setNickname(nickname);
+    //std::string hostname = ;
+    return ;
 }

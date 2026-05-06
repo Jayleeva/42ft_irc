@@ -15,6 +15,9 @@ void Command::user(std::vector<std::string> parsing, Client &client)
     }
 
     std::string arg = *(parsing.begin() + 1);
-    
-    client.setUsername(arg); 
+    client.setUsername(arg);
+
+    /*std::string arg2 = *(parsing.begin() + 4);
+    arg2.erase(0, 1);
+    client.setRealName(arg2);*/ 
 }

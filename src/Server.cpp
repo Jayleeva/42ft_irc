@@ -2,7 +2,8 @@
 #include "../include/utils.hpp"
 #include "../include/Command.hpp"
 
-Server::Server() {};
+Server::Server():_name("ircserv") {};
+
 Server::~Server()
 {
     std::map<int, Client*>::iterator it;
@@ -42,6 +43,10 @@ std::string Server::getPassword() const
     return (this->_password);
 }
 
+std::string Server::getName() const
+{
+    return (this->_name);
+}
 
 void    printMap(std::map<int, Client *> map)
 {
@@ -466,4 +471,25 @@ void Server::sendMessageToChannel(Client *sender, Channel *channel, const std::s
             send((*it)->getFd(), message.c_str(), message.length(), 0);
         it++;
     }
+}
+
+void Server::sendCap(std::vector<std::string> _parsing, Client &client)
+{
+    std::string cap = "CAP * LS :" + _name;
+    (void)_parsing;
+    send(client.getFd(), cap.c_str(), strlen(cap.c_str()), 0);
+}
+
+void Server::sendWelcome(Client &client)
+{
+    std::string welcome = ":"  + _name + " 001 " + client.getNickname();
+    std::cout << welcome << std::endl;
+    send(client.getFd(), welcome.c_str(), strlen(welcome.c_str()), 0);
+}
+
+void    Server::pong(std::vector<std::string> _parsing, Client &client)
+{
+    std::string pong = "PONG " + *(_parsing.begin() + 1);
+    std::cout << pong << std::endl;
+    send(client.getFd(), pong.c_str(), strlen(pong.c_str()), 0);
 }

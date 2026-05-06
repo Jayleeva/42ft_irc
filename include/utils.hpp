@@ -57,7 +57,7 @@ class Channel;
 #define ERR_NOTEXTTOSEND " :No text to send"
 #define ERR_CANNOTSENDTOCHAN "<channel name> :Cannot send to channel"
 //Return messages
-#define RPL_WELCOME ":ircserv 001 " // to confirm connection
+#define RPL_WELCOME ":Welcome to the ircserv " // to confirm connection
 
 #define RPL_NAMREPLY "[@|+]" //to confirm join // <channel> :[[@|+]<nick> [[@|+]<nick> [...]]]
 #define RPL_ENDOFNAMES " :End of /NAMES list"  // to close the list of names

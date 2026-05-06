@@ -35,6 +35,7 @@ class Server
         std::string     _password;
         std::map<int, Client*> _clients; // fd -> Client (index des clients connectés-> clients indexés par fd)
         std::map<std::string, Channel*> _channels; // nom de channel -> Channel (index des channels existants -> channels indexés par nom)
+        std::string     _name;
 
     public:
         Server();
@@ -45,6 +46,7 @@ class Server
         std::map<std::string, Channel*> getMapChannels() const;
         void                            setPassword(std::string);
         std::string                     getPassword() const;
+        std::string                     getName() const;
 
         void    openSocket(struct sockaddr_in *addr);
         void    closeSockets();
@@ -66,6 +68,10 @@ class Server
         Client  *getClientByNick(const std::string &nickname);
         void    sendMessageToClient(Client *sender, Client *target, const std::string &message);
         void    sendMessageToChannel(Client *sender, Channel *channel, const std::string &message);
+
+        void    sendCap(std::vector<std::string> _parsing, Client &client);
+        void    sendWelcome(Client &client);
+        void    pong(std::vector<std::string> _parsing, Client &client);
 };
 
 void    printMap(std::map<int, Client *> map);
