@@ -239,6 +239,22 @@ void Server::execCmd(std::string input, int fd)
     cmd.execute(*(this->_clients.find(fd)->second), *this);
 }
 
+std::vector<std::string>    splitCmd(std::string buffer)
+{
+    std::vector<std::string>	parsing;
+    std::string                 delimiter = "\r\n";
+    size_t pos = 0;
+    std::string element;
+    while ((pos = buffer.find(delimiter)) != std::string::npos)
+    {
+        element = buffer.substr(0, pos);
+        parsing.push_back(element);
+        buffer.erase(0, pos + delimiter.length());
+    }
+    parsing.push_back(buffer);
+    return (parsing);
+}
+
 void    Server::execClient(nfds_t i)
 {
     int fd = this->_fds[i].fd;
@@ -251,22 +267,14 @@ void    Server::execClient(nfds_t i)
     {
         buffer[nbytes] = '\0';
 
-        execCmd(buffer, fd);
-        
         std::cout << "exec " << RED << nbytes << DEFAULT << std::endl;
-        std::cout << "< " << buffer << std::endl;
 
-        /*if (nbytes)
+        std::vector<std::string> split = splitCmd(buffer);
+        for (std::vector<std::string>::iterator it = split.begin(); it != split.end(); it ++)
         {
-            for (nfds_t j = 1; j < _nfd; j ++)
-            {
-                if (j != i)
-                {
-                    std::cout << "'" << buffer << "'" << " sent to client " << _fds[j].fd << " from client " << fd << std::endl;
-                    send(_fds[j].fd, buffer, strlen(buffer), 0);
-                }
-            }
-        }*/
+            execCmd(*(it), fd);
+            std::cout << "< " << (*it) << std::endl;
+        }
     }
     if (nbytes == 0)
         this->removeClient(i);
@@ -449,13 +457,19 @@ Client *Server::getClientByNick(const std::string &nickname)
     return (NULL);
 }
 
-void Server::sendMessageToClient(Client *sender, Client *target, const std::string &message)
+void Server::sendToClient(Client *target, std::string &message)
 {
     if (!target)
         return;
-    
+    message.append("\r\n");
+    std::cout << "> " << message << std::endl;
+    send(target->getFd(), message.c_str(), message.length(), 0);
+}
+
+void Server::sendMessageToClient(Client *sender, Client *target, const std::string &message)
+{
     std::string msg = sender->getNickname() + " PRIVMSG :" + message; // NOTE: pour que le client du destinataire lui affiche qui lui a envoye le message?
-    send(target->getFd(), msg.c_str(), msg.length(), 0);
+    sendToClient(target, msg);
 }
 
 void Server::sendMessageToChannel(Client *sender, Channel *channel, const std::string &message)
@@ -468,7 +482,7 @@ void Server::sendMessageToChannel(Client *sender, Channel *channel, const std::s
     while (it != members.end())
     {
         if (*it != sender)
-            send((*it)->getFd(), message.c_str(), message.length(), 0);
+            sendToClient((*it), msg);
         it++;
     }
 }
@@ -476,20 +490,17 @@ void Server::sendMessageToChannel(Client *sender, Channel *channel, const std::s
 void Server::sendCap(Client &client)
 {
     std::string cap = "CAP * LS :" + _name;
-    std::cout << "> " << cap << std::endl;
-    send(client.getFd(), cap.c_str(), strlen(cap.c_str()), 0);
+    sendToClient(&client, cap);
 }
 
 void Server::sendWelcome(Client &client)
 {
     std::string welcome = ":"  + _name + " 001 " + client.getNickname();
-    std::cout << "> " << welcome << std::endl;
-    send(client.getFd(), welcome.c_str(), strlen(welcome.c_str()), 0);
+    sendToClient(&client, welcome);
 }
 
 void    Server::pong(std::vector<std::string> _parsing, Client &client)
 {
     std::string pong = "PONG " + *(_parsing.begin() + 1);
-    std::cout << "> " << pong << std::endl;
-    send(client.getFd(), pong.c_str(), strlen(pong.c_str()), 0);
+    sendToClient(&client, pong);
 }

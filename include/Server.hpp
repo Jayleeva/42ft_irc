@@ -66,6 +66,8 @@ class Server
         void    joinClientToChannel(Client *client, const std::string &name, const std::string key);
         void    removeClientFromChannel(Client *client, const std::string &name);
         Client  *getClientByNick(const std::string &nickname);
+
+        void    sendToClient(Client *target, std::string &message);
         void    sendMessageToClient(Client *sender, Client *target, const std::string &message);
         void    sendMessageToChannel(Client *sender, Channel *channel, const std::string &message);
 
