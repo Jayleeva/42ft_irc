@@ -20,6 +20,13 @@ void Command::nick(std::vector<std::string> parsing, Client &client, Server &ser
         printError(ERR_NEEDMOREPARAMS);
         return ;
     }
+
+    if (!client.hasPass())
+    {
+        printError(ERR_PASSWDMISMATCH);
+        return ;
+    }
+
     std::string nickname = *(parsing.begin() + 1);
 
     for (size_t j = 0; j < nickname.size(); j++)
@@ -42,6 +49,6 @@ void Command::nick(std::vector<std::string> parsing, Client &client, Server &ser
         printError(ERR_NICKNAMEINUSE);
         return ;
     }
-        
+
     client.setNickname(nickname);
 }

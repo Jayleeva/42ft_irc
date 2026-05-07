@@ -14,7 +14,13 @@ void Command::user(std::vector<std::string> parsing, Client &client)
         return ;
     }
 
+    if (!client.hasPass())
+    {
+        printError(ERR_PASSWDMISMATCH);
+        return ;
+    }
+
     std::string arg = *(parsing.begin() + 1);
-    
-    client.setUsername(arg); 
+
+    client.setUsername(arg);
 }
