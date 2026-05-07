@@ -21,10 +21,10 @@ void Command::invite(std::vector<std::string> parsing, Client &client, Server &s
 	std::string nickname = *(parsing.begin() + 1);
 	std::string channelName = *(parsing.begin() + 2);
 
-    if (channelExists(server.getMapChannels(), channelName) == false)
+    if (!server.channelExists(channelName))
 	{
-		printError(ERR_NOSUCHCHANNEL);
-		return;
+    	printError(ERR_NOSUCHCHANNEL);
+    	return ;
 	}
 
 	Channel *channel = server.getChannel(channelName);
@@ -47,7 +47,7 @@ void Command::invite(std::vector<std::string> parsing, Client &client, Server &s
 		return;
 	}
 
-	Client *targetClient = server.getClientbyNick(nickname);
+	Client *targetClient = server.getClientByNick(nickname);
 	if(!targetClient)
 	{
 		printError(ERR_NOSUCHNICK);
@@ -60,6 +60,6 @@ void Command::invite(std::vector<std::string> parsing, Client &client, Server &s
 		return;
 	}
 
-	channel->addInvite(targetClient);
+	channel->invite(targetClient);
 	//RPL_INVITING à ajouter
 }

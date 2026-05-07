@@ -130,7 +130,7 @@ void    Server::addClient()
     this->_fds[this->_nfd].events = POLLIN;
     this->_nfd ++;
 
-    Client  *newClient = new Client(this->_channels, clientSocket);
+    Client *newClient = new Client(clientSocket);
     newClient->setHostname(inet_ntoa(clientAddr.sin_addr));
     this->_clients.insert(this->_clients.end(), std::make_pair(clientSocket, newClient));
 
@@ -175,7 +175,7 @@ void    Server::removeFromAllChannels(Client *client)
     {
         if (it->second->hasMember(client))
         {
-            if (it->second->hasOperator(client))
+            if (it->second->isOperator(client))
                 it->second->removeOperator(client);
             it->second->removeMember(client);
         }
@@ -329,11 +329,6 @@ bool Server::nicknameExists(const std::string &nickname) const
     return (false);
 }
 
-Channel *Server::createChannel(const std::string &name, Client *client)
-{
-    return (this->_password);
-}
-
 bool Server::channelExists(const std::string &name) const
 {
     return (_channels.find(name) != _channels.end());
@@ -360,9 +355,10 @@ Channel *Server::createChannel(const std::string &name)
 
 void Server::joinClientToChannel(Client *client, const std::string &name)
 {
-    std::cout << "joinClientToChannel called" << std::endl;
     Channel *channel;
-      
+
+    if (!client)
+        return ;
     if (channelExists(name))
         channel = getChannel(name);
     else
@@ -374,18 +370,14 @@ void Server::joinClientToChannel(Client *client, const std::string &name)
         channel->addMember(client);
     if (!client->isInChannel(name))
         client->addChannel(name);
-  
-     if (channel->isInviteOnly() && !channel->isInvited(&client))
-      {
-            printError(ERR_INVITEONLYCHAN);
-            return;
-        }
 }
 
 void Server::removeClientFromChannel(Client *client, const std::string &name)
 {
     Channel *channel;
 
+    if (!client)
+        return ;
     if (!channelExists(name))
         return;
 

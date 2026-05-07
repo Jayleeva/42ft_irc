@@ -55,6 +55,6 @@ void Command::privmsg(Message const &msg, Client &client, Server &server)
             return ;
         }
 
-        server.sendMessageToClient(*targetClient, message);
+        server.sendMessageToClient(targetClient, message);
     }
 }

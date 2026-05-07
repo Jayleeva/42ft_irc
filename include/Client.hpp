@@ -3,13 +3,6 @@
 
 #include <string>
 #include <set>
-#include <map>
-#include "Channel.hpp"
-
-# define NON_MEMBER_STATUS 0
-# define MEMBER_STATUS 1
-# define OPERATOR_STATUS 2 
-# define KICKED_STATUS 3
 
 class Channel;
 
@@ -28,7 +21,7 @@ class Client
     
     public:
         Client();
-        Client(std::map<std::string, Channel*> channels, int fd);
+        Client(int fd);
 
         int getFd() const;
         const std::string& getNickname() const;
@@ -46,6 +39,7 @@ class Client
 
         void addChannel(const std::string &channelName);
         void removeChannel(const std::string &channelName);
+        bool isInChannel(const std::string &channelName) const;
 };
 
 #endif

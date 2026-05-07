@@ -7,38 +7,52 @@
 
 void Command::join(std::vector<std::string> parsing, Client &client, Server &server)
 {
+    std::string channelName;
+    std::string key;
+    Channel *channel;
+
     if (parsing.size() < 2)
     {
         printError(ERR_NEEDMOREPARAMS);
         return ;
     }
-    std::string channelName = *(parsing.begin() + 1);
-
     if (!client.isRegistered())
     {
         printError(ERR_NOTREGISTRED);
         return ;
     }
-    
+
+    channelName = parsing[1];
+    if (parsing.size() >= 3)
+        key = parsing[2];
+
     if (!isValidChannelName(channelName))
     {
         printError(ERR_BADCHANNELNAME);
         return ;
     }
 
-    Channel *channel = server.getChannel(channelName);
-    
-    /*if (channel)
+    channel = server.getChannel(channelName);
+    if (channel)
     {
         if (channel->hasMember(&client))
-            return;
-            
+            return ;
         if (channel->isInviteOnly() && !channel->isInvited(&client))
         {
             printError(ERR_INVITEONLYCHAN);
-            return;
+            return ;
         }
-    }*/
+        if (channel->isFull())
+        {
+            printError(ERR_CHANNELISFULL);
+            return ;
+        }
+        if (channel->hasKey() && !channel->checkKey(key))
+        {
+            printError(ERR_BADCHANNELKEY);
+            return ;
+        }
+    }
 
     server.joinClientToChannel(&client, channelName);
 

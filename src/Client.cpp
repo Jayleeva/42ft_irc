@@ -9,17 +9,13 @@ Client::Client()
 {
 }
 
-Client::Client(std::map<std::string, Channel*> channels, int fd)
+Client::Client(int fd)
     : _fd(fd),
       _registered(false),
       _hasNick(false),
       _hasUser(false),
       _hasPass(false)
 {
-    for (std::map<std::string, Channel*>::iterator it = channels.begin(); it != channels.end(); it ++)
-    {
-        this->_channels.insert(it->first);
-    }
 }
 
 int Client::getFd() const

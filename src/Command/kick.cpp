@@ -45,7 +45,7 @@ void Command::kick(Message const &msg, Client &client, Server &server)
 		return;
     }
 
-    Client *targetClient = server.getClientbyNick(nickname);
+    Client *targetClient = server.getClientByNick(nickname);
 
 	if(!targetClient)
 	{
