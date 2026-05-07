@@ -2,7 +2,7 @@
 #include "../include/utils.hpp"
 #include "../include/Command.hpp"
 
-Server::Server():_name("ircserv") {};
+Server::Server():_name("ircserv") {}; // NOTE
 
 Server::~Server()
 {
@@ -434,7 +434,6 @@ void Server::removeClientFromChannel(Client *client, const std::string &name)
         return;
 
     channel->removeMember(client);
-    client->removeChannel(name);
 
     if (channel->isEmpty())
     {

@@ -7,11 +7,6 @@
 #include "../include/utils.hpp"
 // ports possibles pour IRC : 6665 - 6669, par defaut 6667
 
-// errno 22: EINVAL Invalid argument
-// EINVAL in bind():
-//    The socket is already bound to an address.
-//    addrlen is wrong, or addr is not a valid address for this socket's domain.
-
 int main (int argc, char **argv)
 {
     Server          serv;
@@ -37,7 +32,7 @@ int main (int argc, char **argv)
     port = atoi(argv[1]);
     if (port < 0 || port > 65535)
     {
-        std::cout << "Invalid port number. Available ports range from 0 to 65535. Suggested port: 6667" << std::endl;
+        std::cout << "Invalid port number. Available ports range from 0 to 65535. Suggested port: 6697" << std::endl;
         return (1);
     }
 
