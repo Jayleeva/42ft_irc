@@ -213,19 +213,6 @@ void    Server::removeClient(nfds_t i)
     }
 }
 
-Command parseCmd(std::string input)
-{
-    Command cmd;
-    std::vector<std::string>	parsing;
-	std::string			        element;
-    std::stringstream 	        ss(input);
-
-	while (getline(ss, element, ' '))
-		parsing.push_back(element);
-    
-    cmd.setParsing(parsing);
-    return (cmd);
-}
 
 void Server::execCmd(std::string input, int fd)
 {
@@ -410,11 +397,19 @@ Client *Server::getClientByNick(const std::string &nickname)
     return (NULL);
 }
 
-void Server::sendMessageToClient(Client *target, const std::string &message)
+void Server::sendToClient(Client *target, std::string &message)
 {
     if (!target)
         return;
+    //message.append("\r\n");
+    std::cout << "> " << message << std::endl;
     send(target->getFd(), message.c_str(), message.length(), 0);
+}
+
+void Server::sendMessageToClient(Client *sender, Client *target, const std::string &message)
+{
+    std::string msg = sender->getNickname() + " PRIVMSG :" + message; // NOTE: pour que le client du destinataire lui affiche qui lui a envoye le message?
+    sendToClient(target, msg);
 }
 
 void Server::sendMessageToChannel(Client *sender, Channel *channel, const std::string &message)
@@ -422,11 +417,31 @@ void Server::sendMessageToChannel(Client *sender, Channel *channel, const std::s
     std::set<Client*>::const_iterator it;
     const std::set<Client*> &members = channel->getMembers();
 
+    std::string msg = sender->getNickname() + " PRIVMSG :" + message; // NOTE: pour que le client du destinataire lui affiche qui lui a envoye le message?
     it = members.begin();
     while (it != members.end())
     {
         if (*it != sender)
-            send((*it)->getFd(), message.c_str(), message.length(), 0);
+            sendToClient((*it), msg);
         it++;
     }
 }
+
+void Server::sendCap(Client &client)
+{
+    std::string cap = "CAP * LS :" + _name;
+    sendToClient(&client, cap);
+}
+
+void Server::sendWelcome(Client &client)
+{
+    std::string welcome = ":"  + _name + " 001 " + client.getNickname();
+    sendToClient(&client, welcome);
+}
+
+void    Server::pong(std::vector<std::string> _parsing, Client &client)
+{
+    std::string pong = "PONG " + *(_parsing.begin() + 1);
+    sendToClient(&client, pong);
+}
+

@@ -5,9 +5,11 @@
 #include <string>
 #include "Client.hpp"
 #include "Channel.hpp"
+#include "Server.hpp"
 
 class Client;
 class Channel;
+class Command;
 
 //Colors
 # define DEFAULT "\001\033[0;39m\002"
@@ -54,6 +56,9 @@ class Channel;
 #define ERR_USERNOTINCHANNEL " :They aren't on that channel"
 #define ERR_USERONCHANNEL " :is already on channel"
 
+#define ERR_NOTEXTTOSEND " :No text to send"
+#define ERR_CANNOTSENDTOCHAN " :Cannot send to channel"
+
 //Return messages
 #define RPL_WELCOME ":ircserv 001 " // to confirm connection
 
@@ -70,10 +75,8 @@ class Channel;
 std::string     getCommand(const std::string& msg);
 
 //Utils functions
-bool            isEmptyArg(const std::string &arg);
-std::string     getArgument(const std::string& msg);
 void            printError(const std::string& errorMsg);
-int             findClientByName(std::map<int, Client*> _clients, std::string name);
 bool            channelExists(std::map<std::string, Channel*> channels, std::string name);
 bool 			isValidChannelName(const std::string &name);
+Command parseCmd(std::string input);
 #endif

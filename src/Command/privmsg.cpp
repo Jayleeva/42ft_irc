@@ -7,54 +7,79 @@
 **PRIVMSG <receiver>{,<receiver>} <text to be sent>
 */
 
-void Command::privmsg(Message const &msg, Client &client, Server &server)
-{
-    std::string arg = getArgument(msg.getMsg());
 
-    if (isEmptyArg(arg))
+std::string    rebuildMessage(std::vector<std::string>::iterator it, std::vector<std::string>::iterator ite)
+{
+    std::string res = "";
+
+    for (std::vector<std::string>::iterator its = it; its != ite; its ++)
+    {
+        res.append(*its);
+    }
+    return (res);
+}
+
+
+std::vector<std::string> getAllTargets(std::string list)
+{
+    std::vector<std::string>    res;
+
+	std::string			        element;
+    std::stringstream 	        ss(list);
+
+	while (getline(ss, element, ','))
+		res.push_back(element);
+    return (res);
+}
+
+void Command::privmsg(std::vector<std::string> parsing, Client &client, Server &server)
+{
+    if (parsing.size() < 2)
     {
         printError(ERR_NEEDMOREPARAMS);
         return ;
     }
-
-    std::string target = getTarget(arg);
-    std::string message = getMessage(arg);
-
-    //message
-    if (isEmptyArg(message))
+    if (parsing.size() < 3)
     {
         printError(ERR_NOTEXTTOSEND);
         return ;
     }
+    std::vector<std::string>::iterator it = parsing.begin() + 1;
 
-    //channel
-    if (target[0] == '#')
+    std::string target = *it; // peut y en avoir plusieurs, faire un getline avec ',' en separateur
+    std::vector<std::string> allTargets = getAllTargets(*it);
+    it += allTargets.size(); // incrementer du nombre de targets
+    std::string message = rebuildMessage(it, parsing.end()); 
+
+    for (std::vector<std::string>::iterator it1 = allTargets.begin(); it1 != allTargets.end(); it1 ++) // pour envoyer a toutes les targets
     {
-        Channel *channel = server.getChannel(target);
-        if (!channel)  
+        //channel
+        if (*(it1)->begin() == '#')
         {
-            printError(ERR_NOSUCHCHANNEL);
-            return ;
-        }
-        if (!channel->hasMember(&client))
-        {   
-            printError(ERR_CANNOTSENDTOCHAN);
-            return ;
-        }
-        //fonction pour envoyer message à tous les membres du channel
-        //sauf le sender à créer dans Server
-    }
-
-    //user
-    else
-    {
-        Client *targetClient = server.getClientByNick(target);
-        if (!targetClient)
-        {
-            printError(ERR_NOSUCHNICK);
-            return ;
+            Channel *channel = server.getChannel(*it1);
+            if (!channel)
+            {
+                printError(ERR_NOSUCHCHANNEL);
+                return ;
+            }
+            if (!channel->hasMember(&client))
+            {   
+                printError(ERR_CANNOTSENDTOCHAN);
+                return ;
+            }
+            server.sendMessageToChannel(&client, channel, message); // NOTE
         }
 
-        server.sendMessageToClient(targetClient, message);
+        //user
+        else
+        {
+            Client *targetClient = server.getClientByNick(*(it1));
+            if (!targetClient)
+            {
+                printError(ERR_NOSUCHNICK);
+                return ;
+            }
+            server.sendMessageToClient(&client, targetClient, message); // NOTE: *targetClient
+        }
     }
 }

@@ -47,7 +47,7 @@ void Command::join(std::vector<std::string> parsing, Client &client, Server &ser
             printError(ERR_CHANNELISFULL);
             return ;
         }
-        if (channel->hasKey() && !channel->checkKey(key))
+        if (!channel->checkKey(key))
         {
             printError(ERR_BADCHANNELKEY);
             return ;
@@ -58,5 +58,8 @@ void Command::join(std::vector<std::string> parsing, Client &client, Server &ser
 
     channel = server.getChannel(channelName);
     if (channel)
-        channel->removeInvite(&client);
+    {
+        if (channel->isInvited(&client))    // NOTE
+            channel->removeInvite(&client);
+    }
 }

@@ -6,16 +6,17 @@
    parameter string.
 */
 
-void Command::part(Message const &msg, Client &client, Server &server)
+void Command::part(std::vector<std::string> parsing, Client &client, Server &server)
 {
-    std::string arg = getArgument(msg.getMsg());
-    std::string channel = getTarget(arg);
-
-    if (isEmptyArg(channel))
+    if (parsing.size() < 2)
     {
         printError(ERR_NEEDMOREPARAMS);
         return ;
     }
+
+    std::string channelName = *(parsing.begin() + 1);
+
+    //vérifier si channel existe et si le client est membre du channel
     
-    server.removeClientFromChannel(&client, channel);
+    server.removeClientFromChannel(&client, channelName);
 }

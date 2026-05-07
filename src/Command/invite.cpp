@@ -54,7 +54,7 @@ void Command::invite(std::vector<std::string> parsing, Client &client, Server &s
 		return;
 	}
 
-	if (!channel->hasMember(targetClient))
+	if (channel->hasMember(targetClient))
 	{
 		printError(ERR_USERONCHANNEL);
 		return;

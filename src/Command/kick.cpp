@@ -6,38 +6,23 @@ from  a channel.
 ** KICK <channel> <user>
 */
 
-void Command::kick(Message const &msg, Client &client, Server &server)
+void Command::kick(std::vector<std::string> parsing, Client &client, Server &server)
 {
-    std::string arg = getArgument(msg.getMsg());
-
-    if (isEmptyArg(arg))
+    if (parsing.size() < 3)
     {
         printError(ERR_NEEDMOREPARAMS);
         return ;
     }
+    std::string channelName = *(parsing.begin() + 1);
+	std::string nickname = *(parsing.begin() + 2);
 
-    std::string channelName = getTarget(arg);
-	std::string nickname = getMessage(arg);
-
-	if (isEmptyArg(channelName))
-	{
-		printError(ERR_NEEDMOREPARAMS);
-		return ;
-	}
-
-    Channel *channel = server.getChannel(channelName);
-
-	if (!channel)
+	if (!server.channelExists(channelName))
 	{
 		printError(ERR_NOSUCHCHANNEL);
 		return;
 	}
 
-    if (!channel->hasMember(&client))
-    {
-        printError(ERR_NOTONCHANNEL);
-        return;
-    }
+	Channel *channel = server.getChannel(channelName);
 
     if (!channel->isOperator(&client))
     {		
