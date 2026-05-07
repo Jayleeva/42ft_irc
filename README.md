@@ -41,10 +41,15 @@ weechat
 
 Then, add the server with
 ````
-/server add ircserv 0/6667 password
+/server add ircserv 0/6667
 ````
 0 = the server's address
 6667 = the suggested port
+
+Then, configure the server with
+````
+/set irc.server.ircserv.password password
+````
 password = the server's password
 
 Then, connect to the server with
