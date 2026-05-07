@@ -76,7 +76,7 @@ void    Client::setHostname(const std::string &hostname)
 
 void Client::tryRegister()
 {
-    if (_hasNick && _hasUser && _hasPass)
+    if (_hasPass) // _hasNick && _hasUser && 
         _registered = true;
 }
 
