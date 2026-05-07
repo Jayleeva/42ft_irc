@@ -6,6 +6,7 @@
 #include "../include/Server.hpp"
 #include "../include/utils.hpp"
 // ports possibles pour IRC : 6665 - 6669, par defaut 6667
+// ajouter le serveur avec le flag -notls pour l'instant
 
 int main (int argc, char **argv)
 {

@@ -269,12 +269,14 @@ void    Server::execClient(nfds_t i)
 
         std::cout << "exec " << RED << nbytes << DEFAULT << std::endl;
 
-        std::vector<std::string> split = splitCmd(buffer);
+        /*std::vector<std::string> split = splitCmd(buffer);
         for (std::vector<std::string>::iterator it = split.begin(); it != split.end(); it ++)
         {
             execCmd(*(it), fd);
             std::cout << "< " << (*it) << std::endl;
-        }
+        }*/
+        execCmd(buffer, fd);
+        std::cout << "< " << (buffer) << std::endl;
     }
     if (nbytes == 0)
         this->removeClient(i);
@@ -460,7 +462,7 @@ void Server::sendToClient(Client *target, std::string &message)
 {
     if (!target)
         return;
-    message.append("\r\n");
+    //message.append("\r\n");
     std::cout << "> " << message << std::endl;
     send(target->getFd(), message.c_str(), message.length(), 0);
 }
