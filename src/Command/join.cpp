@@ -68,5 +68,4 @@ void Command::join(std::vector<std::string> parsing, Client &client, Server &ser
         if (channel->isInvited(&client))
             channel->removeInvite(&client);
     }
-    server.sendJoinConfirmation(client, *channel);
 }

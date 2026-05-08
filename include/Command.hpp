@@ -37,9 +37,9 @@ class Command
     private:
         std::vector<std::string>    _parsing;
 
-        void pass(std::vector<std::string> parsing, Client &client, const std::string password);
+        void pass(std::vector<std::string> parsing, Client &client, Server &server);
         void nick(std::vector<std::string> parsing, Client &client, Server &server);
-        void user(std::vector<std::string> parsing, Client &client);
+        void user(std::vector<std::string> parsing, Client &client, Server &server);
         void join(std::vector<std::string> parsing, Client &client, Server &server);
         void invite(std::vector<std::string> parsing, Client &client, Server &server);
         void kick(std::vector<std::string> parsing, Client &client, Server &server);

@@ -39,7 +39,7 @@ class Command;
 #define ERR_UMODEUNKNOWNFLAG " :Unknown MODE flag"
 #define ERR_UNKNOWNMODE " :is unknown mode char to me"
 
-#define ERR_BADCHANNAME " : Bad channel name"
+#define ERR_BADCHANNAME " :Bad channel name"
 
 #define ERR_NOTONCHANNEL " :You're not on that channel"
 #define ERR_NOSUCHCHANNEL " :No such channel"

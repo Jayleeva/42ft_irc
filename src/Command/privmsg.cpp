@@ -37,11 +37,13 @@ void Command::privmsg(std::vector<std::string> parsing, Client &client, Server &
     if (parsing.size() < 2)
     {
         printError(ERR_NEEDMOREPARAMS);
+        server.sendError(client, 461, ERR_NEEDMOREPARAMS);
         return ;
     }
     if (parsing.size() < 3)
     {
         printError(ERR_NOTEXTTOSEND);
+        server.sendError(client, 412, ERR_NOTEXTTOSEND);
         return ;
     }
     std::vector<std::string>::iterator it = parsing.begin() + 1;
@@ -60,14 +62,16 @@ void Command::privmsg(std::vector<std::string> parsing, Client &client, Server &
             if (!channel)
             {
                 printError(ERR_NOSUCHCHANNEL);
+                server.sendError(client, 403, ERR_NOSUCHCHANNEL);
                 return ;
             }
             if (!channel->hasMember(&client))
             {   
                 printError(ERR_CANNOTSENDTOCHAN);
+                server.sendError(client, 404, ERR_CANNOTSENDTOCHAN);
                 return ;
             }
-            server.sendMessageToChannel(&client, channel, message); // NOTE
+            server.sendMessageToChannel(client, *channel, message);
         }
 
         //user
@@ -77,9 +81,10 @@ void Command::privmsg(std::vector<std::string> parsing, Client &client, Server &
             if (!targetClient)
             {
                 printError(ERR_NOSUCHNICK);
+                server.sendError(client, 401, ERR_NOSUCHNICK);
                 return ;
             }
-            server.sendMessageToClient(&client, targetClient, message); // NOTE: *targetClient
+            server.sendMessageToClient(&client, targetClient, message);
         }
     }
 }

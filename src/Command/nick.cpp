@@ -18,12 +18,14 @@ void Command::nick(std::vector<std::string> parsing, Client &client, Server &ser
     if (parsing.size() < 2)
     {
         printError(ERR_NEEDMOREPARAMS);
+        server.sendError(client, 461, ERR_NEEDMOREPARAMS);
         return ;
     }
 
     if (!client.hasPass())
     {
         printError(ERR_PASSWDMISMATCH);
+        server.sendError(client, 464, ERR_PASSWDMISMATCH);
         return ;
     }
 
@@ -34,6 +36,7 @@ void Command::nick(std::vector<std::string> parsing, Client &client, Server &ser
         if (nickname[j] == ' ' || nickname[j] == '\t')
         {
             printError(ERR_ERRONEUSNICKNAME);
+            server.sendError(client, 432, ERR_ERRONEUSNICKNAME);
             return ;
         }
     }
@@ -41,12 +44,14 @@ void Command::nick(std::vector<std::string> parsing, Client &client, Server &ser
     if (nickname[0] == '#' || nickname[0] == '&')
     {
         printError(ERR_ERRONEUSNICKNAME);
+        server.sendError(client, 432, ERR_ERRONEUSNICKNAME);
         return;
     }
 
     if (server.nicknameExists(nickname) && nickname != client.getNickname())
     {
         printError(ERR_NICKNAMEINUSE);
+        server.sendError(client, 433, ERR_NICKNAMEINUSE);
         return ;
     }
 

@@ -42,6 +42,10 @@ std::string Server::getPassword() const
     return (this->_password);
 }
 
+std::string Server::getName() const
+{
+    return (this->_name);
+}
 
 void    printMap(std::map<int, Client *> map)
 {
@@ -362,11 +366,12 @@ void Server::joinClientToChannel(Client *client, const std::string &name)
     {
         channel = createChannel(name);
         channel->addOperator(client);
-    }
+    }    
     if (!channel->hasMember(client))
         channel->addMember(client);
     if (!client->isInChannel(name))
         client->addChannel(name);
+    sendJoinConfirmation(client, *channel);
 }
 
 void Server::removeClientFromChannel(Client *client, const std::string &name)
@@ -416,55 +421,77 @@ void Server::sendToClient(Client *target, std::string &message)
     send(target->getFd(), message.c_str(), message.length(), 0);
 }
 
-void Server::sendMessageToClient(Client *sender, Client *target, const std::string &message)
-{
-    std::string msg = sender->getNickname() + " PRIVMSG :" + message; // NOTE: pour que le client du destinataire lui affiche qui lui a envoye le message?
-    sendToClient(target, msg);
-}
-
-void Server::sendMessageToChannel(Client *sender, Channel *channel, const std::string &message)
+void Server::sendToChannel(Channel &channel, Client *sender, std::string &message)
 {
     std::set<Client*>::const_iterator it;
-    const std::set<Client*> &members = channel->getMembers();
+    const std::set<Client*> &members = channel.getMembers();
 
-    std::string msg = sender->getNickname() + " PRIVMSG :" + message; // NOTE: pour que le client du destinataire lui affiche qui lui a envoye le message?
     it = members.begin();
     while (it != members.end())
     {
         if (*it != sender)
-            sendToClient((*it), msg);
+            sendToClient((*it), message);
         it++;
     }
 }
 
-void Server::sendCap(Client &client)
+/*void Server::sendCap(Client &client)
 {
     std::string cap = "CAP * LS :" + _name;
     sendToClient(&client, cap);
-}
+}*/
 
-void Server::sendWelcome(Client &client)
+/*void Server::sendWelcome(Client &client)
 {
     std::string welcome = ":"  + _name + " 001 " + client.getNickname();
     sendToClient(&client, welcome);
-}
+}*/
 
-void Server::sendJoinConfirmation(Client &client, Channel &channel)
-{
-    
-    sendReply(client, 353, RPL_NAMREPLY);
-    sendReply(client, 366, RPL_ENDOFNAMES);
-    if (channel.hasTopic())
-        sendReply(client, 332, RPL_TOPIC);
-    else
-        sendReply(client, 331, RPL_NOTOPIC);
-}
-
-void    Server::pong(std::vector<std::string> _parsing, Client &client)
+/*void    Server::pong(std::vector<std::string> _parsing, Client &client)
 {
     std::string pong = "PONG " + *(_parsing.begin() + 1);
     sendToClient(&client, pong);
+}*/
+
+void Server::sendMessageToClient(Client *sender, Client *target, const std::string &message)
+{
+    std::string msg = sender->getNickname() + " PRIVMSG :" + message; 
+    sendToClient(target, msg);
 }
+
+void Server::sendMessageToChannel(Client &sender, Channel &channel, const std::string &message)
+{
+    std::string msg = sender.getNickname() + " PRIVMSG :" + message;
+    sendToChannel(channel, &sender, msg);
+}
+
+
+void Server::sendJoinConfirmation(Client *client, Channel &channel)
+{
+    std::string allUsers = channel.listAllUsers(client->getNickname()); // definir
+    sendReplyToClient(client, 353, allUsers.c_str());
+    sendReplyToClient(client, 366, RPL_ENDOFNAMES);
+    if (channel.hasTopic())
+        sendReplyToClient(client, 332, RPL_TOPIC);
+    else
+        sendReplyToClient(client, 331, RPL_NOTOPIC);
+}
+
+void Server::sendPartConfirmation(Client *client, Channel &channel) // BESOIN?
+{
+    std::string allUsers = channel.listAllUsers(""); // definir
+    sendReplyToChannel(channel, client, 353, allUsers.c_str());
+}
+
+void Server::sendNewParams(Channel &channel, Client *sender, std::string flag)
+{
+    //Parameters: <channel> {[+|-]|o|p|s|i|t|n|b|v} [<limit>] [<user>] [<ban mask>]
+
+    sendReplyToClient(sender, 324, RPL_CHANNELMODEIS);
+    sendReplyToChannel(channel, sender, 324, RPL_CHANNELMODEIS);
+}
+
+
 
 void    Server::sendError(Client &client, int errID, const char *error)
 {
@@ -473,9 +500,16 @@ void    Server::sendError(Client &client, int errID, const char *error)
     sendToClient(&client, msg);
 }
 
-void    Server::sendReply(Client &client, int rplID, const char *rpl)
+void    Server::sendReplyToClient(Client *client, int rplID, const char *rpl)
 {
     std::string _rplID = ft_itoa(rplID);
     std::string msg = _rplID + rpl; 
-    sendToClient(&client, msg);
+    sendToClient(client, msg);
+}
+
+void    Server::sendReplyToChannel(Channel &channel, Client *sender, int rplID, const char *rpl)
+{
+    std::string _rplID = ft_itoa(rplID);
+    std::string msg = _rplID + rpl;
+    sendToChannel(channel, sender, msg);
 }
