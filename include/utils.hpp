@@ -60,16 +60,14 @@ class Command;
 #define ERR_CANNOTSENDTOCHAN " :Cannot send to channel"
 
 //Return messages
-#define RPL_WELCOME ":ircserv 001 " // to confirm connection
+#define RPL_WELCOME " :Welcome to the ircserv network " // to confirm connection
 
-#define RPL_NAMREPLY "[@|+]" //to confirm join // <channel> :[[@|+]<nick> [[@|+]<nick> [...]]]
+//#define RPL_NAMREPLY "<channel> :[[@|+]<nick> [[@|+]<nick> [...]]]" //to confirm join
 #define RPL_ENDOFNAMES " :End of /NAMES list"  // to close the list of names
 #define RPL_NOTOPIC " :No topic is set" // to confirm there's no topic
-#define RPL_TOPIC "<channel> :<topic>" // to confirm topic
-#define RPL_INVITING "<channel> <nick>" // to confirm the invitation
-#define RPL_CHANNELMODEIS "<channel> <mode> <mode params>" // to confirm mode
-//#define PART  to confirm part ?
-//#define KICK  to confirm kick ?
+//#define RPL_TOPIC "<channel> :<topic>" // to confirm topic
+//#define RPL_INVITING "<channel> <nick>" // to confirm the invitation
+//#define RPL_CHANNELMODEIS "<channel> <mode> <mode params>" // to confirm mode
 
 //parsing functions
 std::string     getCommand(const std::string& msg);
@@ -79,5 +77,5 @@ void            printError(const std::string& errorMsg);
 bool            channelExists(std::map<std::string, Channel*> channels, std::string name);
 bool 			isValidChannelName(const std::string &name);
 Command parseCmd(std::string input);
-std::string     ft_itoa(int i);
+//std::string     ft_itoa(int i);
 #endif

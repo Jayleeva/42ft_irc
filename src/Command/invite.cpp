@@ -13,7 +13,7 @@ void Command::invite(std::vector<std::string> parsing, Client &client, Server &s
 	if (parsing.size() < 2)
     {
         printError(ERR_NEEDMOREPARAMS);
-		server.sendError(client, 461, ERR_NEEDMOREPARAMS);
+		server.sendError(client, "461", ERR_NEEDMOREPARAMS);
         return ;
     }
 
@@ -25,7 +25,7 @@ void Command::invite(std::vector<std::string> parsing, Client &client, Server &s
     if (!server.channelExists(channelName))
 	{
     	printError(ERR_NOSUCHCHANNEL);
-		server.sendError(client, 403, ERR_NOSUCHCHANNEL);
+		server.sendError(client, "403", ERR_NOSUCHCHANNEL);
     	return ;
 	}
 
@@ -34,21 +34,21 @@ void Command::invite(std::vector<std::string> parsing, Client &client, Server &s
 	if (!channel)
 	{
 		printError(ERR_NOSUCHCHANNEL);
-		server.sendError(client, 403, ERR_NOSUCHCHANNEL);
+		server.sendError(client, "403", ERR_NOSUCHCHANNEL);
 		return;
 	}
 
 	if (!channel->hasMember(&client))
 	{
 		printError(ERR_NOTONCHANNEL);
-		server.sendError(client, 442, ERR_NOTONCHANNEL);
+		server.sendError(client, "442", ERR_NOTONCHANNEL);
 		return;
 	}
 
 	if (channel->isInviteOnly() && !channel->isOperator(&client))
 	{
 		printError(ERR_CHANOPRIVSNEEDED);
-		server.sendError(client, 482, ERR_CHANOPRIVSNEEDED);
+		server.sendError(client, "482", ERR_CHANOPRIVSNEEDED);
 		return;
 	}
 
@@ -56,17 +56,18 @@ void Command::invite(std::vector<std::string> parsing, Client &client, Server &s
 	if(!targetClient)
 	{
 		printError(ERR_NOSUCHNICK);
-		server.sendError(client, 401, ERR_NOSUCHNICK);
+		server.sendError(client, "401", ERR_NOSUCHNICK);
 		return;
 	}
 
 	if (channel->hasMember(targetClient))
 	{
 		printError(ERR_USERONCHANNEL);
-		server.sendError(client, 443, ERR_USERONCHANNEL);
+		server.sendError(client, "443", ERR_USERONCHANNEL);
 		return;
 	}
 
 	channel->invite(targetClient);
-	server.sendReply(client, 341, RPL_INVITING);
+	std::string inviting = " " + client.getNickname() + " " + nickname + channel->getName();
+	server.sendReplyToClient(&client, "341", inviting.c_str());
 }

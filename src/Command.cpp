@@ -40,7 +40,7 @@ void Command::execute(Client &client, Server &server)
     if (_cmd.empty())
     {
         printError(ERR_UNKNOWNCOMMAND);
-        server.sendError(client, 421, ERR_UNKNOWNCOMMAND);
+        server.sendError(client, "421", ERR_UNKNOWNCOMMAND);
         return;
     }
 
@@ -49,7 +49,7 @@ void Command::execute(Client &client, Server &server)
         if (!client.isRegistered())
         {
             printError(ERR_NOTREGISTRED);
-            server.sendError(client, 451, ERR_NOTREGISTRED);
+            server.sendError(client, "451", ERR_NOTREGISTRED);
             return;
         }
     }
@@ -69,7 +69,7 @@ void Command::execute(Client &client, Server &server)
     {
         std::cout << "BRANCH PASS" << std::endl;
         pass(_parsing, client, server);
-    }   ///NOTE
+    }
     else if (_cmd == CMD_NICK)
     {
         std::cout << "BRANCH NICK" << std::endl;
@@ -84,8 +84,8 @@ void Command::execute(Client &client, Server &server)
               << std::endl;
         if (client.isRegistered())
         {
-            std::string welcome = ":"  + server.getName() + " 001 " + client.getNickname();
-            server.sendToClient(&client, welcome);
+            std::string welcome = RPL_WELCOME + client.getNickname() + "!";
+            server.sendReplyToClient(&client, "001", welcome.c_str());
             //server.sendWelcome(client);
         }
     }
@@ -114,6 +114,6 @@ void Command::execute(Client &client, Server &server)
     else
     {
         printError(_cmd + ERR_UNKNOWNCOMMAND);
-        server.sendError(client, 421, ERR_UNKNOWNCOMMAND);
+        server.sendError(client, "421", ERR_UNKNOWNCOMMAND);
     }
 }

@@ -11,7 +11,7 @@ void Command::part(std::vector<std::string> parsing, Client &client, Server &ser
     if (parsing.size() < 2)
     {
         printError(ERR_NEEDMOREPARAMS);
-        server.sendError(client, 461, ERR_NEEDMOREPARAMS);
+        server.sendError(client, "461", ERR_NEEDMOREPARAMS);
         return ;
     }
 

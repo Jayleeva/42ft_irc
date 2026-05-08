@@ -7,7 +7,7 @@ void Command::mode(std::vector<std::string> parsing, Client &client, Server &ser
 	if (parsing.size() < 3)
 	{
 		printError(ERR_NEEDMOREPARAMS);
-		server.sendError(client, 461, ERR_NEEDMOREPARAMS);
+		server.sendError(client, "461", ERR_NEEDMOREPARAMS);
 		return;
 	}
 
@@ -16,14 +16,14 @@ void Command::mode(std::vector<std::string> parsing, Client &client, Server &ser
     if (server.channelExists(channelName) == false)
 	{
 		printError(ERR_NOSUCHCHANNEL);
-		server.sendError(client, 403, ERR_NOSUCHCHANNEL);
+		server.sendError(client, "403", ERR_NOSUCHCHANNEL);
 		return;
 	}
 	Channel *chan = server.getChannel(channelName);
 	if (chan->isOperator(&client) == false)
 	{
 		printError(ERR_CHANOPRIVSNEEDED);
-		server.sendError(client, 482, ERR_CHANOPRIVSNEEDED);
+		server.sendError(client, "482", ERR_CHANOPRIVSNEEDED);
 		return;
 	}
 
@@ -37,7 +37,7 @@ void Command::mode(std::vector<std::string> parsing, Client &client, Server &ser
 				chan->setInviteOnly(false);
 			else
 				chan->setInviteOnly(true);
-			server.sendNewParams(*chan, client, flag);
+			server.sendNewParams(*chan, &client, flag);
 		}
 		else if (flag == "-t")
 		{
@@ -45,7 +45,7 @@ void Command::mode(std::vector<std::string> parsing, Client &client, Server &ser
 				chan->setTopicRestricted(false);
 			else
 				chan->setTopicRestricted(true);
-			server.sendNewParams(*chan, client, flag);
+			server.sendNewParams(*chan, &client, flag);
 		}
 		else if (flag == "-k")
 		{
@@ -57,13 +57,13 @@ void Command::mode(std::vector<std::string> parsing, Client &client, Server &ser
 				if (it == parsing.end())
 				{
 					printError(ERR_NEEDMOREPARAMS);
-					server.sendError(client, 461, ERR_NEEDMOREPARAMS);
+					server.sendError(client, "461", ERR_NEEDMOREPARAMS);
 					return;
 				}
 				std::string key = *it;
 				chan->setKey(key);
 			}
-			server.sendNewParams(*chan, client, flag);
+			server.sendNewParams(*chan, &client, flag);
 		}
 		else if (flag == "-o")
 		{
@@ -71,7 +71,7 @@ void Command::mode(std::vector<std::string> parsing, Client &client, Server &ser
 			if (it == parsing.end())
 			{
 				printError(ERR_NEEDMOREPARAMS);
-				server.sendError(client, 461, ERR_NEEDMOREPARAMS);
+				server.sendError(client, "461", ERR_NEEDMOREPARAMS);
 				return;
 			}
 			std::string targetName = *it;
@@ -80,9 +80,7 @@ void Command::mode(std::vector<std::string> parsing, Client &client, Server &ser
 				chan->removeOperator(target);
 			else
 				chan->addOperator(target);
-			server.sendNewParams(*chan, client, flag);
-			//sendChannelRPL(chan, RPL_, client);
-			//sendChannelRPL(chan, RPL_, target); //send to target ?
+			server.sendNewParams(*chan, &client, flag);
 		}
 		else if (flag == "-l")
 		{
@@ -94,18 +92,18 @@ void Command::mode(std::vector<std::string> parsing, Client &client, Server &ser
 				if (it == parsing.end())
 				{
 					printError(ERR_NEEDMOREPARAMS);
-					server.sendError(client, 461, ERR_NEEDMOREPARAMS);
+					server.sendError(client, "461", ERR_NEEDMOREPARAMS);
 					return;
 				}
 				std::string limit = *it;
 				chan->setUserLimit(atoi(limit.c_str()));
 			}
-			server.sendNewParams(*chan, client, flag);
+			server.sendNewParams(*chan, &client, flag);
 		}
 		else
 		{
 			printError(ERR_UNKNOWNMODE);
-			server.sendError(client, 501, ERR_UNKNOWNMODE);
+			server.sendError(client, "501", ERR_UNKNOWNMODE);
 			return;
 		}
 		it ++;

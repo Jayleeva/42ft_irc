@@ -11,7 +11,7 @@ void Command::kick(std::vector<std::string> parsing, Client &client, Server &ser
     if (parsing.size() < 3)
     {
         printError(ERR_NEEDMOREPARAMS);
-		server.sendError(client, 461, ERR_NEEDMOREPARAMS);
+		server.sendError(client, "461", ERR_NEEDMOREPARAMS);
         return ;
     }
     std::string channelName = *(parsing.begin() + 1);
@@ -20,7 +20,7 @@ void Command::kick(std::vector<std::string> parsing, Client &client, Server &ser
 	if (!server.channelExists(channelName))
 	{
 		printError(ERR_NOSUCHCHANNEL);
-		server.sendError(client, 403, ERR_NOSUCHCHANNEL);
+		server.sendError(client, "403", ERR_NOSUCHCHANNEL);
 		return;
 	}
 
@@ -29,7 +29,7 @@ void Command::kick(std::vector<std::string> parsing, Client &client, Server &ser
     if (!channel->isOperator(&client))
     {		
         printError(ERR_CHANOPRIVSNEEDED);
-		server.sendError(client, 482, ERR_CHANOPRIVSNEEDED);
+		server.sendError(client, "482", ERR_CHANOPRIVSNEEDED);
 		return;
     }
 
@@ -38,14 +38,14 @@ void Command::kick(std::vector<std::string> parsing, Client &client, Server &ser
 	if(!targetClient)
 	{
 		printError(ERR_NOSUCHNICK);
-		server.sendError(client, 401, ERR_NOSUCHNICK);
+		server.sendError(client, "401", ERR_NOSUCHNICK);
 		return;
 	}
 
     if (!channel->hasMember(targetClient))
 	{
 		printError(ERR_NOTONCHANNEL);
-		server.sendError(client, 442, ERR_NOTONCHANNEL);
+		server.sendError(client, "442", ERR_NOTONCHANNEL);
 		return;
 	}
 

@@ -46,7 +46,7 @@ void printError(const std::string& errorMsg)
     return (true);
 }
 
-std::string ft_itoa(int i)
+/*std::string ft_itoa(int i)
 {
   std::stringstream ss;
   std::string str;
@@ -54,4 +54,4 @@ std::string ft_itoa(int i)
   ss << i << std::endl;
   ss >> str;
   return str;
-}
+}*/

@@ -2,7 +2,7 @@
 #include "../include/utils.hpp"
 #include "../include/Command.hpp"
 
-Server::Server() {};
+Server::Server(): _name("ircserv") {};
 Server::~Server()
 {
     std::map<int, Client*>::iterator it;
@@ -146,8 +146,17 @@ void    Server::addClient()
     if (nbytes > 0)
     { 
         buffer[nbytes] = '\0';
+
+        std::stringstream ss(buffer);
+        std::string line;
+
+        while (std::getline(ss, line, '\n'))
+        {
+            if (!line.empty() && line[line.size() - 1] == '\r')
+                line.erase(line.size() - 1);
+        }
         std::cout << "add " << RED << nbytes << DEFAULT << std::endl;
-        std::cout << "buffer = " << buffer << std::endl;
+        std::cout << "< " << buffer << std::endl;
     }
     //(id) handshake [<option>=<valeur>,[<option>=<valeur>,...]]
     //std::string message = this->_password;
@@ -250,7 +259,7 @@ void    Server::execClient(nfds_t i)
         }
         
         std::cout << "exec " << RED << nbytes << DEFAULT << std::endl;
-        std::cout << "buffer = " << buffer << std::endl;
+        std::cout << "< " << buffer << std::endl;
 
         /*if (nbytes)
         {
@@ -426,6 +435,8 @@ void Server::sendToChannel(Channel &channel, Client *sender, std::string &messag
     std::set<Client*>::const_iterator it;
     const std::set<Client*> &members = channel.getMembers();
 
+    message.append("\r\n");
+    std::cout << "> " << message << std::endl;
     it = members.begin();
     while (it != members.end())
     {
@@ -443,8 +454,8 @@ void Server::sendToChannel(Channel &channel, Client *sender, std::string &messag
 
 /*void Server::sendWelcome(Client &client)
 {
-    std::string welcome = ":"  + _name + " 001 " + client.getNickname();
-    sendToClient(&client, welcome);
+    std::string welcome = RPL_WELCOME + client.getNickname() + "!";
+    sendReplyToClient(&client, "001", welcome.c_str());
 }*/
 
 /*void    Server::pong(std::vector<std::string> _parsing, Client &client)
@@ -468,48 +479,61 @@ void Server::sendMessageToChannel(Client &sender, Channel &channel, const std::s
 
 void Server::sendJoinConfirmation(Client *client, Channel &channel)
 {
-    std::string allUsers = channel.listAllUsers(client->getNickname()); // definir
-    sendReplyToClient(client, 353, allUsers.c_str());
-    sendReplyToClient(client, 366, RPL_ENDOFNAMES);
+    std::string allUsers = " " + client->getNickname() + " " + channel.listAllUsers(client->getNickname());
+    sendReplyToClient(client, "353", allUsers.c_str());
+    std::string endOfNames = " " + client->getNickname() + " " + channel.getName() + RPL_ENDOFNAMES; 
+    sendReplyToClient(client, "366", endOfNames.c_str());
     if (channel.hasTopic())
-        sendReplyToClient(client, 332, RPL_TOPIC);
+    {
+        std::string topic = " " + channel.getName() + " :" + channel.getTopic();
+        sendReplyToClient(client, "332", topic.c_str()); // RPL_TOPIC
+    }
     else
-        sendReplyToClient(client, 331, RPL_NOTOPIC);
+    {
+        std::string topic = " " + channel.getName() + " " + channel.getName(); //RPL_NOTOPIC WORKS!!;
+        sendReplyToClient(client, "331", topic.c_str()); // RPL_NOTOPIC
+    }
 }
 
 void Server::sendPartConfirmation(Client *client, Channel &channel) // BESOIN?
 {
-    std::string allUsers = channel.listAllUsers(""); // definir
-    sendReplyToChannel(channel, client, 353, allUsers.c_str());
+    std::string allUsers = " " + channel.listAllUsers("");
+    sendReplyToChannel(channel, client, "353", allUsers.c_str());
+    sendReplyToClient(client, "366", RPL_ENDOFNAMES);
 }
 
 void Server::sendNewParams(Channel &channel, Client *sender, std::string flag)
 {
     //Parameters: <channel> {[+|-]|o|p|s|i|t|n|b|v} [<limit>] [<user>] [<ban mask>]
 
-    sendReplyToClient(sender, 324, RPL_CHANNELMODEIS);
-    sendReplyToChannel(channel, sender, 324, RPL_CHANNELMODEIS);
+    (void)flag;
+    std::string params;
+    sendReplyToClient(sender, "324", params.c_str());
+    sendReplyToChannel(channel, sender, "324", params.c_str());
 }
 
 
 
-void    Server::sendError(Client &client, int errID, const char *error)
+void    Server::sendError(Client &client, std::string errID, const char *error)
 {
-    std::string _errID = ft_itoa(errID);
-    std::string msg = _errID + error; 
+    std::string msg = ":";
+    //std::string _errID = ft_itoa(errID);
+    msg = errID + error; 
     sendToClient(&client, msg);
 }
 
-void    Server::sendReplyToClient(Client *client, int rplID, const char *rpl)
+void    Server::sendReplyToClient(Client *client, std::string rplID, const char *rpl)
 {
-    std::string _rplID = ft_itoa(rplID);
-    std::string msg = _rplID + rpl; 
+    std::string msg = ":";
+    //std::string _rplID = ft_itoa(rplID);
+    msg = rplID + rpl; 
     sendToClient(client, msg);
 }
 
-void    Server::sendReplyToChannel(Channel &channel, Client *sender, int rplID, const char *rpl)
+void    Server::sendReplyToChannel(Channel &channel, Client *sender, std::string rplID, const char *rpl)
 {
-    std::string _rplID = ft_itoa(rplID);
-    std::string msg = _rplID + rpl;
+    std::string msg = ":";
+    //std::string _rplID = ft_itoa(rplID);
+    msg = rplID + rpl;
     sendToChannel(channel, sender, msg);
 }

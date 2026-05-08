@@ -70,9 +70,9 @@ class Server
         void    sendToClient(Client *target, std::string &message);
         void    sendToChannel(Channel &channel, Client *sender, std::string &message);
 
-        void    sendError(Client &client, int errID, const char *error);
-        void    sendReplyToClient(Client *client, int rplID, const char *rpl);
-        void    sendReplyToChannel(Channel &channel, Client *sender, int rplID, const char *rpl);
+        void    sendError(Client &client, std::string errID, const char *error);
+        void    sendReplyToClient(Client *client, std::string rplID, const char *rpl);
+        void    sendReplyToChannel(Channel &channel, Client *sender, std::string rplID, const char *rpl);
 
         void    sendMessageToClient(Client *sender, Client *target, const std::string &message);
         void    sendMessageToChannel(Client &sender, Channel &channel, const std::string &message);

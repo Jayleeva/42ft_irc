@@ -200,25 +200,23 @@ bool Channel::checkKey(const std::string &key) const
 
 std::string Channel::listAllUsers(std::string newClient)
 {
-	//std::string list; // "[@|+]" //to confirm join // <channel> :[[@|+]<nick> [[@|+]<nick> [...]]]
-
-    std::string list = _name + " :[";
+    std::string list = _name + " :";
     
     size_t         i = 0;
     for (std::set<Client*>::iterator it = _members.begin(); it != _members.end(); it ++)
     {
         std::string nickName = (*it)->getNickname();
-        //std::string trimmedName = nickName.substr(0, strlen(nickName.c_str()) - 1);
-        //std::cout << "trimmedName nick = " << trimmedName << std::endl;
+		list += '[';
 		if (newClient.empty())
 			list += '@';
 		else if (newClient == nickName)
 			list += '+';
+		list += ']';
         list += nickName;
-        if (i + 1 < _members.size())
-            list += " ";
+		if (i + 1 < _members.size())
+			list += ' ';
         i ++;
     }
-    list += "]";
+	list += '*';
 	return (list);
 }
