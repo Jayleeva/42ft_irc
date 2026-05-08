@@ -479,27 +479,37 @@ void Server::sendMessageToChannel(Client &sender, Channel &channel, const std::s
 
 void Server::sendJoinConfirmation(Client *client, Channel &channel)
 {
-    std::string allUsers = " " + client->getNickname() + " " + channel.listAllUsers(client->getNickname());
-    sendReplyToClient(client, "353", allUsers.c_str());
-    std::string endOfNames = " " + client->getNickname() + " " + channel.getName() + RPL_ENDOFNAMES; 
-    sendReplyToClient(client, "366", endOfNames.c_str());
+    std::string confirmation = ":" + client->getNickname() + " JOIN :" + channel.getName();
+    sendToClient(client, confirmation);
     if (channel.hasTopic())
     {
-        std::string topic = " " + channel.getName() + " :" + channel.getTopic();
-        sendReplyToClient(client, "332", topic.c_str()); // RPL_TOPIC
+        std::string topic = "332 " + channel.getName() + " :" + channel.getTopic();
+        sendToClient(client, topic);
+        //sendReplyToClient(client, "332", topic.c_str()); // RPL_TOPIC
     }
     else
     {
-        std::string topic = " " + channel.getName() + " " + channel.getName(); //RPL_NOTOPIC WORKS!!;
-        sendReplyToClient(client, "331", topic.c_str()); // RPL_NOTOPIC
+        std::string notopic = "331 " + channel.getName() + " " + channel.getName(); //RPL_NOTOPIC WORKS!!;
+        //sendReplyToClient(client, "331", topic.c_str()); // RPL_NOTOPIC
+        sendToClient(client, notopic);
     }
+    std::string allUsers = "353 " + client->getNickname() + " " + channel.listAllUsers(client->getNickname());
+    //sendReplyToClient(client, "353", allUsers.c_str());
+    sendToClient(client, allUsers);
+    std::string endOfNames = "366 " + client->getNickname() + " " + channel.getName() + RPL_ENDOFNAMES; 
+    //sendReplyToClient(client, "366", endOfNames.c_str());
+    sendToClient(client, endOfNames);
+
 }
 
 void Server::sendPartConfirmation(Client *client, Channel &channel) // BESOIN?
 {
-    std::string allUsers = " " + channel.listAllUsers("");
-    sendReplyToChannel(channel, client, "353", allUsers.c_str());
-    sendReplyToClient(client, "366", RPL_ENDOFNAMES);
+    std::string confirmation = ":" + client->getNickname() + " PART :" + channel.getName();
+    sendToClient(client, confirmation);
+    sendToChannel(channel, client, confirmation);
+    //std::string allUsers = " " + channel.listAllUsers("");
+    //sendReplyToChannel(channel, client, "353", allUsers.c_str());
+    //sendReplyToClient(client, "366", RPL_ENDOFNAMES);
 }
 
 void Server::sendNewParams(Channel &channel, Client *sender, std::string flag)
