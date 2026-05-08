@@ -7,6 +7,7 @@ void Command::mode(std::vector<std::string> parsing, Client &client, Server &ser
 	if (parsing.size() < 3)
 	{
 		printError(ERR_NEEDMOREPARAMS);
+		server.sendError(client, 461, ERR_NEEDMOREPARAMS);
 		return;
 	}
 
@@ -15,12 +16,14 @@ void Command::mode(std::vector<std::string> parsing, Client &client, Server &ser
     if (server.channelExists(channelName) == false)
 	{
 		printError(ERR_NOSUCHCHANNEL);
+		server.sendError(client, 403, ERR_NOSUCHCHANNEL);
 		return;
 	}
 	Channel *chan = server.getChannel(channelName);
 	if (chan->isOperator(&client) == false)
 	{
 		printError(ERR_CHANOPRIVSNEEDED);
+		server.sendError(client, 482, ERR_CHANOPRIVSNEEDED);
 		return;
 	}
 
@@ -54,6 +57,7 @@ void Command::mode(std::vector<std::string> parsing, Client &client, Server &ser
 				if (it == parsing.end())
 				{
 					printError(ERR_NEEDMOREPARAMS);
+					server.sendError(client, 461, ERR_NEEDMOREPARAMS);
 					return;
 				}
 				std::string key = *it;
@@ -67,6 +71,7 @@ void Command::mode(std::vector<std::string> parsing, Client &client, Server &ser
 			if (it == parsing.end())
 			{
 				printError(ERR_NEEDMOREPARAMS);
+				server.sendError(client, 461, ERR_NEEDMOREPARAMS);
 				return;
 			}
 			std::string targetName = *it;
@@ -88,6 +93,7 @@ void Command::mode(std::vector<std::string> parsing, Client &client, Server &ser
 				if (it == parsing.end())
 				{
 					printError(ERR_NEEDMOREPARAMS);
+					server.sendError(client, 461, ERR_NEEDMOREPARAMS);
 					return;
 				}
 				std::string limit = *it;
@@ -98,6 +104,7 @@ void Command::mode(std::vector<std::string> parsing, Client &client, Server &ser
 		else
 		{
 			printError(ERR_UMODEUNKNOWNFLAG);
+			server.sendError(client, 501, ERR_CHANOPRIVSNEEDED);
 			return;
 		}
 		it ++;

@@ -39,7 +39,7 @@ class Command;
 #define ERR_UMODEUNKNOWNFLAG " :Unknown MODE flag"
 #define ERR_UNKNOWNMODE " :is unknown mode char to me"
 
-#define ERR_BADCHANNELNAME " : Bad channel name"
+#define ERR_BADCHANNAME " : Bad channel name"
 
 #define ERR_NOTONCHANNEL " :You're not on that channel"
 #define ERR_NOSUCHCHANNEL " :No such channel"
@@ -79,4 +79,5 @@ void            printError(const std::string& errorMsg);
 bool            channelExists(std::map<std::string, Channel*> channels, std::string name);
 bool 			isValidChannelName(const std::string &name);
 Command parseCmd(std::string input);
+std::string     ft_itoa(int i);
 #endif

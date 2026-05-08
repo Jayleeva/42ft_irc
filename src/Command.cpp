@@ -40,6 +40,7 @@ void Command::execute(Client &client, Server &server)
     if (_cmd.empty())
     {
         printError(ERR_UNKNOWNCOMMAND);
+        server.sendError(client, 421, ERR_UNKNOWNCOMMAND);
         return;
     }
 
@@ -48,6 +49,7 @@ void Command::execute(Client &client, Server &server)
         if (!client.isRegistered())
         {
             printError(ERR_NOTREGISTRED);
+            server.sendError(client, 451, ERR_NOTREGISTRED);
             return;
         }
     }
@@ -100,5 +102,6 @@ void Command::execute(Client &client, Server &server)
     else
     {
         printError(_cmd + ERR_UNKNOWNCOMMAND);
+        server.sendError(client, 421, ERR_UNKNOWNCOMMAND);
     }
 }

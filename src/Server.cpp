@@ -449,9 +449,33 @@ void Server::sendWelcome(Client &client)
     sendToClient(&client, welcome);
 }
 
+void Server::sendJoinConfirmation(Client &client, Channel &channel)
+{
+    
+    sendReply(client, 353, RPL_NAMREPLY);
+    sendReply(client, 366, RPL_ENDOFNAMES);
+    if (channel.hasTopic())
+        sendReply(client, 332, RPL_TOPIC);
+    else
+        sendReply(client, 331, RPL_NOTOPIC);
+}
+
 void    Server::pong(std::vector<std::string> _parsing, Client &client)
 {
     std::string pong = "PONG " + *(_parsing.begin() + 1);
     sendToClient(&client, pong);
 }
 
+void    Server::sendError(Client &client, int errID, const char *error)
+{
+    std::string _errID = ft_itoa(errID);
+    std::string msg = _errID + error; 
+    sendToClient(&client, msg);
+}
+
+void    Server::sendReply(Client &client, int rplID, const char *rpl)
+{
+    std::string _rplID = ft_itoa(rplID);
+    std::string msg = _rplID + rpl; 
+    sendToClient(&client, msg);
+}

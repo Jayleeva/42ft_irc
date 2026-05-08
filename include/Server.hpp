@@ -72,6 +72,9 @@ class Server
         void    sendCap(Client &client);
         void    sendWelcome(Client &client);
         void    pong(std::vector<std::string> _parsing, Client &client);
+        void    sendJoinConfirmation(Client &client, Channel &channel);
+        void    sendError(Client &client, int errID,  const char *error);
+        void    sendReply(Client &client, int rplID, const char *rpl);
 };
 
 void    printMap(std::map<int, Client *> map);
