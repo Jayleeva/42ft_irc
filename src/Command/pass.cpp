@@ -27,12 +27,13 @@ void Command::pass(std::vector<std::string> parsing, Client &client, Server &ser
 
     if (arg != server.getPassword())
     {
-        printError(ERR_PASSWDMISMATCH);
+        //printError(ERR_PASSWDMISMATCH);
         std::string nickname = client.getNickname();
         if (nickname.empty())
             nickname = "<unknownclient>";
-        std::string mismatch = " " + nickname + ERR_PASSWDMISMATCH;
-        server.sendError(client, "464", mismatch.c_str());
+        //std::string mismatch = " " + nickname + ERR_PASSWDMISMATCH;
+        server.sendToClient(&client, ERR_PASSWDMISMATCH(nickname));
+        //server.sendError(client, "464", mismatch.c_str());
         return ;
     }
     client.setPassValid();
