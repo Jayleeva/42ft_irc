@@ -39,8 +39,8 @@ void Command::execute(Client &client, Server &server)
 
     if (_cmd.empty())
     {
-        printError(ERR_UNKNOWNCOMMAND);
-        server.sendError(client, "421", ERR_UNKNOWNCOMMAND);
+        printError(ERR_UNKNOWNCOMMAND(_cmd));
+        server.sendToClient(&client, ERR_UNKNOWNCOMMAND(_cmd));
         return;
     }
 
@@ -49,7 +49,7 @@ void Command::execute(Client &client, Server &server)
         if (!client.isRegistered())
         {
             printError(ERR_NOTREGISTRED);
-            server.sendError(client, "451", ERR_NOTREGISTRED);
+            server.sendToClient(&client, ERR_NOTREGISTRED);
             return;
         }
     }
@@ -58,11 +58,7 @@ void Command::execute(Client &client, Server &server)
     {
         std::cout << "BRANCH CAP" << std::endl;
         if (_parsing.size() >= 2 && _parsing[1] == "LS")
-        {
-            std::string cap = "CAP * LS :" + server.getName();
-            server.sendToClient(&client, cap);
-            //server.sendCap(client);
-        }
+            server.sendCap(&client);
         return ;
     }
     else if (_cmd == CMD_PASS)
@@ -83,11 +79,7 @@ void Command::execute(Client &client, Server &server)
               << client.isRegistered()
               << std::endl;
         if (client.isRegistered())
-        {
-            std::string welcome = RPL_WELCOME + client.getNickname() + "!";
-            server.sendReplyToClient(&client, "001", welcome.c_str());
-            //server.sendWelcome(client);
-        }
+            server.sendToClient(&client, RPL_WELCOME(client.getNickname()));
     }
     else if (_cmd == CMD_JOIN)
         join(_parsing, client, server);
@@ -104,16 +96,12 @@ void Command::execute(Client &client, Server &server)
     else if (_cmd == CMD_KICK)
         kick(_parsing, client, server);
     else if (_cmd == CMD_PING)
-    {
-        std::string pong = "PONG " + *(_parsing.begin() + 1);
-        server.sendToClient(&client, pong);
-        //server.pong(_parsing, client);
-    }
+        server.pong(&client, *(_parsing.begin() + 1));
     else if (_cmd == CMD_QUIT)
         return ;
     else
     {
-        printError(_cmd + ERR_UNKNOWNCOMMAND);
-        server.sendError(client, "421", ERR_UNKNOWNCOMMAND);
+        printError(ERR_UNKNOWNCOMMAND(_cmd));
+        server.sendToClient(&client, ERR_UNKNOWNCOMMAND(_cmd));
     }
 }

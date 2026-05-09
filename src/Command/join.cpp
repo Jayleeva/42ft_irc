@@ -13,14 +13,14 @@ void Command::join(std::vector<std::string> parsing, Client &client, Server &ser
 
     if (parsing.size() < 2)
     {
-        printError(ERR_NEEDMOREPARAMS);
-        server.sendError(client, "461", ERR_NEEDMOREPARAMS);
+        printError(ERR_NEEDMOREPARAMS(parsing.front()));
+		server.sendToClient(&client, ERR_NEEDMOREPARAMS(parsing.front()));
         return ;
     }
     if (!client.isRegistered())
     {
         printError(ERR_NOTREGISTRED);
-        server.sendError(client, "451", ERR_NOTREGISTRED);
+        server.sendToClient(&client, ERR_NOTREGISTRED);
         return ;
     }
 
@@ -30,8 +30,8 @@ void Command::join(std::vector<std::string> parsing, Client &client, Server &ser
 
     if (!isValidChannelName(channelName))
     {
-        printError(ERR_BADCHANNAME);
-        server.sendError(client, "479", ERR_BADCHANNAME);
+        printError(ERR_BADCHANNAME(channelName));
+        server.sendToClient(&client, ERR_BADCHANNAME(channelName));
         return ;
     }
 
@@ -42,20 +42,20 @@ void Command::join(std::vector<std::string> parsing, Client &client, Server &ser
             return ;
         if (channel->isInviteOnly() && !channel->isInvited(&client))
         {
-            printError(ERR_INVITEONLYCHAN);
-            server.sendError(client, "473", ERR_INVITEONLYCHAN);
+            printError(ERR_INVITEONLYCHAN(channelName));
+            server.sendToClient(&client, ERR_INVITEONLYCHAN(channelName));
             return ;
         }
         if (channel->isFull())
         {
-            printError(ERR_CHANNELISFULL);
-            server.sendError(client, "471", ERR_CHANNELISFULL);
+            printError(ERR_CHANNELISFULL(channelName));
+            server.sendToClient(&client, ERR_CHANNELISFULL(channelName));
             return ;
         }
         if (!channel->checkKey(key))
         {
-            printError(ERR_BADCHANNELKEY);
-            server.sendError(client, "475", ERR_BADCHANNELKEY);
+            printError(ERR_BADCHANNELKEY(channelName));
+            server.sendToClient(&client, ERR_BADCHANNELKEY(channelName));
             return ;
         }
     }

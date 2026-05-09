@@ -12,9 +12,8 @@ void Command::invite(std::vector<std::string> parsing, Client &client, Server &s
 {
 	if (parsing.size() < 2)
     {
-        printError(ERR_NEEDMOREPARAMS);
-		server.sendToClient(client, ERR_NEEDMOREPARAMS("invite"));
-		//server.sendError(client, "461", ERR_NEEDMOREPARAMS);
+        printError(ERR_NEEDMOREPARAMS(parsing.front()));
+		server.sendToClient(&client, ERR_NEEDMOREPARAMS(parsing.front()));
         return ;
     }
 
@@ -25,8 +24,8 @@ void Command::invite(std::vector<std::string> parsing, Client &client, Server &s
 
     if (!server.channelExists(channelName))
 	{
-    	printError(ERR_NOSUCHCHANNEL);
-		server.sendError(client, "403", ERR_NOSUCHCHANNEL);
+    	printError(ERR_NOSUCHCHANNEL(channelName));
+		server.sendToClient(&client, ERR_NOSUCHCHANNEL(channelName));
     	return ;
 	}
 
@@ -34,41 +33,40 @@ void Command::invite(std::vector<std::string> parsing, Client &client, Server &s
 
 	if (!channel)
 	{
-		printError(ERR_NOSUCHCHANNEL);
-		server.sendError(client, "403", ERR_NOSUCHCHANNEL);
+    	printError(ERR_NOSUCHCHANNEL(channelName));
+		server.sendToClient(&client, ERR_NOSUCHCHANNEL(channelName));
 		return;
 	}
 
 	if (!channel->hasMember(&client))
 	{
-		printError(ERR_NOTONCHANNEL);
-		server.sendError(client, "442", ERR_NOTONCHANNEL);
+		printError(ERR_NOTONCHANNEL(channelName));
+		server.sendToClient(&client, ERR_NOTONCHANNEL(channelName));
 		return;
 	}
 
 	if (channel->isInviteOnly() && !channel->isOperator(&client))
 	{
-		printError(ERR_CHANOPRIVSNEEDED);
-		server.sendError(client, "482", ERR_CHANOPRIVSNEEDED);
+		printError(ERR_CHANOPRIVSNEEDED(channelName));
+		server.sendToClient(&client, ERR_CHANOPRIVSNEEDED(channelName));
 		return;
 	}
 
 	Client *targetClient = server.getClientByNick(nickname);
 	if(!targetClient)
 	{
-		printError(ERR_NOSUCHNICK);
-		server.sendError(client, "401", ERR_NOSUCHNICK);
+		printError(ERR_NOSUCHNICK(nickname));
+		server.sendToClient(&client, ERR_NOSUCHNICK(nickname));
 		return;
 	}
 
 	if (channel->hasMember(targetClient))
 	{
-		printError(ERR_USERONCHANNEL);
-		server.sendError(client, "443", ERR_USERONCHANNEL);
+		printError(ERR_USERONCHANNEL(nickname, channelName));
+		server.sendToClient(&client, ERR_USERONCHANNEL(nickname, channelName));
 		return;
 	}
 
 	channel->invite(targetClient);
-	std::string inviting = " " + client.getNickname() + " " + nickname + channel->getName();
-	server.sendReplyToClient(&client, "341", inviting.c_str());
+	server.sendToClient(&client, RPL_INVITING(nickname, channel->getName())); // ajouter nom qui invite?
 }

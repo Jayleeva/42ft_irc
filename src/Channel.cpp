@@ -200,7 +200,7 @@ bool Channel::checkKey(const std::string &key) const
 
 std::string Channel::listAllUsers(std::string newClient)
 {
-    std::string list = _name + " :";
+    std::string list = ":";
     
     size_t         i = 0;
     for (std::set<Client*>::iterator it = _members.begin(); it != _members.end(); it ++)

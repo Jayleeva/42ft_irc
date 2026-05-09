@@ -10,18 +10,19 @@ void Command::user(std::vector<std::string> parsing, Client &client, Server &ser
 {
     if (parsing.size() < 2)
     {
-        printError(ERR_NEEDMOREPARAMS);
-        server.sendError(client, "461", ERR_NEEDMOREPARAMS);
+        printError(ERR_NEEDMOREPARAMS(parsing.front()));
+		server.sendToClient(&client, ERR_NEEDMOREPARAMS(parsing.front()));
         return ;
     }
 
     if (!client.hasPass())
     {
-        /*std::string nickname = client.getNickname();
+        /*
+        std::string nickname = client.getNickname();
         if (nickname.empty())
-            nickname = "<unknownclient>";
-        std::string mismatch = " " + nickname + ERR_PASSWDMISMATCH;
-        server.sendError(client, "464", mismatch.c_str());*/
+            nickname = "noNickname";  // get hostname de la machine?
+        printError(ERR_PASSWDMISMATCH(nickname));
+        server.sendToClient(&client, ERR_PASSWDMISMATCH(nickname));*/
         return ;
     }
 

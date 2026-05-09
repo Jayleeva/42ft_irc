@@ -9,15 +9,15 @@ void Command::pass(std::vector<std::string> parsing, Client &client, Server &ser
 {
     if (parsing.size() < 2)
     {
-        printError(ERR_NEEDMOREPARAMS);
-        server.sendError(client, "461", ERR_NEEDMOREPARAMS);
+        printError(ERR_NEEDMOREPARAMS(parsing.front()));
+		server.sendToClient(&client, ERR_NEEDMOREPARAMS(parsing.front()));
         return ;
     }
 
     if (client.isRegistered())
     {
         printError(ERR_ALREADYREGISTRED);
-        server.sendError(client, "462", ERR_ALREADYREGISTRED);
+        server.sendToClient(&client, ERR_ALREADYREGISTRED);
         return;
     }
 
@@ -27,13 +27,11 @@ void Command::pass(std::vector<std::string> parsing, Client &client, Server &ser
 
     if (arg != server.getPassword())
     {
-        //printError(ERR_PASSWDMISMATCH);
         std::string nickname = client.getNickname();
         if (nickname.empty())
-            nickname = "<unknownclient>";
-        //std::string mismatch = " " + nickname + ERR_PASSWDMISMATCH;
+            nickname = "noNickname"; // get hostname de la machine?
+        printError(ERR_PASSWDMISMATCH(nickname));
         server.sendToClient(&client, ERR_PASSWDMISMATCH(nickname));
-        //server.sendError(client, "464", mismatch.c_str());
         return ;
     }
     client.setPassValid();

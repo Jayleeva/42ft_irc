@@ -10,8 +10,8 @@ void Command::part(std::vector<std::string> parsing, Client &client, Server &ser
 {
     if (parsing.size() < 2)
     {
-        printError(ERR_NEEDMOREPARAMS);
-        server.sendError(client, "461", ERR_NEEDMOREPARAMS);
+        printError(ERR_NEEDMOREPARAMS(parsing.front()));
+		server.sendToClient(&client, ERR_NEEDMOREPARAMS(parsing.front()));
         return ;
     }
 

@@ -6,8 +6,8 @@ void Command::mode(std::vector<std::string> parsing, Client &client, Server &ser
 
 	if (parsing.size() < 3)
 	{
-		printError(ERR_NEEDMOREPARAMS);
-		server.sendError(client, "461", ERR_NEEDMOREPARAMS);
+        printError(ERR_NEEDMOREPARAMS(parsing.front()));
+		server.sendToClient(&client, ERR_NEEDMOREPARAMS(parsing.front()));
 		return;
 	}
 
@@ -15,15 +15,15 @@ void Command::mode(std::vector<std::string> parsing, Client &client, Server &ser
 	std::string channelName = *it;
     if (server.channelExists(channelName) == false)
 	{
-		printError(ERR_NOSUCHCHANNEL);
-		server.sendError(client, "403", ERR_NOSUCHCHANNEL);
+    	printError(ERR_NOSUCHCHANNEL(channelName));
+		server.sendToClient(&client, ERR_NOSUCHCHANNEL(channelName));
 		return;
 	}
 	Channel *chan = server.getChannel(channelName);
 	if (chan->isOperator(&client) == false)
 	{
-		printError(ERR_CHANOPRIVSNEEDED);
-		server.sendError(client, "482", ERR_CHANOPRIVSNEEDED);
+		printError(ERR_CHANOPRIVSNEEDED(channelName));
+		server.sendToClient(&client, ERR_CHANOPRIVSNEEDED(channelName));
 		return;
 	}
 
@@ -56,8 +56,8 @@ void Command::mode(std::vector<std::string> parsing, Client &client, Server &ser
 				it ++;
 				if (it == parsing.end())
 				{
-					printError(ERR_NEEDMOREPARAMS);
-					server.sendError(client, "461", ERR_NEEDMOREPARAMS);
+					printError(ERR_NEEDMOREPARAMS(parsing.front()));
+					server.sendToClient(&client, ERR_NEEDMOREPARAMS(parsing.front()));
 					return;
 				}
 				std::string key = *it;
@@ -70,8 +70,8 @@ void Command::mode(std::vector<std::string> parsing, Client &client, Server &ser
 			it ++;
 			if (it == parsing.end())
 			{
-				printError(ERR_NEEDMOREPARAMS);
-				server.sendError(client, "461", ERR_NEEDMOREPARAMS);
+				printError(ERR_NEEDMOREPARAMS(parsing.front()));
+				server.sendToClient(&client, ERR_NEEDMOREPARAMS(parsing.front()));
 				return;
 			}
 			std::string targetName = *it;
@@ -91,8 +91,8 @@ void Command::mode(std::vector<std::string> parsing, Client &client, Server &ser
 				it ++;
 				if (it == parsing.end())
 				{
-					printError(ERR_NEEDMOREPARAMS);
-					server.sendError(client, "461", ERR_NEEDMOREPARAMS);
+					printError(ERR_NEEDMOREPARAMS(parsing.front()));
+					server.sendToClient(&client, ERR_NEEDMOREPARAMS(parsing.front()));
 					return;
 				}
 				std::string limit = *it;
@@ -102,8 +102,8 @@ void Command::mode(std::vector<std::string> parsing, Client &client, Server &ser
 		}
 		else
 		{
-			printError(ERR_UNKNOWNMODE);
-			server.sendError(client, "501", ERR_UNKNOWNMODE);
+			printError(ERR_UNKNOWNMODE(flag));
+			server.sendToClient(&client, ERR_UNKNOWNMODE(flag));
 			return;
 		}
 		it ++;

@@ -64,5 +64,4 @@ class Command
 
 /*
 **getCmd: Method of Command class, return the command already stored in the object
-**getCommand : Parsing function, extract the command from the raw message
 */

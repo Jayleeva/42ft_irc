@@ -19,7 +19,7 @@ bool  channelExists(std::map<std::string, Channel*> channels, std::string name)
     if not return `npos`.
  */
 
-void printError(const std::string& errorMsg)
+void printError(const std::string errorMsg)
 {
    std::cout << "Error: " << errorMsg << std::endl;
 }

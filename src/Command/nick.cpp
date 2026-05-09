@@ -17,44 +17,43 @@ void Command::nick(std::vector<std::string> parsing, Client &client, Server &ser
 {
     if (parsing.size() < 2)
     {
-        printError(ERR_NEEDMOREPARAMS);
-        server.sendError(client, "461", ERR_NEEDMOREPARAMS);
-        return ;
-    }
-
-    if (!client.hasPass())
-    {
-        /*std::string nickname = client.getNickname();
-        if (nickname.empty())
-            nickname = "<unknownclient>";
-        std::string mismatch = " " + nickname + ERR_PASSWDMISMATCH;
-        server.sendError(client, "464", mismatch.c_str());*/
+        printError(ERR_NEEDMOREPARAMS(parsing.front()));
+		server.sendToClient(&client, ERR_NEEDMOREPARAMS(parsing.front()));
         return ;
     }
 
     std::string nickname = *(parsing.begin() + 1);
 
+    if (!client.hasPass())
+    {
+        /*if (nickname.empty())
+            nickname = "noNickname";  // get hostname de la machine?
+        printError(ERR_PASSWDMISMATCH(nickname));
+        server.sendToClient(&client, ERR_PASSWDMISMATCH(nickname));*/
+        return ;
+    } 
+
     for (size_t j = 0; j < nickname.size(); j++)
     {
         if (nickname[j] == ' ' || nickname[j] == '\t')
         {
-            printError(ERR_ERRONEUSNICKNAME);
-            server.sendError(client, "432", ERR_ERRONEUSNICKNAME);
+            printError(ERR_ERRONEUSNICKNAME(nickname));
+            server.sendToClient(&client, ERR_ERRONEUSNICKNAME(nickname));
             return ;
         }
     }
 
     if (nickname[0] == '#' || nickname[0] == '&')
     {
-        printError(ERR_ERRONEUSNICKNAME);
-        server.sendError(client, "432", ERR_ERRONEUSNICKNAME);
+        printError(ERR_ERRONEUSNICKNAME(nickname));
+        server.sendToClient(&client, ERR_ERRONEUSNICKNAME(nickname));
         return;
     }
 
     if (server.nicknameExists(nickname) && nickname != client.getNickname())
     {
-        printError(ERR_NICKNAMEINUSE);
-        server.sendError(client, "433", ERR_NICKNAMEINUSE);
+        printError(ERR_NICKNAMEINUSE(nickname));
+        server.sendToClient(&client, ERR_NICKNAMEINUSE(nickname));
         return ;
     }
 

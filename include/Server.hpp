@@ -67,20 +67,14 @@ class Server
         void    removeClientFromChannel(Client *client, const std::string &name);
         Client  *getClientByNick(const std::string &nickname);
 
-        void    sendToClient(Client *target, std::string &message);
-        void    sendToChannel(Channel &channel, Client *sender, std::string &message);
-
-        void    sendError(Client &client, std::string errID, const char *error);
-        void    sendReplyToClient(Client *client, std::string rplID, const char *rpl);
-        void    sendReplyToChannel(Channel &channel, Client *sender, std::string rplID, const char *rpl);
+        void    sendToClient(Client *target, std::string message);
+        void    sendToChannel(Channel &channel, Client *sender, std::string message);
 
         void    sendMessageToClient(Client *sender, Client *target, const std::string &message);
         void    sendMessageToChannel(Client &sender, Channel &channel, const std::string &message);
 
-        //void    sendCap(Client &client);
-        //void    sendWelcome(Client &client);
-    
-        //void    pong(std::vector<std::string> _parsing, Client &client);
+        void    sendCap(Client *client);
+        void    pong(Client *client, std::string arg);
 
         void    sendJoinConfirmation(Client *client, Channel &channel);
         void    sendPartConfirmation(Client *client, Channel &channel); // besoin?
