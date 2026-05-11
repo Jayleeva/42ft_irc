@@ -43,7 +43,7 @@ void Command::execute(Client &client, Server &server)
         return;
     }
 
-    if (_cmd != CMD_PASS && _cmd != CMD_NICK && _cmd != CMD_USER)
+    if (_cmd != CMD_PASS && _cmd != CMD_NICK && _cmd != CMD_USER && _cmd != CMD_CAP)
     {
         if (!client.isRegistered())
         {
@@ -54,20 +54,30 @@ void Command::execute(Client &client, Server &server)
 
     if (_cmd == CMD_CAP)
     {
-        if (*(_parsing.begin() + 1) == "END\r\n")
-            server.sendWelcome(client);
-        else
+        std::cout << "BRANCH CAP" << std::endl;
+        if (_parsing.size() >= 2 && _parsing[1] == "LS")
             server.sendCap(client);
+        return ;
     }
     else if (_cmd == CMD_PASS)
-        pass(_parsing, client, server.getPassword());   ///NOTE
+    {
+        std::cout << "BRANCH PASS" << std::endl;
+        pass(_parsing, client, server.getPassword());
+    }   ///NOTE
     else if (_cmd == CMD_NICK)
+    {
+        std::cout << "BRANCH NICK" << std::endl;
         nick(_parsing, client, server);
+    }
     else if (_cmd == CMD_USER)
     {
+        std::cout << "BRANCH USER" << std::endl;
         user(_parsing, client);
-        //server.sendCap(client);
-        server.sendWelcome(client);
+        std::cout << "registered = "
+              << client.isRegistered()
+              << std::endl;
+        if (client.isRegistered())
+            server.sendWelcome(client);
     }
     else if (_cmd == CMD_JOIN)
         join(_parsing, client, server);

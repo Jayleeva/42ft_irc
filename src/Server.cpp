@@ -233,7 +233,17 @@ void    Server::execClient(nfds_t i)
     {
         buffer[nbytes] = '\0';
 
-        execCmd(buffer, fd);
+        //execCmd(buffer, fd);
+        std::stringstream ss(buffer);
+        std::string line;
+
+        while (std::getline(ss, line, '\n'))
+        {
+            if (!line.empty() && line[line.size() - 1] == '\r')
+                line.erase(line.size() - 1);
+            if (!line.empty())
+                execCmd(line, fd);
+        }
         
         std::cout << "exec " << RED << nbytes << DEFAULT << std::endl;
         std::cout << "buffer = " << buffer << std::endl;
@@ -401,7 +411,7 @@ void Server::sendToClient(Client *target, std::string &message)
 {
     if (!target)
         return;
-    //message.append("\r\n");
+    message.append("\r\n");
     std::cout << "> " << message << std::endl;
     send(target->getFd(), message.c_str(), message.length(), 0);
 }
