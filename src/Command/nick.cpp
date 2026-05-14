@@ -26,6 +26,7 @@ void Command::nick(std::vector<std::string> parsing, Client &client, Server &ser
 
     if (!client.hasPass())
     {
+        std::cout << "hello\n";
         /*if (nickname.empty())
             nickname = "noNickname";  // get hostname de la machine?
         printError(ERR_PASSWDMISMATCH(nickname));

@@ -21,13 +21,15 @@ void Command::part(std::vector<std::string> parsing, Client &client, Server &ser
 
 	if (!channel)
 	{
-		printError(ERR_NOSUCHCHANNEL);
+		printError(ERR_NOSUCHCHANNEL(channelName));
+        server.sendToClient(&client, ERR_NOSUCHCHANNEL(channelName));
 		return;
 	}
 
     if (!channel->hasMember(&client))
 	{
-		printError(ERR_NOTONCHANNEL);
+		printError(ERR_NOTONCHANNEL(channelName));
+        server.sendToClient(&client, ERR_NOTONCHANNEL(channelName));
 		return;
 	}
     
