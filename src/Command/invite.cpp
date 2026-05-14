@@ -10,13 +10,11 @@
 */
 void Command::invite(std::vector<std::string> parsing, Client &client, Server &server)
 {
-	if (parsing.size() < 2)
+	if (parsing.size() < 3)
     {
         printError(ERR_NEEDMOREPARAMS);
         return ;
     }
-
-	(void)client; // verifier si le client qui fait la demande est operateur de la channel
 
 	std::string nickname = *(parsing.begin() + 1);
 	std::string channelName = *(parsing.begin() + 2);

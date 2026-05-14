@@ -16,7 +16,21 @@ void Command::part(std::vector<std::string> parsing, Client &client, Server &ser
 
     std::string channelName = *(parsing.begin() + 1);
 
-    //vérifier si channel existe et si le client est membre du channel
+    Channel *channel = server.getChannel(channelName);
+
+	if (!channel)
+	{
+		printError(ERR_NOSUCHCHANNEL);
+		return;
+	}
+
+    if (!channel->hasMember(&client))
+	{
+		printError(ERR_NOTONCHANNEL);
+		return;
+	}
     
     server.removeClientFromChannel(&client, channelName);
 }
+
+//vérifier si channel existe et si le client est membre du channel
