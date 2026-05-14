@@ -46,6 +46,7 @@ class Server
         std::map<std::string, Channel*> getMapChannels() const;
         void                            setPassword(std::string);
         std::string                     getPassword() const;
+        std::string                     getName() const;
 
         void    openSocket(struct sockaddr_in *addr);
         void    closeSockets();
@@ -65,13 +66,20 @@ class Server
         void    joinClientToChannel(Client *client, const std::string &name);
         void    removeClientFromChannel(Client *client, const std::string &name);
         Client  *getClientByNick(const std::string &nickname);
-        void    sendToClient(Client *target, std::string &message);
-        void    sendMessageToClient(Client *sender, Client *target, const std::string &message);
-        void    sendMessageToChannel(Client *sender, Channel *channel, const std::string &message);
 
-        void    sendCap(Client &client);
-        void    sendWelcome(Client &client);
-        void    pong(std::vector<std::string> _parsing, Client &client);
+        void    sendToClient(Client *target, std::string message);
+        void    sendToChannel(Channel &channel, Client *sender, std::string message);
+
+        void    sendMessageToClient(Client *sender, Client *target, const std::string &message);
+        void    sendMessageToChannel(Client &sender, Channel &channel, const std::string &message);
+
+        void    sendCap(Client *client);
+        void    pong(Client *client, std::string arg);
+
+        void    sendJoinConfirmation(Client *client, Channel &channel);
+        void    sendPartConfirmation(Client *client, Channel &channel); // besoin?
+        void    sendNewParams(Channel &channel, Client *sender, std::string flag);
+
 };
 
 void    printMap(std::map<int, Client *> map);

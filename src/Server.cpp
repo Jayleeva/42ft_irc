@@ -2,7 +2,7 @@
 #include "../include/utils.hpp"
 #include "../include/Command.hpp"
 
-Server::Server() {};
+Server::Server(): _name("ircserv") {};
 Server::~Server()
 {
     std::map<int, Client*>::iterator it;
@@ -42,6 +42,10 @@ std::string Server::getPassword() const
     return (this->_password);
 }
 
+std::string Server::getName() const
+{
+    return (this->_name);
+}
 
 void    printMap(std::map<int, Client *> map)
 {
@@ -142,13 +146,20 @@ void    Server::addClient()
     if (nbytes > 0)
     { 
         buffer[nbytes] = '\0';
+
+        std::stringstream ss(buffer);
+        std::string line;
+
+        while (std::getline(ss, line, '\n'))
+        {
+            if (!line.empty() && line[line.size() - 1] == '\r')
+                line.erase(line.size() - 1);
+            if (!line.empty())
+                execCmd(line, clientSocket);
+        }
         std::cout << "add " << RED << nbytes << DEFAULT << std::endl;
-        std::cout << "buffer = " << buffer << std::endl;
+        std::cout << "< " << buffer << std::endl;
     }
-    //(id) handshake [<option>=<valeur>,[<option>=<valeur>,...]]
-    //std::string message = this->_password;
-    //send(clientSocket, message.c_str(), strlen(message.c_str()), 0);
-    //printMap(this->_clients);
 }
 
 void int_to_char(int num, char *result)
@@ -233,7 +244,6 @@ void    Server::execClient(nfds_t i)
     {
         buffer[nbytes] = '\0';
 
-        //execCmd(buffer, fd);
         std::stringstream ss(buffer);
         std::string line;
 
@@ -246,19 +256,7 @@ void    Server::execClient(nfds_t i)
         }
         
         std::cout << "exec " << RED << nbytes << DEFAULT << std::endl;
-        std::cout << "buffer = " << buffer << std::endl;
-
-        /*if (nbytes)
-        {
-            for (nfds_t j = 1; j < _nfd; j ++)
-            {
-                if (j != i)
-                {
-                    std::cout << "'" << buffer << "'" << " sent to client " << _fds[j].fd << " from client " << fd << std::endl;
-                    send(_fds[j].fd, buffer, strlen(buffer), 0);
-                }
-            }
-        }*/
+        std::cout << "< " << buffer << std::endl;
     }
     if (nbytes == 0)
         this->removeClient(i);
@@ -362,11 +360,12 @@ void Server::joinClientToChannel(Client *client, const std::string &name)
     {
         channel = createChannel(name);
         channel->addOperator(client);
-    }
+    }    
     if (!channel->hasMember(client))
         channel->addMember(client);
     if (!client->isInChannel(name))
         client->addChannel(name);
+    sendJoinConfirmation(client, *channel);
 }
 
 void Server::removeClientFromChannel(Client *client, const std::string &name)
@@ -407,7 +406,7 @@ Client *Server::getClientByNick(const std::string &nickname)
     return (NULL);
 }
 
-void Server::sendToClient(Client *target, std::string &message)
+void Server::sendToClient(Client *target, std::string message)
 {
     if (!target)
         return;
@@ -416,42 +415,74 @@ void Server::sendToClient(Client *target, std::string &message)
     send(target->getFd(), message.c_str(), message.length(), 0);
 }
 
-void Server::sendMessageToClient(Client *sender, Client *target, const std::string &message)
-{
-    std::string msg = sender->getNickname() + " PRIVMSG :" + message; // NOTE: pour que le client du destinataire lui affiche qui lui a envoye le message?
-    sendToClient(target, msg);
-}
-
-void Server::sendMessageToChannel(Client *sender, Channel *channel, const std::string &message)
+void Server::sendToChannel(Channel &channel, Client *sender, std::string message)
 {
     std::set<Client*>::const_iterator it;
-    const std::set<Client*> &members = channel->getMembers();
+    const std::set<Client*> &members = channel.getMembers();
 
-    std::string msg = sender->getNickname() + " PRIVMSG :" + message; // NOTE: pour que le client du destinataire lui affiche qui lui a envoye le message?
+    message.append("\r\n");
+    std::cout << "> " << message << std::endl;
     it = members.begin();
     while (it != members.end())
     {
         if (*it != sender)
-            sendToClient((*it), msg);
+            sendToClient((*it), message);
         it++;
     }
 }
 
-void Server::sendCap(Client &client)
+void Server::sendMessageToClient(Client *sender, Client *target, const std::string &message)
+{
+    std::string msg = sender->getNickname() + " PRIVMSG :" + message; 
+    sendToClient(target, msg);
+}
+
+void Server::sendMessageToChannel(Client &sender, Channel &channel, const std::string &message)
+{
+    std::string msg = sender.getNickname() + " PRIVMSG :" + message;
+    sendToChannel(channel, &sender, msg);
+}
+
+void Server::sendJoinConfirmation(Client *client, Channel &channel)
+{
+    std::string confirmation = ":" + client->getNickname() + " JOIN :" + channel.getName();
+    sendToClient(client, confirmation);
+    if (channel.hasTopic())
+        sendToClient(client, RPL_TOPIC(channel.getName(), channel.getTopic()));
+    else
+        sendToClient(client, RPL_NOTOPIC(channel.getName()));
+    sendToClient(client, RPL_NAMREPLY(client->getNickname(), channel.getName(), channel.listAllUsers(client->getNickname())));
+    sendToClient(client, RPL_ENDOFNAMES(client->getNickname(), channel.getName()));
+}
+
+void Server::sendPartConfirmation(Client *client, Channel &channel) // BESOIN?
+{
+    std::string confirmation = ":" + client->getNickname() + " PART :" + channel.getName();
+    sendToClient(client, confirmation);
+    sendToChannel(channel, client, confirmation);
+    //sendToClient(client, RPL_NAMREPLY(channel.getName(), channel.listAllUsers(client->getNickname())));
+    //sendToClient(client, RPL_ENDOFNAMES(client->getNickname(), channel.getName()));
+}
+
+void Server::sendNewParams(Channel &channel, Client *sender, std::string flag)
+{
+    //Parameters: <channel> {[+|-]|o|p|s|i|t|n|b|v} [<limit>] [<user>] [<ban mask>]
+
+    (void)flag;
+    std::string mode;
+    std::string params;
+    sendToClient(sender, RPL_CHANNELMODEIS(channel.getName(), mode, params));
+    sendToChannel(channel, sender, RPL_CHANNELMODEIS(channel.getName(), mode, params));
+}
+
+void Server::sendCap(Client *client)
 {
     std::string cap = "CAP * LS :" + _name;
-    sendToClient(&client, cap);
+    sendToClient(client, cap);
 }
 
-void Server::sendWelcome(Client &client)
+void Server::pong(Client *client, std::string arg)
 {
-    std::string welcome = ":"  + _name + " 001 " + client.getNickname();
-    sendToClient(&client, welcome);
+    std::string pong = "PONG " + arg;
+    sendToClient(client, pong);
 }
-
-void    Server::pong(std::vector<std::string> _parsing, Client &client)
-{
-    std::string pong = "PONG " + *(_parsing.begin() + 1);
-    sendToClient(&client, pong);
-}
-

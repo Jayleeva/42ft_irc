@@ -6,21 +6,26 @@
 **USER <username> <hostname> <servername> <realname>
 */
 
-void Command::user(std::vector<std::string> parsing, Client &client)
+void Command::user(std::vector<std::string> parsing, Client &client, Server &server)
 {
     if (parsing.size() < 2)
     {
-        printError(ERR_NEEDMOREPARAMS);
+        printError(ERR_NEEDMOREPARAMS(parsing.front()));
+		server.sendToClient(&client, ERR_NEEDMOREPARAMS(parsing.front()));
         return ;
     }
 
     if (!client.hasPass())
     {
-        printError(ERR_PASSWDMISMATCH);
+        /*
+        std::string nickname = client.getNickname();
+        if (nickname.empty())
+            nickname = "noNickname";  // get hostname de la machine?
+        printError(ERR_PASSWDMISMATCH(nickname));
+        server.sendToClient(&client, ERR_PASSWDMISMATCH(nickname));*/
         return ;
     }
 
     std::string arg = *(parsing.begin() + 1);
-
     client.setUsername(arg);
 }

@@ -17,38 +17,46 @@ void Command::nick(std::vector<std::string> parsing, Client &client, Server &ser
 {
     if (parsing.size() < 2)
     {
-        printError(ERR_NEEDMOREPARAMS);
-        return ;
-    }
-
-    if (!client.hasPass())
-    {
-        printError(ERR_PASSWDMISMATCH);
+        printError(ERR_NEEDMOREPARAMS(parsing.front()));
+		server.sendToClient(&client, ERR_NEEDMOREPARAMS(parsing.front()));
         return ;
     }
 
     std::string nickname = *(parsing.begin() + 1);
 
+    if (!client.hasPass())
+    {
+        /*if (nickname.empty())
+            nickname = "noNickname";  // get hostname de la machine?
+        printError(ERR_PASSWDMISMATCH(nickname));
+        server.sendToClient(&client, ERR_PASSWDMISMATCH(nickname));*/
+        return ;
+    } 
+
     for (size_t j = 0; j < nickname.size(); j++)
     {
         if (nickname[j] == ' ' || nickname[j] == '\t')
         {
-            printError(ERR_ERRONEUSNICKNAME);
+            printError(ERR_ERRONEUSNICKNAME(nickname));
+            server.sendToClient(&client, ERR_ERRONEUSNICKNAME(nickname));
             return ;
         }
     }
 
     if (nickname[0] == '#' || nickname[0] == '&')
     {
-        printError(ERR_ERRONEUSNICKNAME);
+        printError(ERR_ERRONEUSNICKNAME(nickname));
+        server.sendToClient(&client, ERR_ERRONEUSNICKNAME(nickname));
         return;
     }
 
     if (server.nicknameExists(nickname) && nickname != client.getNickname())
     {
-        printError(ERR_NICKNAMEINUSE);
+        printError(ERR_NICKNAMEINUSE(nickname));
+        server.sendToClient(&client, ERR_NICKNAMEINUSE(nickname));
         return ;
     }
 
     client.setNickname(nickname);
+    std::cout << "nickname '" << nickname << "'" << std::endl;
 }

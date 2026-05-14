@@ -12,7 +12,8 @@ void Command::invite(std::vector<std::string> parsing, Client &client, Server &s
 {
 	if (parsing.size() < 3)
     {
-        printError(ERR_NEEDMOREPARAMS);
+        printError(ERR_NEEDMOREPARAMS(parsing.front()));
+		server.sendToClient(&client, ERR_NEEDMOREPARAMS(parsing.front()));
         return ;
     }
 
@@ -21,7 +22,8 @@ void Command::invite(std::vector<std::string> parsing, Client &client, Server &s
 
     if (!server.channelExists(channelName))
 	{
-    	printError(ERR_NOSUCHCHANNEL);
+    	printError(ERR_NOSUCHCHANNEL(channelName));
+		server.sendToClient(&client, ERR_NOSUCHCHANNEL(channelName));
     	return ;
 	}
 
@@ -29,35 +31,40 @@ void Command::invite(std::vector<std::string> parsing, Client &client, Server &s
 
 	if (!channel)
 	{
-		printError(ERR_NOSUCHCHANNEL);
+    	printError(ERR_NOSUCHCHANNEL(channelName));
+		server.sendToClient(&client, ERR_NOSUCHCHANNEL(channelName));
 		return;
 	}
 
 	if (!channel->hasMember(&client))
 	{
-		printError(ERR_NOTONCHANNEL);
+		printError(ERR_NOTONCHANNEL(channelName));
+		server.sendToClient(&client, ERR_NOTONCHANNEL(channelName));
 		return;
 	}
 
 	if (channel->isInviteOnly() && !channel->isOperator(&client))
 	{
-		printError(ERR_CHANOPRIVSNEEDED);
+		printError(ERR_CHANOPRIVSNEEDED(channelName));
+		server.sendToClient(&client, ERR_CHANOPRIVSNEEDED(channelName));
 		return;
 	}
 
 	Client *targetClient = server.getClientByNick(nickname);
 	if(!targetClient)
 	{
-		printError(ERR_NOSUCHNICK);
+		printError(ERR_NOSUCHNICK(nickname));
+		server.sendToClient(&client, ERR_NOSUCHNICK(nickname));
 		return;
 	}
 
 	if (channel->hasMember(targetClient))
 	{
-		printError(ERR_USERONCHANNEL);
+		printError(ERR_USERONCHANNEL(nickname, channelName));
+		server.sendToClient(&client, ERR_USERONCHANNEL(nickname, channelName));
 		return;
 	}
 
 	channel->invite(targetClient);
-	//RPL_INVITING à ajouter
+	server.sendToClient(&client, RPL_INVITING(nickname, channel->getName())); // ajouter nom qui invite?
 }

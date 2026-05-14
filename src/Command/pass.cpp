@@ -5,17 +5,19 @@
 ** PASS <password>   
 */
 
-void Command::pass(std::vector<std::string> parsing, Client &client, const std::string password)
+void Command::pass(std::vector<std::string> parsing, Client &client, Server &server)
 {
     if (parsing.size() < 2)
     {
-        printError(ERR_NEEDMOREPARAMS);
+        printError(ERR_NEEDMOREPARAMS(parsing.front()));
+		server.sendToClient(&client, ERR_NEEDMOREPARAMS(parsing.front()));
         return ;
     }
 
     if (client.isRegistered())
     {
         printError(ERR_ALREADYREGISTRED);
+        server.sendToClient(&client, ERR_ALREADYREGISTRED);
         return;
     }
 
@@ -23,9 +25,13 @@ void Command::pass(std::vector<std::string> parsing, Client &client, const std::
     arg = arg.substr(0, arg.find("\r\n"));
     std::cout << "password = '" << arg << "'" << std::endl;
 
-    if (arg != password) // fonction a creer
+    if (arg != server.getPassword())
     {
-        printError(ERR_PASSWDMISMATCH);
+        std::string nickname = client.getNickname();
+        if (nickname.empty())
+            nickname = "noNickname"; // get hostname de la machine?
+        printError(ERR_PASSWDMISMATCH(nickname));
+        server.sendToClient(&client, ERR_PASSWDMISMATCH(nickname));
         return ;
     }
     client.setPassValid();

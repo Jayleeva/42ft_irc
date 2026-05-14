@@ -36,12 +36,14 @@ void Command::privmsg(std::vector<std::string> parsing, Client &client, Server &
 {
     if (parsing.size() < 2)
     {
-        printError(ERR_NEEDMOREPARAMS);
+        printError(ERR_NEEDMOREPARAMS(parsing.front()));
+		server.sendToClient(&client, ERR_NEEDMOREPARAMS(parsing.front()));
         return ;
     }
     if (parsing.size() < 3)
     {
         printError(ERR_NOTEXTTOSEND);
+        server.sendToClient(&client, ERR_NOTEXTTOSEND);
         return ;
     }
     std::vector<std::string>::iterator it = parsing.begin() + 1;
@@ -59,15 +61,17 @@ void Command::privmsg(std::vector<std::string> parsing, Client &client, Server &
             Channel *channel = server.getChannel(*it1);
             if (!channel)
             {
-                printError(ERR_NOSUCHCHANNEL);
+                printError(ERR_NOSUCHCHANNEL(channel->getName()));
+                server.sendToClient(&client, ERR_NOSUCHCHANNEL(channel->getName()));
                 return ;
             }
             if (!channel->hasMember(&client))
             {   
-                printError(ERR_CANNOTSENDTOCHAN);
+                printError(ERR_CANNOTSENDTOCHAN(channel->getName()));
+                server.sendToClient(&client, ERR_CANNOTSENDTOCHAN(channel->getName()));
                 return ;
             }
-            server.sendMessageToChannel(&client, channel, message); // NOTE
+            server.sendMessageToChannel(client, *channel, message);
         }
 
         //user
@@ -76,10 +80,11 @@ void Command::privmsg(std::vector<std::string> parsing, Client &client, Server &
             Client *targetClient = server.getClientByNick(*(it1));
             if (!targetClient)
             {
-                printError(ERR_NOSUCHNICK);
+                printError(ERR_NOSUCHNICK(targetClient->getNickname()));
+                server.sendToClient(&client, ERR_NOSUCHNICK(targetClient->getNickname()));
                 return ;
             }
-            server.sendMessageToClient(&client, targetClient, message); // NOTE: *targetClient
+            server.sendMessageToClient(&client, targetClient, message);
         }
     }
 }

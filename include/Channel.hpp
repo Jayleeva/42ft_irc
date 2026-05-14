@@ -67,6 +67,8 @@ class Channel
         void setKey(const std::string &key);
         void removeKey();
         bool checkKey(const std::string &key) const;
+
+        std::string listAllUsers(std::string newClient);
         
 };
 
