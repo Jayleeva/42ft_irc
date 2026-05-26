@@ -1,0 +1,170 @@
+2026-05-26 13:29:42	--	irc: connecting to server 0/6667...
+2026-05-26 13:29:42	--	irc: connected to 0/6667 (0.0.0.0)
+2026-05-26 13:29:42	--	irc: client capability, server supports: ircserv
+2026-05-26 13:29:42	--	irc: client capability, requesting: 
+2026-05-26 13:29:42	--	irc: nickname "cynthiaglardon" is already in use, trying nickname "cynthiaglardon2"
+2026-05-26 13:29:42	--	
+2026-05-26 13:29:42	--	cynthiaglardon2: Nickname is already used
+2026-05-26 13:45:39	=!=	irc: reading data on socket: error 4 (connection closed by peer)
+2026-05-26 13:45:39	--	irc: disconnecting from server...
+2026-05-26 13:45:39	--	irc: disconnected from server
+2026-05-26 13:45:39	--	irc: reconnecting to server in 10 seconds
+2026-05-26 13:45:49	--	irc: reconnecting to server...
+2026-05-26 13:45:49	--	irc: connecting to server 0/6667...
+2026-05-26 13:45:49	=!=	irc: connection refused
+2026-05-26 13:45:49	--	irc: reconnecting to server in 20 seconds
+2026-05-26 13:46:09	--	irc: reconnecting to server...
+2026-05-26 13:46:09	--	irc: connecting to server 0/6667...
+2026-05-26 13:46:09	=!=	irc: connection refused
+2026-05-26 13:46:09	--	irc: reconnecting to server in 40 seconds
+2026-05-26 13:46:49	--	irc: reconnecting to server...
+2026-05-26 13:46:49	--	irc: connecting to server 0/6667...
+2026-05-26 13:46:49	=!=	irc: connection refused
+2026-05-26 13:46:49	--	irc: reconnecting to server in 1 minute, 20 seconds
+2026-05-26 13:48:09	--	irc: reconnecting to server...
+2026-05-26 13:48:09	--	irc: connecting to server 0/6667...
+2026-05-26 13:48:09	--	irc: connected to 0/6667 (0.0.0.0)
+2026-05-26 13:48:09	--	irc: client capability, server supports: ircserv
+2026-05-26 13:48:09	--	irc: client capability, requesting: 
+2026-05-26 13:48:09	--	irc: nickname "cynthiaglardon" is already in use, trying nickname "cynthiaglardon2"
+2026-05-26 13:48:09	--	
+2026-05-26 13:48:09	--	cynthiaglardon2: Nickname is already used
+2026-05-26 13:48:32	--	
+2026-05-26 13:50:11	--	irc: disconnected from server
+2026-05-26 13:50:55	--	irc: connecting to server 0/6667...
+2026-05-26 13:50:55	--	irc: connected to 0/6667 (0.0.0.0)
+2026-05-26 13:50:55	--	irc: client capability, server supports: ircserv
+2026-05-26 13:50:55	--	irc: client capability, requesting: 
+2026-05-26 13:50:55	--	irc: nickname "cynthiaglardon" is already in use, trying nickname "cynthiaglardon2"
+2026-05-26 13:50:55	--	
+2026-05-26 13:50:55	--	cynthiaglardon2: Nickname is already used
+2026-05-26 13:51:09	--	
+2026-05-26 13:52:45	=!=	irc: reading data on socket: error 4 (connection closed by peer)
+2026-05-26 13:52:45	--	irc: disconnecting from server...
+2026-05-26 13:52:45	--	irc: disconnected from server
+2026-05-26 13:52:45	--	irc: reconnecting to server in 10 seconds
+2026-05-26 13:52:55	--	irc: reconnecting to server...
+2026-05-26 13:52:55	--	irc: connecting to server 0/6667...
+2026-05-26 13:52:55	=!=	irc: connection refused
+2026-05-26 13:52:55	--	irc: reconnecting to server in 20 seconds
+2026-05-26 13:53:15	--	irc: disconnected from server
+2026-05-26 14:10:51	--	irc: connecting to server 0/6667...
+2026-05-26 14:10:51	--	irc: connected to 0/6667 (0.0.0.0)
+2026-05-26 14:10:51	--	irc: client capability, server supports: ircserv
+2026-05-26 14:10:51	--	irc: client capability, requesting: 
+2026-05-26 14:10:51	--	irc: nickname "cynthiaglardon" is already in use, trying nickname "cynthiaglardon2"
+2026-05-26 14:10:51	--	
+2026-05-26 14:10:51	--	cynthiaglardon2: Nickname is already used
+2026-05-26 14:11:46	--	
+2026-05-26 14:15:08	=!=	irc: reading data on socket: error 4 (connection closed by peer)
+2026-05-26 14:15:08	--	irc: disconnecting from server...
+2026-05-26 14:15:08	--	irc: disconnected from server
+2026-05-26 14:15:08	--	irc: reconnecting to server in 10 seconds
+2026-05-26 14:15:18	--	irc: reconnecting to server...
+2026-05-26 14:15:18	--	irc: connecting to server 0/6667...
+2026-05-26 14:15:18	=!=	irc: connection refused
+2026-05-26 14:15:18	--	irc: reconnecting to server in 20 seconds
+2026-05-26 14:15:25	--	irc: disconnected from server
+2026-05-26 14:16:26	--	irc: connecting to server 0/6667...
+2026-05-26 14:16:26	--	irc: connected to 0/6667 (0.0.0.0)
+2026-05-26 14:16:26	--	irc: client capability, server supports: ircserv
+2026-05-26 14:16:26	--	irc: client capability, requesting: 
+2026-05-26 14:16:26	--	irc: nickname "cynthiaglardon" is already in use, trying nickname "cynthiaglardon2"
+2026-05-26 14:16:26	--	
+2026-05-26 14:16:26	--	cynthiaglardon2: Nickname is already used
+2026-05-26 14:18:08	=!=	irc: reading data on socket: error 4 (connection closed by peer)
+2026-05-26 14:18:08	--	irc: disconnecting from server...
+2026-05-26 14:18:08	--	irc: disconnected from server
+2026-05-26 14:18:08	--	irc: reconnecting to server in 10 seconds
+2026-05-26 14:18:19	--	irc: reconnecting to server...
+2026-05-26 14:18:19	--	irc: connecting to server 0/6667...
+2026-05-26 14:18:19	=!=	irc: connection refused
+2026-05-26 14:18:19	--	irc: reconnecting to server in 20 seconds
+2026-05-26 14:18:25	--	irc: disconnected from server
+2026-05-26 14:52:31	--	irc: connecting to server 0/6667...
+2026-05-26 14:52:31	--	irc: connected to 0/6667 (0.0.0.0)
+2026-05-26 14:52:31	--	irc: client capability, server supports: ircserv
+2026-05-26 14:52:31	--	irc: client capability, requesting: 
+2026-05-26 14:52:31	--	irc: nickname "cynthiaglardon" is already in use, trying nickname "cynthiaglardon2"
+2026-05-26 14:52:31	--	
+2026-05-26 14:52:32	--	cynthiaglardon2: Nickname is already used
+2026-05-26 14:53:44	=!=	irc: reading data on socket: error 4 (connection closed by peer)
+2026-05-26 14:53:44	--	irc: disconnecting from server...
+2026-05-26 14:53:44	--	irc: disconnected from server
+2026-05-26 14:53:44	--	irc: reconnecting to server in 10 seconds
+2026-05-26 14:53:54	--	irc: reconnecting to server...
+2026-05-26 14:53:54	--	irc: connecting to server 0/6667...
+2026-05-26 14:53:54	=!=	irc: connection refused
+2026-05-26 14:53:54	--	irc: reconnecting to server in 20 seconds
+2026-05-26 14:54:12	--	irc: disconnected from server
+2026-05-26 14:56:48	--	irc: connecting to server 0/6667...
+2026-05-26 14:56:48	--	irc: connected to 0/6667 (0.0.0.0)
+2026-05-26 14:56:48	--	irc: client capability, server supports: ircserv
+2026-05-26 14:56:48	--	irc: client capability, requesting: 
+2026-05-26 14:56:48	--	irc: nickname "cynthiaglardon" is already in use, trying nickname "cynthiaglardon2"
+2026-05-26 14:56:48	--	irc: nickname "cynthiaglardon2" is already in use, trying nickname "cynthiaglardon3"
+2026-05-26 14:56:48	--	
+2026-05-26 14:57:48	=!=	irc: too few parameters received in command "451" (received: 1, expected: at least 2)
+2026-05-26 14:57:48	=!=	irc: failed to parse command "451" (please report to developers): "451 :You have not registered"
+2026-05-26 15:02:23	=!=	irc: reading data on socket: error 4 (connection closed by peer)
+2026-05-26 15:02:23	--	irc: disconnecting from server...
+2026-05-26 15:02:23	--	irc: disconnected from server
+2026-05-26 15:02:23	--	irc: reconnecting to server in 10 seconds
+2026-05-26 15:02:33	--	irc: reconnecting to server...
+2026-05-26 15:02:33	--	irc: connecting to server 0/6667...
+2026-05-26 15:02:33	--	irc: connected to 0/6667 (0.0.0.0)
+2026-05-26 15:02:33	--	irc: client capability, server supports: ircserv
+2026-05-26 15:02:33	--	irc: client capability, requesting: 
+2026-05-26 15:02:33	--	irc: nickname "cynthiaglardon" is already in use, trying nickname "cynthiaglardon2"
+2026-05-26 15:02:33	--	
+2026-05-26 15:03:04	--	irc: disconnected from server
+2026-05-26 15:03:49	--	irc: connecting to server 0/6667...
+2026-05-26 15:03:49	--	irc: connected to 0/6667 (0.0.0.0)
+2026-05-26 15:03:49	--	irc: client capability, server supports: ircserv
+2026-05-26 15:03:49	--	irc: client capability, requesting: 
+2026-05-26 15:03:49	--	irc: nickname "cynthiaglardon" is already in use, trying nickname "cynthiaglardon2"
+2026-05-26 15:03:49	--	irc: nickname "cynthiaglardon2" is already in use, trying nickname "cynthiaglardon3"
+2026-05-26 15:03:49	--	
+2026-05-26 15:04:49	--	cynthiaglardon3:You: have not registered
+2026-05-26 15:06:37	=!=	irc: reading data on socket: error 4 (connection closed by peer)
+2026-05-26 15:06:37	--	irc: disconnecting from server...
+2026-05-26 15:06:37	--	irc: disconnected from server
+2026-05-26 15:06:37	--	irc: reconnecting to server in 10 seconds
+2026-05-26 15:06:46	--	irc: disconnected from server
+2026-05-26 15:07:26	--	irc: connecting to server 0/6667...
+2026-05-26 15:07:26	--	irc: connected to 0/6667 (0.0.0.0)
+2026-05-26 15:07:26	--	irc: client capability, server supports: ircserv
+2026-05-26 15:07:26	--	irc: client capability, requesting: 
+2026-05-26 15:07:26	--	irc: nickname "cynthiaglardon" is already in use, trying nickname "cynthiaglardon2"
+2026-05-26 15:07:26	--	irc: nickname "cynthiaglardon2" is already in use, trying nickname "cynthiaglardon3"
+2026-05-26 15:07:26	--	
+2026-05-26 15:09:50	=!=	irc: reading data on socket: error 4 (connection closed by peer)
+2026-05-26 15:09:50	--	irc: disconnecting from server...
+2026-05-26 15:09:50	--	irc: disconnected from server
+2026-05-26 15:09:50	--	irc: reconnecting to server in 10 seconds
+2026-05-26 15:10:00	--	irc: reconnecting to server...
+2026-05-26 15:10:00	--	irc: connecting to server 0/6667...
+2026-05-26 15:10:00	=!=	irc: connection refused
+2026-05-26 15:10:00	--	irc: reconnecting to server in 20 seconds
+2026-05-26 15:10:07	--	irc: disconnected from server
+2026-05-26 15:12:02	--	irc: connecting to server 0/6667...
+2026-05-26 15:12:02	--	irc: connected to 0/6667 (0.0.0.0)
+2026-05-26 15:12:02	--	irc: client capability, server supports: ircserv
+2026-05-26 15:12:02	--	irc: client capability, requesting: 
+2026-05-26 15:12:02	--	irc: nickname "cynthiaglardon" is already in use, trying nickname "cynthiaglardon2"
+2026-05-26 15:12:02	--	irc: nickname "cynthiaglardon2" is already in use, trying nickname "cynthiaglardon3"
+2026-05-26 15:12:02	--	
+2026-05-26 15:13:51	=!=	irc: reading data on socket: error 4 (connection closed by peer)
+2026-05-26 15:13:51	--	irc: disconnecting from server...
+2026-05-26 15:13:51	--	irc: disconnected from server
+2026-05-26 15:13:51	--	irc: reconnecting to server in 10 seconds
+2026-05-26 15:14:01	--	irc: reconnecting to server...
+2026-05-26 15:14:01	--	irc: connecting to server 0/6667...
+2026-05-26 15:14:01	=!=	irc: connection refused
+2026-05-26 15:14:01	--	irc: reconnecting to server in 20 seconds
+2026-05-26 15:14:21	--	irc: reconnecting to server...
+2026-05-26 15:14:21	--	irc: connecting to server 0/6667...
+2026-05-26 15:14:21	--	irc: connected to 0/6667 (0.0.0.0)
+2026-05-26 15:14:21	--	irc: client capability, server supports: ircserv
+2026-05-26 15:14:21	--	irc: client capability, requesting: 
+2026-05-26 15:14:21	--	

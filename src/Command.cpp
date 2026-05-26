@@ -48,8 +48,8 @@ void Command::execute(Client &client, Server &server)
     {
         if (!client.isRegistered())
         {
-            printError(ERR_NOTREGISTRED);
-            server.sendToClient(&client, ERR_NOTREGISTRED);
+            printError(ERR_NOTREGISTRED(client.getNickname()));
+            server.sendToClient(&client, ERR_NOTREGISTRED(client.getNickname()));
             return;
         }
     }

@@ -26,7 +26,7 @@ class Command;
 # define MAG  "\001\033[1;35m\002"
 
 //Error messages
-#define ERR_NOTREGISTRED "451 :You have not registered" 
+#define ERR_NOTREGISTRED(nick) "451 " + nick + ":You have not registered" 
 #define ERR_ALREADYREGISTRED "462 :You may not reregister" 
 #define ERR_PASSWDMISMATCH(nick) ("464 " + nick + " :Password incorrect")
 

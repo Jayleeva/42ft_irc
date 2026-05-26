@@ -53,11 +53,20 @@ void Command::nick(std::vector<std::string> parsing, Client &client, Server &ser
 
     if (server.nicknameExists(nickname) && nickname != client.getNickname())
     {
+        client.setNeedRename(true);
         printError(ERR_NICKNAMEINUSE(nickname));
         server.sendToClient(&client, ERR_NICKNAMEINUSE(nickname));
         return ;
     }
 
     client.setNickname(nickname);
+
+    if (client.getNeedRename() == true)
+    {
+        client.setNeedRename(false);
+        client.tryRegister();
+        server.sendToClient(&client, RPL_WELCOME(nickname));
+    }
+
     std::cout << "nickname '" << nickname << "'" << std::endl;
 }

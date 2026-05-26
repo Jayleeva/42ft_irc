@@ -5,7 +5,8 @@ Client::Client()
 	  _registered(false),
 	  _hasNick(false),
 	  _hasUser(false),
-	  _hasPass(false)
+	  _hasPass(false),
+      _needRename(false)
 {
 }
 
@@ -14,7 +15,8 @@ Client::Client(int fd)
       _registered(false),
       _hasNick(false),
       _hasUser(false),
-      _hasPass(false)
+      _hasPass(false),
+      _needRename(false)
 {
 }
 
@@ -44,16 +46,30 @@ bool Client::isRegistered() const
     return _registered;
 }
 
+bool Client::getNeedRename() const
+{
+    return _needRename;;
+}
+
 bool Client::hasPass() const
 {
     return (_hasPass);
 }
 
-void Client::setNickname(const std::string &nickname)
+bool Client::hasNick() const
 {
+    return (_hasNick);
+}
+
+int Client::setNickname(const std::string &nickname)
+{
+    int res = 0;
+    if (_hasNick == true)
+        res = 1;
     _nickname = nickname;
     _hasNick = true;
     tryRegister();
+    return (res);
 }
 
 void Client::setUsername(const std::string &username)
@@ -74,9 +90,14 @@ void    Client::setHostname(const std::string &hostname)
     _hostname = hostname;
 }
 
+void    Client::setNeedRename(bool need)
+{
+    _needRename = need;
+}
+
 void Client::tryRegister()
 {
-    if (_hasPass) // _hasNick && _hasUser && 
+    if (_hasPass && _hasNick && _needRename == false) //  _hasUser && 
         _registered = true;
 }
 
