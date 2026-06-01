@@ -28,6 +28,7 @@ class Client
         const std::string& getNickname() const;
         const std::string& getUsername() const;
         const std::string& getHostname() const;
+        const std::string getPrefix() const;
         bool isRegistered() const;
         bool getNeedRename() const;
 

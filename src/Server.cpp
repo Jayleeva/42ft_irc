@@ -445,8 +445,9 @@ void Server::sendMessageToChannel(Client &sender, Channel &channel, const std::s
 
 void Server::sendJoinConfirmation(Client *client, Channel &channel)
 {
-    std::string confirmation = ":" + client->getNickname() + " JOIN :" + channel.getName();
-    sendToClient(client, confirmation);
+    //std::string confirmation = ":" + client->getNickname() + " JOIN :" + channel.getName();
+
+    sendToClient(client, RPL_JOIN(client->getPrefix(), channel.getName()));
     if (channel.hasTopic())
         sendToClient(client, RPL_TOPIC(channel.getName(), channel.getTopic()));
     else
@@ -473,16 +474,4 @@ void Server::sendNewParams(Channel &channel, Client *sender, std::string flag)
     std::string params;
     sendToClient(sender, RPL_CHANNELMODEIS(channel.getName(), mode, params));
     sendToChannel(channel, sender, RPL_CHANNELMODEIS(channel.getName(), mode, params));
-}
-
-void Server::sendCap(Client *client)
-{
-    std::string cap = "CAP * LS :" + _name;
-    sendToClient(client, cap);
-}
-
-void Server::pong(Client *client, std::string arg)
-{
-    std::string pong = "PONG " + arg;
-    sendToClient(client, pong);
 }

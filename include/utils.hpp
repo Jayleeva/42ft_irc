@@ -58,13 +58,23 @@ class Command;
 #define ERR_CANNOTSENDTOCHAN(channel) ("404 " + channel + " :Cannot send to channel")
 
 //Return messages
-#define RPL_WELCOME(nick) ("001 :Welcome to the ircserv network " + nick + "!") // to confirm connection
-#define RPL_NAMREPLY(client, channel, list) ("353 " + client + " " + channel + " " + list) // ":['@'/'+']<nick> (['@'/'+']<nick>)*" //to confirm join
-#define RPL_ENDOFNAMES(nick, channel) ("366 " + nick + " " + channel + " :End of /NAMES list")  // to close the list of names
-#define RPL_NOTOPIC(channel) ("331 " + channel + " " + channel) // to confirm there's no topic
-#define RPL_TOPIC(channel, topic) ("332 " + channel + " " + topic) // to confirm topic
-#define RPL_INVITING(nick, channel) ("341 " + nick + " " + channel) // to confirm the invitation
-#define RPL_CHANNELMODEIS(channel, mode, params) ("324 " + channel + " " + mode + " " + params) // to confirm mode
+#define RPL_WELCOME(nick)                               "001 :Welcome to the ircserv network " + nick + "!" // to confirm connection
+#define RPL_NAMREPLY(client, channel, list)             "353 " + client + " " + channel + " " + list // ":['@'/'+']<nick> (['@'/'+']<nick>)*" //to confirm join
+#define RPL_ENDOFNAMES(nick, channel)                   "366 " + nick + " " + channel + " :End of /NAMES list"  // to close the list of names
+#define RPL_NOTOPIC(channel)                            "331 " + channel + " " + channel // to confirm there's no topic
+#define RPL_TOPIC(channel, topic)                       "332 " + channel + " " + topic // to confirm topic
+#define RPL_INVITING(nick, channel)                     "341 " + nick + " " + channel // to confirm the invitation
+#define RPL_CHANNELMODEIS(channel, mode, params)        "324 " + channel + " " + mode + " " + params // to confirm mode
+
+#define RPL_CAP(client)                                 "CAP * LS :" + client
+#define RPL_JOIN(source, channel)                       ":" + source + " JOIN :" + channel
+#define RPL_PRIVMSG(source, target, message)            ":" + source + " PRIVMSG " + target + " :" + message
+//#define RPL_NOTICE(source, target, message)             ":" + source + " NOTICE " + target + " :" + message
+#define RPL_KICK(source, channel, target, reason)       ":" + source + " KICK " + channel + " " + target + " :" + reason
+#define RPL_PART(source, channel)                       ":" + source + " PART :" + channel
+#define RPL_QUIT(source, message)                       ":" + source + " QUIT :Quit: " + message
+//#define RPL_MODE(source, channel, modes, args)          ":" + source + " MODE " + channel + " " + modes + " " + args
+#define RPL_PING(source, token)                         ":" + source + " PONG :" + token
 
 //Utils functions
 void            printError(const std::string errorMsg);

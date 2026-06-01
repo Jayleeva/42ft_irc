@@ -40,6 +40,14 @@ const std::string& Client::getHostname() const
     return _hostname;
 }
 
+const std::string Client::getPrefix() const
+{
+    std::string username = _username.empty() ? "" : "!" + _username;
+    std::string hostname = _hostname.empty() ? "" : "@" + _hostname;
+
+    return _nickname + username + hostname;
+}
+
 
 bool Client::isRegistered() const
 {

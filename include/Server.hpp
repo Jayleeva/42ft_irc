@@ -73,9 +73,6 @@ class Server
         void    sendMessageToClient(Client *sender, Client *target, const std::string &message);
         void    sendMessageToChannel(Client &sender, Channel &channel, const std::string &message);
 
-        void    sendCap(Client *client);
-        void    pong(Client *client, std::string arg);
-
         void    sendJoinConfirmation(Client *client, Channel &channel);
         void    sendPartConfirmation(Client *client, Channel &channel); // besoin?
         void    sendNewParams(Channel &channel, Client *sender, std::string flag);
