@@ -67,6 +67,7 @@ class Command;
 #define RPL_CHANNELMODEIS(channel, mode, params)        "324 " + channel + " " + mode + " " + params // to confirm mode
 
 #define RPL_CAP(client)                                 "CAP * LS :" + client
+#define RPL_NICK(client, newnick)                       ":" + client + " NICK :" + newnick
 #define RPL_JOIN(source, channel)                       ":" + source + " JOIN :" + channel
 #define RPL_PRIVMSG(source, target, message)            ":" + source + " PRIVMSG " + target + " :" + message
 //#define RPL_NOTICE(source, target, message)             ":" + source + " NOTICE " + target + " :" + message
