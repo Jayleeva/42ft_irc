@@ -70,8 +70,7 @@ class Server
         void    sendToClient(Client *target, std::string message);
         void    sendToChannel(Channel &channel, Client *sender, std::string message);
 
-        void    sendMessageToClient(Client *sender, Client *target, const std::string &message);
-        void    sendMessageToChannel(Client &sender, Channel &channel, const std::string &message);
+        void    sendMessageToChannel(Client *sender, Channel &channel, std::string &message);
 
         void    sendJoinConfirmation(Client *client, Channel &channel);
         void    sendPartConfirmation(Client *client, Channel &channel); // besoin?

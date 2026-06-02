@@ -15,6 +15,8 @@ std::string    rebuildMessage(std::vector<std::string>::iterator it, std::vector
     for (std::vector<std::string>::iterator its = it; its != ite; its ++)
     {
         res.append(*its);
+        if (its + 1 != ite)
+            res.append(" ");
     }
     return (res);
 }
@@ -52,7 +54,8 @@ void Command::privmsg(std::vector<std::string> parsing, Client &client, Server &
     std::string target = *it; // peut y en avoir plusieurs, faire un getline avec ',' en separateur
     std::vector<std::string> allTargets = getAllTargets(*it);
     it += allTargets.size(); // incrementer du nombre de targets
-    std::string message = rebuildMessage(it, parsing.end()); 
+    std::string message = rebuildMessage(it, parsing.end());
+    std::cout << "message = '" << message << "'" << std::endl;
 
     for (std::vector<std::string>::iterator it1 = allTargets.begin(); it1 != allTargets.end(); it1 ++) // pour envoyer a toutes les targets
     {
@@ -72,7 +75,7 @@ void Command::privmsg(std::vector<std::string> parsing, Client &client, Server &
                 server.sendToClient(&client, ERR_CANNOTSENDTOCHAN(channel->getName()));
                 return ;
             }
-            server.sendMessageToChannel(client, *channel, message);
+            server.sendMessageToChannel(&client, *channel, message);
         }
 
         //user
@@ -81,11 +84,11 @@ void Command::privmsg(std::vector<std::string> parsing, Client &client, Server &
             Client *targetClient = server.getClientByNick(*(it1));
             if (!targetClient)
             {
-                printError(ERR_NOSUCHNICK(targetClient->getNickname()));
-                server.sendToClient(&client, ERR_NOSUCHNICK(targetClient->getNickname()));
+                printError(ERR_NOSUCHNICK(target));
+                server.sendToClient(&client, ERR_NOSUCHNICK(target));
                 return ;
             }
-            server.sendMessageToClient(&client, targetClient, message);
+            server.sendToClient(targetClient, RPL_PRIVMSG(client.getNickname(), targetClient->getNickname(), message));
         }
     }
 }

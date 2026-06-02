@@ -194,6 +194,7 @@ void    Server::removeFromAllChannels(Client *client)
             if (it->second->isOperator(client))
                 it->second->removeOperator(client);
             it->second->removeMember(client);
+            sendToChannel(*(it->second), client, RPL_QUIT(client->getNickname(), " "));
         }
     }
 }
@@ -202,31 +203,24 @@ void    Server::removeClient(nfds_t i)
 {
     std::map<int, Client*>::iterator    it;
 
-    char result[1024];
-    int_to_char(_fds[i].fd, result);
-
+    std::string nickname;
     it = this->_clients.find(_fds[i].fd);
     if (it != this->_clients.end())
     {
         removeFromAllChannels(it->second);
-        delete it->second;
+        std::string message = RPL_QUIT(it->second->getNickname(), " ");
+        sendToClient(it->second, message);
         this->_clients.erase(it);
+        delete it->second;
     }
-
 	close(_fds[i].fd);
+
     std::cout << YELLOW << "Client " << _fds[i].fd << " disconnected." << DEFAULT << std::endl;
 
 	_fds[i].fd = _fds[_nfd -1].fd;
 	_fds[i].events = POLLIN;
 	_fds[_nfd -1].fd = -1;
     _nfd --;
-
-    std::string message = static_cast<std::string>(result) + " disconnected";
-    for (nfds_t j = 1; j < _nfd; j ++)
-    {
-        std::cout << "'" << message << "'" << " sent to client " << _fds[j].fd << std::endl;
-        send(_fds[j].fd, message.c_str(), strlen(message.c_str()), 0);
-    }
 }
 
 
@@ -399,14 +393,10 @@ void Server::removeClientFromChannel(Client *client, const std::string &name)
 
 Client *Server::getClientByNick(const std::string &nickname)
 {
-    std::map<int, Client*>::iterator it;
-
-    it = _clients.begin();
-    while (it != _clients.end())
+    for (std::map<int, Client*>::iterator it = _clients.begin(); it != _clients.end(); it ++)
     {
         if (it->second->getNickname() == nickname)
             return (it->second);
-        it++;
     }
     return (NULL);
 }
@@ -436,14 +426,21 @@ void Server::sendToChannel(Channel &channel, Client *sender, std::string message
     }
 }
 
-void Server::sendMessageToClient(Client *sender, Client *target, const std::string &message)
-{
-    sendToClient(target, RPL_PRIVMSG(sender->getNickname(), target->getNickname(), message));
-}
 
-void Server::sendMessageToChannel(Client &sender, Channel &channel, const std::string &message)
+void Server::sendMessageToChannel(Client *sender, Channel &channel, std::string &message)
 {
-    sendToChannel(channel, &sender, message);
+    std::set<Client*>::const_iterator it;
+    const std::set<Client*> &members = channel.getMembers();
+
+    message.append("\r\n");
+    std::cout << "> " << message << std::endl;
+    it = members.begin();
+    while (it != members.end())
+    {
+        if (*it != sender)
+            sendToClient(sender, RPL_PRIVMSG(sender->getNickname(), (*it)->getNickname(), message));
+        it++;
+    }
 }
 
 void Server::sendJoinConfirmation(Client *client, Channel &channel)
