@@ -140,7 +140,7 @@ void    Server::addClient()
     if (res != 0)
         std::cout << "error\n";
     Client *newClient = new Client(clientSocket);
-    newClient->setHostname(hostname); //inet_ntoa(clientAddr.sin_addr));
+    newClient->setHostname(hostname); // hostname inet_ntoa(clientAddr.sin_addr)
     this->_clients.insert(this->_clients.end(), std::make_pair(clientSocket, newClient));
 
     std::cout << YELLOW << "Client " << clientSocket << " connected." << DEFAULT << std::endl;
@@ -438,21 +438,19 @@ void Server::sendToChannel(Channel &channel, Client *sender, std::string message
 
 void Server::sendMessageToClient(Client *sender, Client *target, const std::string &message)
 {
-    std::string msg = sender->getNickname() + " PRIVMSG :" + message; 
-    sendToClient(target, msg);
+    sendToClient(target, RPL_PRIVMSG(sender->getNickname(), target->getNickname(), message));
 }
 
 void Server::sendMessageToChannel(Client &sender, Channel &channel, const std::string &message)
 {
-    std::string msg = sender.getNickname() + " PRIVMSG :" + message;
-    sendToChannel(channel, &sender, msg);
+    sendToChannel(channel, &sender, message);
 }
 
 void Server::sendJoinConfirmation(Client *client, Channel &channel)
 {
     //std::string confirmation = ":" + client->getNickname() + " JOIN :" + channel.getName();
 
-    sendToClient(client, RPL_JOIN(client->getPrefix(), channel.getName()));
+    sendToClient(client, RPL_JOIN(client->getPrefix(), channel.getName())); //Prefix()
     if (channel.hasTopic())
         sendToClient(client, RPL_TOPIC(channel.getName(), channel.getTopic()));
     else

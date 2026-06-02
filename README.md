@@ -49,6 +49,7 @@ Then, add the server with
 Then, configure the server with
 ````
 /set irc.server.ircserv.password password
+/save
 ````
 password = the server's password
 
@@ -98,6 +99,7 @@ Choosing an IRC client:
 
 Understanding how the IRC client works:
 - https://docs.redhat.com/en/documentation/red_hat_fuse/7.3/html/connecting_fuse_online_to_applications_and_services/connecting-to-irc_connectors
+- the weechat-fr buffer of the libera server
 
 Understanding the sockets:
 - https://www.geeksforgeeks.org/c/socket-programming-cc/
