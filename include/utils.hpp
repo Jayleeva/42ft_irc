@@ -58,7 +58,7 @@ class Command;
 #define ERR_CANNOTSENDTOCHAN(channel) ("404 " + channel + " :Cannot send to channel")
 
 //Return messages
-#define RPL_WELCOME(nick)                               "001 :Welcome to the ircserv network " + nick + "!" // to confirm connection
+#define RPL_WELCOME(nick)                               "001 " + nick + " :Welcome to the ircserv network " + nick + "!" // to confirm connection
 #define RPL_NAMREPLY(client, channel, list)             "353 " + client + " " + channel + " " + list // ":['@'/'+']<nick> (['@'/'+']<nick>)*" //to confirm join
 #define RPL_ENDOFNAMES(nick, channel)                   "366 " + nick + " " + channel + " :End of /NAMES list"  // to close the list of names
 #define RPL_NOTOPIC(channel)                            "331 " + channel + " " + channel // to confirm there's no topic
