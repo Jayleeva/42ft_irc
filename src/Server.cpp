@@ -362,27 +362,22 @@ void Server::joinClientToChannel(Client *client, const std::string &name)
     sendJoinConfirmation(client, *channel);
 }
 
-void Server::removeClientFromChannel(Client *client, const std::string &name)
+void Server::removeClientFromChannel(Client *client, Channel *channel)
 {
-    Channel *channel;
-
     if (!client)
         return ;
-    if (!channelExists(name))
-        return;
-
-    channel = getChannel(name);
-
     if (!channel->hasMember(client))
         return;
 
+    sendPartConfirmation(client, channel);
     channel->removeMember(client);
-    client->removeChannel(name);
+    std::string channelName = channel->getName();
+    client->removeChannel(channelName);
 
     if (channel->isEmpty())
     {
         delete channel;
-        _channels.erase(name);
+        _channels.erase(channelName);
     }
 }
 
@@ -424,23 +419,18 @@ void Server::sendToChannel(Channel &channel, Client *sender, std::string message
 
 void Server::sendMessageToChannel(Client *sender, Channel &channel, std::string &message)
 {
-    std::set<Client*>::const_iterator it;
     const std::set<Client*> &members = channel.getMembers();
-
-    message.append("\r\n");
-    std::cout << "> " << message << std::endl;
-    it = members.begin();
-    while (it != members.end())
+    for (std::set<Client*>::const_iterator it = members.begin(); it != members.end(); it ++)
     {
         if (*it != sender)
-            sendToClient(sender, RPL_PRIVMSG(sender->getNickname(), (*it)->getNickname(), message));
-        it++;
+            sendToClient(*it, RPL_PRIVMSG(sender->getNickname(), (*it)->getNickname(), message));
     }
 }
 
 void Server::sendJoinConfirmation(Client *client, Channel &channel)
 {
-    sendToClient(client, RPL_JOIN(client->getPrefix(), channel.getName())); 
+    sendToClient(client, RPL_JOIN(client->getPrefix(), channel.getName()));
+    sendToChannel(channel, client, RPL_JOIN(client->getPrefix(), channel.getName()));
     if (channel.hasTopic())
         sendToClient(client, RPL_TOPIC(channel.getName(), channel.getTopic()));
     else
@@ -449,19 +439,14 @@ void Server::sendJoinConfirmation(Client *client, Channel &channel)
     sendToClient(client, RPL_ENDOFNAMES(client->getNickname(), channel.getName()));
 }
 
-void Server::sendPartConfirmation(Client *client, Channel &channel) // BESOIN?
+void Server::sendPartConfirmation(Client *client, Channel *channel) // BESOIN?
 {
-    std::string confirmation = ":" + client->getNickname() + " PART :" + channel.getName();
-    sendToClient(client, confirmation);
-    sendToChannel(channel, client, confirmation);
-    //sendToClient(client, RPL_NAMREPLY(channel.getName(), channel.listAllUsers(client->getNickname())));
-    //sendToClient(client, RPL_ENDOFNAMES(client->getNickname(), channel.getName()));
+    sendToClient(client, RPL_PART(client->getPrefix(), channel->getName()));
+    sendToChannel(*channel, client, RPL_PART(client->getPrefix(), channel->getName()));
 }
 
 void Server::sendNewParams(Channel &channel, Client *sender, std::string mode, std::string params)
 {
-    //Parameters: <channel> {[+|-]|o|p|s|i|t|n|b|v} [<limit>] [<user>] [<ban mask>]
-
     sendToClient(sender, RPL_MODE(sender->getNickname(), channel.getName(), mode, params));
     sendToChannel(channel, sender, RPL_MODE(sender->getNickname(), channel.getName(), mode, params));
 }

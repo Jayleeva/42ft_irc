@@ -33,7 +33,7 @@ void Command::part(std::vector<std::string> parsing, Client &client, Server &ser
 		return;
 	}
     
-    server.removeClientFromChannel(&client, channelName);
+    server.removeClientFromChannel(&client, channel);
 }
 
 //vérifier si channel existe et si le client est membre du channel

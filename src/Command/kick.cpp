@@ -49,5 +49,5 @@ void Command::kick(std::vector<std::string> parsing, Client &client, Server &ser
 		return;
 	}
 
-    server.removeClientFromChannel(targetClient, channelName);
+    server.removeClientFromChannel(targetClient, channel);
 }

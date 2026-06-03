@@ -18,6 +18,7 @@ std::string    rebuildMessage(std::vector<std::string>::iterator it, std::vector
         if (its + 1 != ite)
             res.append(" ");
     }
+    //res.append("\r\n");
     return (res);
 }
 
