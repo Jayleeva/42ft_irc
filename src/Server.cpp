@@ -134,13 +134,8 @@ void    Server::addClient()
     this->_fds[this->_nfd].events = POLLIN;
     this->_nfd ++;
 
-
-    char hostname[NI_MAXHOST];
-    int res = getnameinfo((struct sockaddr *) &clientAddr, sizeof(clientAddr), hostname, NI_MAXHOST, NULL, 0, NI_NUMERICSERV);
-    if (res != 0)
-        std::cout << "error\n";
     Client *newClient = new Client(clientSocket);
-    newClient->setHostname(hostname); // hostname inet_ntoa(clientAddr.sin_addr)
+    newClient->setHostname(inet_ntoa(clientAddr.sin_addr));
     this->_clients.insert(this->_clients.end(), std::make_pair(clientSocket, newClient));
 
     std::cout << YELLOW << "Client " << clientSocket << " connected." << DEFAULT << std::endl;
@@ -445,14 +440,12 @@ void Server::sendMessageToChannel(Client *sender, Channel &channel, std::string 
 
 void Server::sendJoinConfirmation(Client *client, Channel &channel)
 {
-    //std::string confirmation = ":" + client->getNickname() + " JOIN :" + channel.getName();
-
-    sendToClient(client, RPL_JOIN(client->getPrefix(), channel.getName())); //Prefix()
+    sendToClient(client, RPL_JOIN(client->getPrefix(), channel.getName())); 
     if (channel.hasTopic())
         sendToClient(client, RPL_TOPIC(channel.getName(), channel.getTopic()));
     else
         sendToClient(client, RPL_NOTOPIC(channel.getName()));
-    sendToClient(client, RPL_NAMREPLY(client->getNickname(), channel.getName(), channel.listAllUsers(client->getNickname())));
+    sendToClient(client, RPL_NAMREPLY(client->getNickname(), channel.getName(), channel.listAllUsers()));
     sendToClient(client, RPL_ENDOFNAMES(client->getNickname(), channel.getName()));
 }
 

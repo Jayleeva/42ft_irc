@@ -198,21 +198,23 @@ bool Channel::checkKey(const std::string &key) const
 	return false;
 }
 
-std::string Channel::listAllUsers(std::string newClient)
+std::string Channel::getMode()
+{
+	
+}
+
+std::string Channel::listAllUsers()
 {
     std::string list = ":";
     
     size_t         i = 0;
     for (std::set<Client*>::iterator it = _members.begin(); it != _members.end(); it ++)
     {
-        std::string nickName = (*it)->getNickname();
-		list += '[';
-		if (newClient.empty())
+		if (isOperator(*it))
 			list += '@';
-		else if (newClient == nickName)
+		else
 			list += '+';
-		list += ']';
-        list += nickName;
+        list += (*it)->getNickname();
 		if (i + 1 < _members.size())
 			list += ' ';
         i ++;

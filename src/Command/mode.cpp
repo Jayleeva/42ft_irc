@@ -4,7 +4,7 @@ void Command::mode(std::vector<std::string> parsing, Client &client, Server &ser
 {
 	std::vector<std::string>::iterator it = parsing.begin();
 
-	if (parsing.size() < 3)
+	if (parsing.size() < 2)
 	{
         printError(ERR_NEEDMOREPARAMS(parsing.front()));
 		server.sendToClient(&client, ERR_NEEDMOREPARAMS(parsing.front()));
@@ -20,6 +20,11 @@ void Command::mode(std::vector<std::string> parsing, Client &client, Server &ser
 		return;
 	}
 	Channel *chan = server.getChannel(channelName);
+	if (parsing.size() == 2)
+	{
+		server.sendNewParams(*chan, &client, chan->getMode());
+		return;
+	}
 	if (chan->isOperator(&client) == false)
 	{
 		printError(ERR_CHANOPRIVSNEEDED(channelName));
