@@ -200,7 +200,24 @@ bool Channel::checkKey(const std::string &key) const
 
 std::string Channel::getMode()
 {
-	
+	std::string mode;
+
+	mode = (isInviteOnly() ? "+i" : "-i");
+	mode.append(isTopicRestricted() ? "+t" : "-t");
+	mode.append(hasKey() ? "+t" : "-t");
+	mode.append(hasUserLimit() ? "+l" : "-l");
+	return (mode);
+}
+
+std::string Channel::getModeParams()
+{
+	std::string params = "";
+
+	if (hasKey())
+		params.append(_key);
+	if (hasUserLimit())
+		params.append(_userLimit);
+	return (params);
 }
 
 std::string Channel::listAllUsers()

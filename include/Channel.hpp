@@ -70,6 +70,7 @@ class Channel
         bool checkKey(const std::string &key) const;
 
         std::string getMode();
+        std::string getModeParams();
         std::string listAllUsers();
         
 };

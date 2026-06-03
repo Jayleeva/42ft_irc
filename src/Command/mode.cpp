@@ -22,7 +22,9 @@ void Command::mode(std::vector<std::string> parsing, Client &client, Server &ser
 	Channel *chan = server.getChannel(channelName);
 	if (parsing.size() == 2)
 	{
-		server.sendNewParams(*chan, &client, chan->getMode());
+		std::string mode = chan->getMode();
+		std::string params = chan->getModeParams();
+		server.sendToClient(&client, RPL_CHANNELMODEIS(channelName, mode, params));
 		return;
 	}
 	if (chan->isOperator(&client) == false)
@@ -38,18 +40,12 @@ void Command::mode(std::vector<std::string> parsing, Client &client, Server &ser
 	{
 		if (flag == "-i")
 		{
-			if (chan->isInviteOnly())
-				chan->setInviteOnly(false);
-			else
-				chan->setInviteOnly(true);
+			chan->setInviteOnly(!chan->isInviteOnly());
 			server.sendNewParams(*chan, &client, flag);
 		}
 		else if (flag == "-t")
 		{
-			if (chan->isTopicRestricted())
-				chan->setTopicRestricted(false);
-			else
-				chan->setTopicRestricted(true);
+			chan->setTopicRestricted(!chan->isTopicRestricted());
 			server.sendNewParams(*chan, &client, flag);
 		}
 		else if (flag == "-k")
