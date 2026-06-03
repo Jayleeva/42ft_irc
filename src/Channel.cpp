@@ -216,7 +216,11 @@ std::string Channel::getModeParams()
 	if (hasKey())
 		params.append(_key);
 	if (hasUserLimit())
-		params.append(_userLimit);
+	{
+		params.append(" ");
+		params.append(ft_itoa(_userLimit));
+	}
+	params.append("*");
 	return (params);
 }
 

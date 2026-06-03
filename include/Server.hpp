@@ -74,7 +74,7 @@ class Server
 
         void    sendJoinConfirmation(Client *client, Channel &channel);
         void    sendPartConfirmation(Client *client, Channel &channel); // besoin?
-        void    sendNewParams(Channel &channel, Client *sender, std::string flag);
+        void    sendNewParams(Channel &channel, Client *sender, std::string mode, std::string params);
 
 };
 

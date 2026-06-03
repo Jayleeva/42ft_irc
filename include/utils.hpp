@@ -82,5 +82,16 @@ void            printError(const std::string errorMsg);
 bool            channelExists(std::map<std::string, Channel*> channels, std::string name);
 bool 			isValidChannelName(const std::string &name);
 Command         parseCmd(std::string input);
-//std::string     ft_itoa(int i);
+std::string     ft_itoa(int i);
+int             ft_stoi(std::string str);
+
+class NotAnIntException : public std::exception // pour hériter des exceptions de la std
+{
+    public:
+        virtual const char *what() const throw()
+        {
+            return ("Exception: Not an int.");	//personnalisez votre message qui servira de valeur de retour.
+        }
+};
+
 #endif

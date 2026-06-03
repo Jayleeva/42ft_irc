@@ -3,14 +3,14 @@
 void Command::mode(std::vector<std::string> parsing, Client &client, Server &server)
 {
 	std::vector<std::string>::iterator it = parsing.begin();
+	ssize_t	size = parsing.size();
 
-	if (parsing.size() < 2)
+	if (size < 2)
 	{
         printError(ERR_NEEDMOREPARAMS(parsing.front()));
 		server.sendToClient(&client, ERR_NEEDMOREPARAMS(parsing.front()));
 		return;
 	}
-
 	it ++;
 	std::string channelName = *it;
     if (server.channelExists(channelName) == false)
@@ -20,95 +20,131 @@ void Command::mode(std::vector<std::string> parsing, Client &client, Server &ser
 		return;
 	}
 	Channel *chan = server.getChannel(channelName);
-	if (parsing.size() == 2)
+	if (size == 2)
 	{
-		std::string mode = chan->getMode();
-		std::string params = chan->getModeParams();
-		server.sendToClient(&client, RPL_CHANNELMODEIS(channelName, mode, params));
+		server.sendToClient(&client, RPL_CHANNELMODEIS(channelName, chan->getMode(), chan->getModeParams()));
 		return;
 	}
+
 	if (chan->isOperator(&client) == false)
 	{
 		printError(ERR_CHANOPRIVSNEEDED(channelName));
 		server.sendToClient(&client, ERR_CHANOPRIVSNEEDED(channelName));
 		return;
 	}
-
 	it ++;
-	std::string flag = *it;
+	
 	while (it != parsing.end())
 	{
-		if (flag == "-i")
+		std::string flag = *it;
+		int i = 0;
+		while (flag[i])
 		{
-			chan->setInviteOnly(!chan->isInviteOnly());
-			server.sendNewParams(*chan, &client, flag);
-		}
-		else if (flag == "-t")
-		{
-			chan->setTopicRestricted(!chan->isTopicRestricted());
-			server.sendNewParams(*chan, &client, flag);
-		}
-		else if (flag == "-k")
-		{
-			if (chan->hasKey() == true)
-				chan->setKey("");
-			else
+			if (flag[i] == '+' || flag[i] == '-')
 			{
-				it ++;
-				if (it == parsing.end())
+				int j = 0;
+				while (flag[i + j])
 				{
-					printError(ERR_NEEDMOREPARAMS(parsing.front()));
-					server.sendToClient(&client, ERR_NEEDMOREPARAMS(parsing.front()));
-					return;
+					if (!flag[i + j])
+					{
+						printError(ERR_UNKNOWNMODE(flag));
+						server.sendToClient(&client, ERR_UNKNOWNMODE(flag));
+						return;
+					}
+					switch (flag[i + j])
+					{
+						case 'i':
+						{
+							chan->setInviteOnly((flag[i] == '+' ? true : false));
+							break;
+						}
+						case 't':
+						{
+							chan->setTopicRestricted((flag[i] == '+' ? true : false));
+							break;
+						}
+						case 'k':
+						{
+							if (flag[i] == '-')
+								chan->removeKey();
+							else
+							{
+								std::vector<std::string>::iterator tmpit = it ++;
+								if (tmpit == parsing.end())
+								{
+									printError(ERR_NEEDMOREPARAMS(parsing.front()));
+									server.sendToClient(&client, ERR_NEEDMOREPARAMS(parsing.front()));
+									return;
+								}
+								std::string key = *tmpit;
+								chan->setKey(key);
+							}							
+							break;
+						}
+						case 'l':
+						{
+							if (flag[i] == '-')
+								chan->removeUserLimit();
+							else
+							{
+								std::vector<std::string>::iterator tmpit = it;
+								tmpit ++;
+								if (tmpit == parsing.end())
+								{
+									printError(ERR_NEEDMOREPARAMS(parsing.front()));
+									server.sendToClient(&client, ERR_NEEDMOREPARAMS(parsing.front()));
+									return;
+								}
+								int limit;
+								try
+								{
+									limit = ft_stoi(*tmpit);
+								}
+								catch (std::exception &e)
+								{
+									std::cout << "tmpit KO = " << *tmpit << std::endl;
+									printError(ERR_UNKNOWNMODE(*tmpit));
+									server.sendToClient(&client, ERR_UNKNOWNMODE(*tmpit));
+									return;
+								}
+								std::cout << "tmpit OK = " << *tmpit << std::endl;
+								chan->setUserLimit(limit);
+							}
+							break;
+						}
+						case 'o':
+						{
+							std::vector<std::string>::iterator tmpit = it ++;
+							if (tmpit == parsing.end())
+							{
+								printError(ERR_NEEDMOREPARAMS(parsing.front()));
+								server.sendToClient(&client, ERR_NEEDMOREPARAMS(parsing.front()));
+								return;
+							}
+							std::string targetName = *tmpit;
+							Client *target = server.getClientByNick(targetName);
+							if (chan->isOperator(target))
+								chan->removeOperator(target);
+							else
+								chan->addOperator(target);
+							break;
+						}
+						default:
+						{
+							printError(ERR_UNKNOWNMODE(flag));
+							server.sendToClient(&client, ERR_UNKNOWNMODE(flag));
+							return;
+						}
+						break;
+					}
+					j ++;
 				}
-				std::string key = *it;
-				chan->setKey(key);
 			}
-			server.sendNewParams(*chan, &client, flag);
-		}
-		else if (flag == "-o")
-		{
-			it ++;
-			if (it == parsing.end())
-			{
-				printError(ERR_NEEDMOREPARAMS(parsing.front()));
-				server.sendToClient(&client, ERR_NEEDMOREPARAMS(parsing.front()));
-				return;
-			}
-			std::string targetName = *it;
-			Client *target = server.getClientByNick(targetName);
-			if (chan->isOperator(target))
-				chan->removeOperator(target);
-			else
-				chan->addOperator(target);
-			server.sendNewParams(*chan, &client, flag);
-		}
-		else if (flag == "-l")
-		{
-			if (chan->hasUserLimit())
-				chan->removeUserLimit();
-			else
-			{
-				it ++;
-				if (it == parsing.end())
-				{
-					printError(ERR_NEEDMOREPARAMS(parsing.front()));
-					server.sendToClient(&client, ERR_NEEDMOREPARAMS(parsing.front()));
-					return;
-				}
-				std::string limit = *it;
-				chan->setUserLimit(atoi(limit.c_str()));
-			}
-			server.sendNewParams(*chan, &client, flag);
-		}
-		else
-		{
-			printError(ERR_UNKNOWNMODE(flag));
-			server.sendToClient(&client, ERR_UNKNOWNMODE(flag));
-			return;
+			i ++;
 		}
 		it ++;
 	}
+	server.sendNewParams(*chan, &client, chan->getMode(), chan->getModeParams());
 }
 
 /*

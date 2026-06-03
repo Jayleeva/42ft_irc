@@ -458,13 +458,10 @@ void Server::sendPartConfirmation(Client *client, Channel &channel) // BESOIN?
     //sendToClient(client, RPL_ENDOFNAMES(client->getNickname(), channel.getName()));
 }
 
-void Server::sendNewParams(Channel &channel, Client *sender, std::string flag)
+void Server::sendNewParams(Channel &channel, Client *sender, std::string mode, std::string params)
 {
     //Parameters: <channel> {[+|-]|o|p|s|i|t|n|b|v} [<limit>] [<user>] [<ban mask>]
 
-    (void)flag;
-    std::string mode;
-    std::string params;
     sendToClient(sender, RPL_CHANNELMODEIS(channel.getName(), mode, params));
     sendToChannel(channel, sender, RPL_CHANNELMODEIS(channel.getName(), mode, params));
 }

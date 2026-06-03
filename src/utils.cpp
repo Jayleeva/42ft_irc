@@ -46,7 +46,7 @@ void printError(const std::string errorMsg)
     return (true);
 }
 
-/*std::string ft_itoa(int i)
+std::string ft_itoa(int i)
 {
   std::stringstream ss;
   std::string str;
@@ -54,4 +54,21 @@ void printError(const std::string errorMsg)
   ss << i << std::endl;
   ss >> str;
   return str;
-}*/
+}
+
+int  ft_stoi(std::string str)
+{
+    int res = 0;
+
+    int l = 1;
+    for (int i = str.length() -1; i >= 0; i --)
+    {
+        if (i > 0 && !isdigit(str[i]))
+            throw NotAnIntException();
+        res += (str[i] - '0') * l;
+        l *= 10;
+    }
+    if (str[0] == '-')
+        res *= -1;
+    return (res);
+}

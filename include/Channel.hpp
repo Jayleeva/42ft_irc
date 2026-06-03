@@ -6,6 +6,7 @@
 #include <vector>
 #include <sys/socket.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include "utils.hpp"
 
