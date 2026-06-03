@@ -204,7 +204,7 @@ std::string Channel::getMode()
 
 	mode = (isInviteOnly() ? "+i" : "-i");
 	mode.append(isTopicRestricted() ? "+t" : "-t");
-	mode.append(hasKey() ? "+t" : "-t");
+	mode.append(hasKey() ? "+k" : "-k");
 	mode.append(hasUserLimit() ? "+l" : "-l");
 	return (mode);
 }

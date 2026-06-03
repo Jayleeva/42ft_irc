@@ -462,6 +462,6 @@ void Server::sendNewParams(Channel &channel, Client *sender, std::string mode, s
 {
     //Parameters: <channel> {[+|-]|o|p|s|i|t|n|b|v} [<limit>] [<user>] [<ban mask>]
 
-    sendToClient(sender, RPL_CHANNELMODEIS(channel.getName(), mode, params));
-    sendToChannel(channel, sender, RPL_CHANNELMODEIS(channel.getName(), mode, params));
+    sendToClient(sender, RPL_MODE(sender->getNickname(), channel.getName(), mode, params));
+    sendToChannel(channel, sender, RPL_MODE(sender->getNickname(), channel.getName(), mode, params));
 }
