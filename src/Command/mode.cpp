@@ -42,7 +42,7 @@ void Command::mode(std::vector<std::string> parsing, Client &client, Server &ser
 		{
 			if (flag[i] == '+' || flag[i] == '-')
 			{
-				int j = 0;
+				int j = 1;
 				while (flag[i + j])
 				{
 					if (!flag[i + j])
@@ -102,12 +102,16 @@ void Command::mode(std::vector<std::string> parsing, Client &client, Server &ser
 								}
 								catch (std::exception &e)
 								{
-									std::cout << "tmpit KO = " << *tmpit << std::endl;
 									printError(ERR_UNKNOWNMODE(*tmpit));
 									server.sendToClient(&client, ERR_UNKNOWNMODE(*tmpit));
 									return;
 								}
-								std::cout << "tmpit OK = " << *tmpit << std::endl;
+								if (limit < 0)
+								{
+									printError(ERR_UNKNOWNMODE(*tmpit));
+									server.sendToClient(&client, ERR_UNKNOWNMODE(*tmpit));
+									return;
+								}
 								chan->setUserLimit(limit);
 							}
 							break;

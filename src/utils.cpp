@@ -58,17 +58,22 @@ std::string ft_itoa(int i)
 
 int  ft_stoi(std::string str)
 {
-    int res = 0;
-
-    int l = 1;
-    for (int i = str.length() -1; i >= 0; i --)
+    long res = 0;
+    long l = 1;
+    int last = 0;
+    if (str[0] == '-')
     {
-        if (i > 0 && !isdigit(str[i]))
+        last ++;
+        l = -1;
+    }
+    for (int i = str.length() -1; i >= last; i --)
+    {
+        if ((i == 0 && !isdigit(str[i]) && str[i] != '-' && str[i] != '+') || (i > 0 && !isdigit(str[i])))
             throw NotAnIntException();
         res += (str[i] - '0') * l;
         l *= 10;
+        if (res > MAX_INT || res < MIN_INT)
+            throw NotAnIntException();
     }
-    if (str[0] == '-')
-        res *= -1;
-    return (res);
+    return (static_cast<int>(res));
 }

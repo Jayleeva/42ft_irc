@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <string>
+#include <limits>
 #include "Client.hpp"
 #include "Channel.hpp"
 #include "Server.hpp"
@@ -18,12 +19,9 @@ class Command;
 # define GREEN "\001\033[1;32m\002"
 # define MAG  "\001\033[1;35m\002"
 
-//Colors
-# define DEFAULT "\001\033[0;39m\002"
-# define YELLOW "\001\033[1;93m\002"
-# define RED "\001\033[0;31m\002"
-# define GREEN "\001\033[1;32m\002"
-# define MAG  "\001\033[1;35m\002"
+//Max and min int
+# define MAX_INT std::numeric_limits<int>::max()
+# define MIN_INT std::numeric_limits<int>::min() 
 
 //Error messages
 #define ERR_NOTREGISTRED(nick) "451 " + nick + ":You have not registered" 
