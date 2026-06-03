@@ -234,12 +234,11 @@ std::string Channel::listAllUsers()
 		if (isOperator(*it))
 			list += '@';
 		else
-			list += '+';
+			list += '+';	// voices
         list += (*it)->getNickname();
 		if (i + 1 < _members.size())
 			list += ' ';
         i ++;
     }
-	list += '*';
 	return (list);
 }

@@ -402,28 +402,35 @@ void Server::sendToClient(Client *target, std::string message)
 
 void Server::sendToChannel(Channel &channel, Client *sender, std::string message)
 {
-    std::set<Client*>::const_iterator it;
-    const std::set<Client*> &members = channel.getMembers();
-
     message.append("\r\n");
     std::cout << "> " << message << std::endl;
-    it = members.begin();
-    while (it != members.end())
-    {
-        if (*it != sender)
-            sendToClient((*it), message);
-        it++;
-    }
-}
-
-
-void Server::sendMessageToChannel(Client *sender, Channel &channel, std::string &message)
-{
     const std::set<Client*> &members = channel.getMembers();
     for (std::set<Client*>::const_iterator it = members.begin(); it != members.end(); it ++)
     {
+        if (*it == sender)
+            std::cout << "IS SENDEEEER\n";
         if (*it != sender)
+        {
+            std::cout << "IS NOOOOT SENDER\n";
+            sendToClient((*it), message);
+        }
+    }
+}
+
+void Server::sendMessageToChannel(Client *sender, Channel &channel, std::string &message)
+{
+    message.append("\r\n");
+    std::cout << "> " << message << std::endl;
+    const std::set<Client*> &members = channel.getMembers();
+    for (std::set<Client*>::const_iterator it = members.begin(); it != members.end(); it ++)
+    {
+        if (*it == sender)
+            std::cout << "IS SENDEEEER\n";
+        if (*it != sender)
+        {
+            std::cout << "IS NOOOOT SENDER\n";
             sendToClient(*it, RPL_PRIVMSG(sender->getNickname(), (*it)->getNickname(), message));
+        }
     }
 }
 
