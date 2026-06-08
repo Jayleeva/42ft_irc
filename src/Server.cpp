@@ -376,8 +376,8 @@ void Server::removeClientFromChannel(Client *client, Channel *channel)
 
     if (channel->isEmpty())
     {
-        delete channel;
         _channels.erase(channelName);
+        delete channel;
     }
 }
 
