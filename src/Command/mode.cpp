@@ -56,20 +56,26 @@ void Command::mode(std::vector<std::string> parsing, Client &client, Server &ser
 						case 'i':
 						{
 							chan->setInviteOnly((flag[i] == '+' ? true : false));
+							server.sendNewParams(*chan, &client, (flag[i] == '+' ? "+i" : "-i"), "");
 							break;
 						}
 						case 't':
 						{
 							chan->setTopicRestricted((flag[i] == '+' ? true : false));
+							server.sendNewParams(*chan, &client, (flag[i] == '+' ? "+t" : "-t"), "");
 							break;
 						}
 						case 'k':
 						{
 							if (flag[i] == '-')
+							{
 								chan->removeKey();
+								server.sendNewParams(*chan, &client, "-k", "");
+							}
 							else
 							{
 								std::vector<std::string>::iterator tmpit = it ++;
+								tmpit ++;
 								if (tmpit == parsing.end())
 								{
 									printError(ERR_NEEDMOREPARAMS(parsing.front()));
@@ -78,16 +84,20 @@ void Command::mode(std::vector<std::string> parsing, Client &client, Server &ser
 								}
 								std::string key = *tmpit;
 								chan->setKey(key);
+								server.sendNewParams(*chan, &client, "+k", key);
 							}							
 							break;
 						}
 						case 'l':
 						{
 							if (flag[i] == '-')
+							{
 								chan->removeUserLimit();
+								server.sendNewParams(*chan, &client, "-l", "0");
+							}
 							else
 							{
-								std::vector<std::string>::iterator tmpit = it;
+								std::vector<std::string>::iterator tmpit = it ++;
 								tmpit ++;
 								if (tmpit == parsing.end())
 								{
@@ -113,12 +123,14 @@ void Command::mode(std::vector<std::string> parsing, Client &client, Server &ser
 									return;
 								}
 								chan->setUserLimit(limit);
+								server.sendNewParams(*chan, &client, "+l", *tmpit);
 							}
 							break;
 						}
 						case 'o':
 						{
 							std::vector<std::string>::iterator tmpit = it ++;
+							tmpit ++;
 							if (tmpit == parsing.end())
 							{
 								printError(ERR_NEEDMOREPARAMS(parsing.front()));
@@ -127,10 +139,22 @@ void Command::mode(std::vector<std::string> parsing, Client &client, Server &ser
 							}
 							std::string targetName = *tmpit;
 							Client *target = server.getClientByNick(targetName);
-							if (chan->isOperator(target))
-								chan->removeOperator(target);
+							if (flag[i] == '-')
+							{
+								if (chan->isOperator(target))
+								{
+									chan->removeOperator(target);
+									server.sendNewParams(*chan, &client, "-o", targetName);
+								}
+							}
 							else
-								chan->addOperator(target);
+							{
+								if (!chan->isOperator(target))
+								{
+									chan->addOperator(target);
+									server.sendNewParams(*chan, &client, "+o", targetName);
+								}
+							}
 							break;
 						}
 						default:
@@ -148,7 +172,7 @@ void Command::mode(std::vector<std::string> parsing, Client &client, Server &ser
 		}
 		it ++;
 	}
-	server.sendNewParams(*chan, &client, chan->getMode(), chan->getModeParams());
+	//server.sendNewParams(*chan, &client, chan->getMode(), chan->getModeParams());
 }
 
 /*
