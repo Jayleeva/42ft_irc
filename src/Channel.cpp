@@ -229,7 +229,6 @@ std::string Channel::getModeParams()
 		params.append(" ");
 		params.append(ft_itoa(_userLimit));
 	}
-	//params.append("*");
 	return (params);
 }
 
@@ -242,8 +241,6 @@ std::string Channel::listAllUsers()
     {
 		if (isOperator(*it))
 			list += '@';
-		else
-			list += '+';	// voices
         list += (*it)->getNickname();
 		if (i + 1 < _members.size())
 			list += ' ';

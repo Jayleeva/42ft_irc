@@ -429,7 +429,7 @@ void Server::sendMessageToChannel(Client *sender, Channel &channel, std::string 
         if (*it != sender)
         {
             std::cout << "IS NOOOOT SENDER\n";
-            sendToClient(*it, RPL_PRIVMSG(sender->getNickname(), (*it)->getNickname(), message));
+            sendToClient(*it, RPL_PRIVMSG(sender->getNickname(), channel.getName(), message));
         }
     }
 }
