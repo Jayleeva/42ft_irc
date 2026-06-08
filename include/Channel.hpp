@@ -6,6 +6,7 @@
 #include <vector>
 #include <sys/socket.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include "utils.hpp"
 
@@ -34,6 +35,7 @@ class Channel
         const std::set<Client*>& getMembers() const;
         const std::set<Client*>& getOperators() const;
         const std::string& getTopic() const;
+
 
         void addMember(Client *client);
         void removeMember(Client *client);
@@ -68,7 +70,9 @@ class Channel
         void removeKey();
         bool checkKey(const std::string &key) const;
 
-        std::string listAllUsers(std::string newClient);
+        std::string getMode();
+        std::string getModeParams();
+        std::string listAllUsers();
         
 };
 

@@ -198,25 +198,47 @@ bool Channel::checkKey(const std::string &key) const
 	return false;
 }
 
-std::string Channel::listAllUsers(std::string newClient)
+std::string Channel::getMode()
+{
+	std::string mode;
+
+	mode = (isInviteOnly() ? "+i" : "-i");
+	mode.append(isTopicRestricted() ? "+t" : "-t");
+	mode.append(hasKey() ? "+k" : "-k");
+	mode.append(hasUserLimit() ? "+l" : "-l");
+	return (mode);
+}
+
+std::string Channel::getModeParams()
+{
+	std::string params = "";
+
+	if (hasKey())
+		params.append(_key);
+	if (hasUserLimit())
+	{
+		params.append(" ");
+		params.append(ft_itoa(_userLimit));
+	}
+	params.append("*");
+	return (params);
+}
+
+std::string Channel::listAllUsers()
 {
     std::string list = ":";
     
     size_t         i = 0;
     for (std::set<Client*>::iterator it = _members.begin(); it != _members.end(); it ++)
     {
-        std::string nickName = (*it)->getNickname();
-		list += '[';
-		if (newClient.empty())
+		if (isOperator(*it))
 			list += '@';
-		else if (newClient == nickName)
-			list += '+';
-		list += ']';
-        list += nickName;
+		else
+			list += '+';	// voices
+        list += (*it)->getNickname();
 		if (i + 1 < _members.size())
 			list += ' ';
         i ++;
     }
-	list += '*';
 	return (list);
 }

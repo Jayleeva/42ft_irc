@@ -22,6 +22,7 @@ void Command::nick(std::vector<std::string> parsing, Client &client, Server &ser
         return ;
     }
 
+
     std::string nickname = *(parsing.begin() + 1);
 
     if (!client.hasPass())
@@ -53,11 +54,31 @@ void Command::nick(std::vector<std::string> parsing, Client &client, Server &ser
 
     if (server.nicknameExists(nickname) && nickname != client.getNickname())
     {
+        client.setNeedRename(true);
         printError(ERR_NICKNAMEINUSE(nickname));
         server.sendToClient(&client, ERR_NICKNAMEINUSE(nickname));
         return ;
     }
 
+    bool        overwrite = false;
+    std::string oldnick = client.getNickname();
+    if (client.hasNick())
+        overwrite = true;
+
     client.setNickname(nickname);
+
+    if (client.getNeedRename() == true)
+    {
+        client.setNeedRename(false);
+        client.tryRegister();
+        server.sendToClient(&client, RPL_WELCOME(nickname));
+    }
+
+    if (overwrite)
+    {
+        server.sendToClient(&client, RPL_NICK(oldnick, nickname));
+        server.sendToClient(&client, RPL_WELCOME(nickname));
+    }
+
     std::cout << "nickname '" << nickname << "'" << std::endl;
 }

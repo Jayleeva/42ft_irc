@@ -189,6 +189,7 @@ void    Server::removeFromAllChannels(Client *client)
             if (it->second->isOperator(client))
                 it->second->removeOperator(client);
             it->second->removeMember(client);
+            sendToChannel(*(it->second), client, RPL_QUIT(client->getNickname(), " "));
         }
     }
 }
@@ -197,31 +198,24 @@ void    Server::removeClient(nfds_t i)
 {
     std::map<int, Client*>::iterator    it;
 
-    char result[1024];
-    int_to_char(_fds[i].fd, result);
-
+    std::string nickname;
     it = this->_clients.find(_fds[i].fd);
     if (it != this->_clients.end())
     {
         removeFromAllChannels(it->second);
-        delete it->second;
+        std::string message = RPL_QUIT(it->second->getNickname(), " ");
+        sendToClient(it->second, message);
         this->_clients.erase(it);
+        delete it->second;
     }
-
 	close(_fds[i].fd);
+
     std::cout << YELLOW << "Client " << _fds[i].fd << " disconnected." << DEFAULT << std::endl;
 
 	_fds[i].fd = _fds[_nfd -1].fd;
 	_fds[i].events = POLLIN;
 	_fds[_nfd -1].fd = -1;
     _nfd --;
-
-    std::string message = static_cast<std::string>(result) + " disconnected";
-    for (nfds_t j = 1; j < _nfd; j ++)
-    {
-        std::cout << "'" << message << "'" << " sent to client " << _fds[j].fd << std::endl;
-        send(_fds[j].fd, message.c_str(), strlen(message.c_str()), 0);
-    }
 }
 
 
@@ -368,40 +362,31 @@ void Server::joinClientToChannel(Client *client, const std::string &name)
     sendJoinConfirmation(client, *channel);
 }
 
-void Server::removeClientFromChannel(Client *client, const std::string &name)
+void Server::removeClientFromChannel(Client *client, Channel *channel)
 {
-    Channel *channel;
-
     if (!client)
         return ;
-    if (!channelExists(name))
-        return;
-
-    channel = getChannel(name);
-
     if (!channel->hasMember(client))
         return;
 
+    sendPartConfirmation(client, channel);
     channel->removeMember(client);
-    client->removeChannel(name);
+    std::string channelName = channel->getName();
+    client->removeChannel(channelName);
 
     if (channel->isEmpty())
     {
+        _channels.erase(channelName);
         delete channel;
-        _channels.erase(name);
     }
 }
 
 Client *Server::getClientByNick(const std::string &nickname)
 {
-    std::map<int, Client*>::iterator it;
-
-    it = _clients.begin();
-    while (it != _clients.end())
+    for (std::map<int, Client*>::iterator it = _clients.begin(); it != _clients.end(); it ++)
     {
         if (it->second->getNickname() == nickname)
             return (it->second);
-        it++;
     }
     return (NULL);
 }
@@ -417,72 +402,58 @@ void Server::sendToClient(Client *target, std::string message)
 
 void Server::sendToChannel(Channel &channel, Client *sender, std::string message)
 {
-    std::set<Client*>::const_iterator it;
-    const std::set<Client*> &members = channel.getMembers();
-
     message.append("\r\n");
     std::cout << "> " << message << std::endl;
-    it = members.begin();
-    while (it != members.end())
+    const std::set<Client*> &members = channel.getMembers();
+    for (std::set<Client*>::const_iterator it = members.begin(); it != members.end(); it ++)
     {
+        if (*it == sender)
+            std::cout << "IS SENDEEEER\n";
         if (*it != sender)
+        {
+            std::cout << "IS NOOOOT SENDER\n";
             sendToClient((*it), message);
-        it++;
+        }
     }
 }
 
-void Server::sendMessageToClient(Client *sender, Client *target, const std::string &message)
+void Server::sendMessageToChannel(Client *sender, Channel &channel, std::string &message)
 {
-    std::string msg = sender->getNickname() + " PRIVMSG :" + message; 
-    sendToClient(target, msg);
-}
-
-void Server::sendMessageToChannel(Client &sender, Channel &channel, const std::string &message)
-{
-    std::string msg = sender.getNickname() + " PRIVMSG :" + message;
-    sendToChannel(channel, &sender, msg);
+    message.append("\r\n");
+    std::cout << "> " << message << std::endl;
+    const std::set<Client*> &members = channel.getMembers();
+    for (std::set<Client*>::const_iterator it = members.begin(); it != members.end(); it ++)
+    {
+        if (*it == sender)
+            std::cout << "IS SENDEEEER\n";
+        if (*it != sender)
+        {
+            std::cout << "IS NOOOOT SENDER\n";
+            sendToClient(*it, RPL_PRIVMSG(sender->getNickname(), (*it)->getNickname(), message));
+        }
+    }
 }
 
 void Server::sendJoinConfirmation(Client *client, Channel &channel)
 {
-    std::string confirmation = ":" + client->getNickname() + " JOIN :" + channel.getName();
-    sendToClient(client, confirmation);
+    sendToClient(client, RPL_JOIN(client->getPrefix(), channel.getName()));
+    sendToChannel(channel, client, RPL_JOIN(client->getPrefix(), channel.getName()));
     if (channel.hasTopic())
         sendToClient(client, RPL_TOPIC(channel.getName(), channel.getTopic()));
     else
         sendToClient(client, RPL_NOTOPIC(channel.getName()));
-    sendToClient(client, RPL_NAMREPLY(client->getNickname(), channel.getName(), channel.listAllUsers(client->getNickname())));
+    sendToClient(client, RPL_NAMREPLY(client->getNickname(), channel.getName(), channel.listAllUsers()));
     sendToClient(client, RPL_ENDOFNAMES(client->getNickname(), channel.getName()));
 }
 
-void Server::sendPartConfirmation(Client *client, Channel &channel) // BESOIN?
+void Server::sendPartConfirmation(Client *client, Channel *channel) // BESOIN?
 {
-    std::string confirmation = ":" + client->getNickname() + " PART :" + channel.getName();
-    sendToClient(client, confirmation);
-    sendToChannel(channel, client, confirmation);
-    //sendToClient(client, RPL_NAMREPLY(channel.getName(), channel.listAllUsers(client->getNickname())));
-    //sendToClient(client, RPL_ENDOFNAMES(client->getNickname(), channel.getName()));
+    sendToClient(client, RPL_PART(client->getPrefix(), channel->getName()));
+    sendToChannel(*channel, client, RPL_PART(client->getPrefix(), channel->getName()));
 }
 
-void Server::sendNewParams(Channel &channel, Client *sender, std::string flag)
+void Server::sendNewParams(Channel &channel, Client *sender, std::string mode, std::string params)
 {
-    //Parameters: <channel> {[+|-]|o|p|s|i|t|n|b|v} [<limit>] [<user>] [<ban mask>]
-
-    (void)flag;
-    std::string mode;
-    std::string params;
-    sendToClient(sender, RPL_CHANNELMODEIS(channel.getName(), mode, params));
-    sendToChannel(channel, sender, RPL_CHANNELMODEIS(channel.getName(), mode, params));
-}
-
-void Server::sendCap(Client *client)
-{
-    std::string cap = "CAP * LS :" + _name;
-    sendToClient(client, cap);
-}
-
-void Server::pong(Client *client, std::string arg)
-{
-    std::string pong = "PONG " + arg;
-    sendToClient(client, pong);
+    sendToClient(sender, RPL_MODE(sender->getNickname(), channel.getName(), mode, params));
+    sendToChannel(channel, sender, RPL_MODE(sender->getNickname(), channel.getName(), mode, params));
 }

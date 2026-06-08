@@ -64,21 +64,17 @@ class Server
         Channel *getChannel(const std::string &name);
         Channel *createChannel(const std::string &name);
         void    joinClientToChannel(Client *client, const std::string &name);
-        void    removeClientFromChannel(Client *client, const std::string &name);
+        void    removeClientFromChannel(Client *client, Channel *channel);
         Client  *getClientByNick(const std::string &nickname);
 
         void    sendToClient(Client *target, std::string message);
         void    sendToChannel(Channel &channel, Client *sender, std::string message);
 
-        void    sendMessageToClient(Client *sender, Client *target, const std::string &message);
-        void    sendMessageToChannel(Client &sender, Channel &channel, const std::string &message);
-
-        void    sendCap(Client *client);
-        void    pong(Client *client, std::string arg);
+        void    sendMessageToChannel(Client *sender, Channel &channel, std::string &message);
 
         void    sendJoinConfirmation(Client *client, Channel &channel);
-        void    sendPartConfirmation(Client *client, Channel &channel); // besoin?
-        void    sendNewParams(Channel &channel, Client *sender, std::string flag);
+        void    sendPartConfirmation(Client *client, Channel *channel); // besoin?
+        void    sendNewParams(Channel &channel, Client *sender, std::string mode, std::string params);
 
 };
 

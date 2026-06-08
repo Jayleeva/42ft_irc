@@ -19,8 +19,8 @@ void Command::join(std::vector<std::string> parsing, Client &client, Server &ser
     }
     if (!client.isRegistered())
     {
-        printError(ERR_NOTREGISTRED);
-        server.sendToClient(&client, ERR_NOTREGISTRED);
+        printError(ERR_NOTREGISTRED(client.getNickname()));
+        server.sendToClient(&client, ERR_NOTREGISTRED(client.getNickname()));
         return ;
     }
 

@@ -48,8 +48,8 @@ void Command::execute(Client &client, Server &server)
     {
         if (!client.isRegistered())
         {
-            printError(ERR_NOTREGISTRED);
-            server.sendToClient(&client, ERR_NOTREGISTRED);
+            printError(ERR_NOTREGISTRED(client.getNickname()));
+            server.sendToClient(&client, ERR_NOTREGISTRED(client.getNickname()));
             return;
         }
     }
@@ -58,7 +58,7 @@ void Command::execute(Client &client, Server &server)
     {
         std::cout << "BRANCH CAP" << std::endl;
         if (_parsing.size() >= 2 && _parsing[1] == "LS")
-            server.sendCap(&client);
+            server.sendToClient(&client, RPL_CAP(client.getNickname()));
         return ;
     }
     else if (_cmd == CMD_PASS)
@@ -96,7 +96,7 @@ void Command::execute(Client &client, Server &server)
     else if (_cmd == CMD_KICK)
         kick(_parsing, client, server);
     else if (_cmd == CMD_PING)
-        server.pong(&client, *(_parsing.begin() + 1));
+        server.sendToClient(&client, RPL_PING(client.getNickname(), *(_parsing.begin() + 1)));
     else if (_cmd == CMD_QUIT)
         return ;
     else
