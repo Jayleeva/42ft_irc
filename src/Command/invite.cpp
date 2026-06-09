@@ -10,7 +10,7 @@
 */
 void Command::invite(std::vector<std::string> parsing, Client &client, Server &server)
 {
-	if (parsing.size() < 3)
+	if (parsing.size() < 3 || parsing[1][0] == '#' || parsing[2][0] != '#')
     {
         printError(ERR_NEEDMOREPARAMS(parsing.front()));
 		server.sendToClient(&client, ERR_NEEDMOREPARAMS(parsing.front()));
@@ -66,5 +66,9 @@ void Command::invite(std::vector<std::string> parsing, Client &client, Server &s
 	}
 
 	channel->invite(targetClient);
-	server.sendToClient(&client, RPL_INVITING(nickname, channel->getName())); // ajouter nom qui invite?
+
+	std::string msg = ":" + client.getNickname() + " INVITE " + targetClient->getNickname()
+		+ " " + channelName;
+	server.sendToClient(targetClient, msg);
+	server.sendToClient(&client, RPL_INVITING(nickname, channel->getName()));
 }
