@@ -8,6 +8,8 @@
 
 void Command::part(std::vector<std::string> parsing, Client &client, Server &server)
 {
+    std::vector<std::string>::iterator it = parsing.begin();
+
     if (parsing.size() < 2)
     {
         printError(ERR_NEEDMOREPARAMS(parsing.front()));
@@ -15,7 +17,7 @@ void Command::part(std::vector<std::string> parsing, Client &client, Server &ser
         return ;
     }
 
-    std::string channelName = *(parsing.begin() + 1);
+    std::string channelName = *(++it);
 
     Channel *channel = server.getChannel(channelName);
 
@@ -32,7 +34,15 @@ void Command::part(std::vector<std::string> parsing, Client &client, Server &ser
         server.sendToClient(&client, ERR_NOTONCHANNEL(channelName));
 		return;
 	}
-    server.sendPartConfirmation(&client, channel);
+
+    std::string reason = "";
+    while (++it != parsing.end())
+    {
+        reason.append(*it);
+        if (it + 1 != parsing.end())
+            reason.append(" ");
+    }
+    server.sendPartConfirmation(&client, channel, reason);
     server.removeClientFromChannel(&client, channel);
 }
 

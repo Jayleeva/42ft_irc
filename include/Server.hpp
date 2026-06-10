@@ -53,7 +53,7 @@ class Server
         void    clearClientsMap();
         void    run();
         void    addClient();
-        void    removeClient(nfds_t i);
+        void    removeClient(nfds_t i, std::string message);
         void    removeFromAllChannels(Client *client);
         void    execClient(nfds_t i);
 
@@ -73,7 +73,7 @@ class Server
         void    sendMessageToChannel(Client *sender, Channel &channel, std::string &message);
 
         void    sendJoinConfirmation(Client *client, Channel &channel);
-        void    sendPartConfirmation(Client *client, Channel *channel);
+        void    sendPartConfirmation(Client *client, Channel *channel, std::string reason);
         void    sendKickConfirmation(Client *client, Channel *channel, std::string target, std::string reason);
         void    sendNewParams(Channel &channel, Client *sender, std::string mode, std::string params);
 
