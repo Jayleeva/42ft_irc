@@ -16,6 +16,18 @@ void Command::kick(std::vector<std::string> parsing, Client &client, Server &ser
     }
     std::string channelName = *(parsing.begin() + 1);
 	std::string nickname = *(parsing.begin() + 2);
+	std::string reason;
+
+	if (parsing.size() > 3)
+	{
+		reason = *(parsing.begin() + 3);
+		if (!reason.empty() && reason[0] == ':')
+        	reason.erase(0, 1);
+	}
+	else
+	{
+		reason = "Kicked";
+	}
 
 	if (!server.channelExists(channelName))
 	{
@@ -49,5 +61,6 @@ void Command::kick(std::vector<std::string> parsing, Client &client, Server &ser
 		return;
 	}
 
-    server.removeClientFromChannel(targetClient, channel);
+	server.sendKickConfirmation(&client, targetClient, channel, reason);
+	server.removeClientFromChannel(targetClient, channel, false);
 }

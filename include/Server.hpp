@@ -64,7 +64,7 @@ class Server
         Channel *getChannel(const std::string &name);
         Channel *createChannel(const std::string &name);
         void    joinClientToChannel(Client *client, const std::string &name);
-        void    removeClientFromChannel(Client *client, Channel *channel);
+        void    removeClientFromChannel(Client *client, Channel *channel, bool sendPart);
         Client  *getClientByNick(const std::string &nickname);
 
         void    sendToClient(Client *target, std::string message);
@@ -75,6 +75,7 @@ class Server
         void    sendJoinConfirmation(Client *client, Channel &channel);
         void    sendPartConfirmation(Client *client, Channel *channel); // besoin?
         void    sendNewParams(Channel &channel, Client *sender, std::string mode, std::string params);
+        void    sendKickConfirmation(Client *client, Client *target, Channel *channel, const std::string &reason);
 
 };
 
