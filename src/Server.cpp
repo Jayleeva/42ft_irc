@@ -375,6 +375,14 @@ void Server::removeClientFromChannel(Client *client, Channel *channel, bool send
     std::string channelName = channel->getName();
     client->removeChannel(channelName);
 
+    Client *newOp;
+
+    newOp = NULL;
+    if (!channel->isEmpty())
+	    newOp = channel->promoteFirstMember();
+    if (newOp)
+	    sendToChannel(*channel, NULL, RPL_MODE(std::string("ircserv"), channel->getName(), "+o", newOp->getNickname()));
+
     if (channel->isEmpty())
     {
         _channels.erase(channelName);
