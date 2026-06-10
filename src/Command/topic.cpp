@@ -19,15 +19,41 @@ void Command::topic(std::vector<std::string> parsing, Client &client, Server &se
 		server.sendToClient(&client, ERR_NOSUCHCHANNEL(channelName));
 		return;
 	}
-	Channel *chan = server.getChannel(channelName);
-	if (chan->isOperator(&client) == false)
-	{
-		printError(ERR_CHANOPRIVSNEEDED(channelName));
-		server.sendToClient(&client, ERR_CHANOPRIVSNEEDED(channelName));
-		return;
-	}
 
-	it ++;
-	std::string newTopic = *it;
-	chan->setTopic(newTopic);
+	Channel *chan = server.getChannel(channelName);
+
+	if (parsing.size() > 2)
+	{
+		if (chan->isOperator(&client) == false)
+		{
+			printError(ERR_CHANOPRIVSNEEDED(channelName));
+			server.sendToClient(&client, ERR_CHANOPRIVSNEEDED(channelName));
+			return;
+		}
+		std::string newTopic = "";
+		while (++it != parsing.end())
+		{
+			newTopic.append(*(it));
+			if (it + 1 != parsing.end())
+				newTopic.append(" ");
+		}
+		chan->setTopic(newTopic);
+		server.sendToClient(&client, RPL_TOPIC(chan->getName(), chan->getTopic()));
+	}
+	else
+	{
+		if (chan->isTopicRestricted())
+		{
+			if (chan->isOperator(&client) == false)
+			{
+				printError(ERR_CHANOPRIVSNEEDED(channelName));
+				server.sendToClient(&client, ERR_CHANOPRIVSNEEDED(channelName));
+				return;
+			}
+		}
+		if (chan->hasTopic())
+			server.sendToClient(&client, RPL_TOPIC(chan->getName(), chan->getTopic()));
+		else
+			server.sendToClient(&client, RPL_NOTOPIC(chan->getName()));
+	}
 }
