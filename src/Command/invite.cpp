@@ -66,5 +66,6 @@ void Command::invite(std::vector<std::string> parsing, Client &client, Server &s
 	}
 
 	channel->invite(targetClient);
-	server.sendToClient(&client, RPL_INVITING(nickname, channel->getName())); // ajouter nom qui invite?
+	server.sendToClient(&client, RPL_INVITING(client.getNickname(), nickname, channel->getName()));
+	server.sendToClient(targetClient, RPL_INVITING(client.getNickname(), nickname, channel->getName()));
 }
