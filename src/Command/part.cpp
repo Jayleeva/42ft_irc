@@ -32,7 +32,7 @@ void Command::part(std::vector<std::string> parsing, Client &client, Server &ser
         server.sendToClient(&client, ERR_NOTONCHANNEL(channelName));
 		return;
 	}
-    
+    server.sendPartConfirmation(&client, channel);
     server.removeClientFromChannel(&client, channel);
 }
 

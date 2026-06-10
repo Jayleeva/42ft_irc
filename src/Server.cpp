@@ -369,7 +369,6 @@ void Server::removeClientFromChannel(Client *client, Channel *channel)
     if (!channel->hasMember(client))
         return;
 
-    sendPartConfirmation(client, channel);
     channel->removeMember(client);
     std::string channelName = channel->getName();
     client->removeChannel(channelName);
@@ -446,10 +445,16 @@ void Server::sendJoinConfirmation(Client *client, Channel &channel)
     sendToClient(client, RPL_ENDOFNAMES(client->getNickname(), channel.getName()));
 }
 
-void Server::sendPartConfirmation(Client *client, Channel *channel) // BESOIN?
+void Server::sendPartConfirmation(Client *client, Channel *channel) 
 {
     sendToClient(client, RPL_PART(client->getPrefix(), channel->getName()));
     sendToChannel(*channel, client, RPL_PART(client->getPrefix(), channel->getName()));
+}
+
+void Server::sendKickConfirmation(Client *client, Channel *channel, std::string target, std::string reason) 
+{
+    sendToClient(client, RPL_KICK(client->getNickname(), channel->getName(), target, reason));
+    sendToChannel(*channel, client, RPL_KICK(client->getNickname(), channel->getName(), target, reason));
 }
 
 void Server::sendNewParams(Channel &channel, Client *sender, std::string mode, std::string params)
