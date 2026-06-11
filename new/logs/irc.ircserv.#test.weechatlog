@@ -13,3 +13,18 @@
 2026-06-11 13:19:52	<--	cyglardo () has left #test
 2026-06-11 13:19:52	--	Mode #test [+o jayl] by ircserv
 2026-06-11 13:20:05	--	irc: disconnected from server
+2026-06-11 13:22:35	-->	jayl (cyglardo@127.0.0.1) has joined #test
+2026-06-11 13:22:35	--	No topic set for channel #test
+2026-06-11 13:22:35	--	Channel #test: 1 nick (1 op, 0 voices, 0 normals)
+2026-06-11 13:23:03	@jayl	fjell
+2026-06-11 13:23:17	-->	cyglardo (cyglardo@127.0.0.1) has joined #test
+2026-06-11 13:23:53	<--	jayl has kicked cyglardo (nulle)
+2026-06-11 13:25:08	--	No topic set for channel #test
+2026-06-11 13:25:16	--	Topic for #test is "projet"
+2026-06-11 13:25:50	-->	cyglardo (cyglardo@127.0.0.1) has joined #test
+2026-06-11 13:26:02	<--	cyglardo () has left #test
+2026-06-11 13:26:18	--	Mode #test [+t] by jayl
+2026-06-11 13:26:24	-->	cyglardo (cyglardo@127.0.0.1) has joined #test
+2026-06-11 13:26:36	--	Mode #test [-t] by jayl
+2026-06-11 13:30:00	--	Mode #test [-itkl]
+2026-06-11 13:32:58	--	irc: disconnected from server
