@@ -362,17 +362,26 @@ void Server::joinClientToChannel(Client *client, const std::string &name)
     sendJoinConfirmation(client, *channel);
 }
 
-void Server::removeClientFromChannel(Client *client, Channel *channel)
+void Server::removeClientFromChannel(Client *client, Channel *channel, bool sendPart)
 {
     if (!client)
         return ;
     if (!channel->hasMember(client))
         return;
 
-    sendPartConfirmation(client, channel);
+    if (sendPart)
+        sendPartConfirmation(client, channel);
     channel->removeMember(client);
     std::string channelName = channel->getName();
     client->removeChannel(channelName);
+
+    Client *newOp;
+
+    newOp = NULL;
+    if (!channel->isEmpty())
+	    newOp = channel->promoteFirstMember();
+    if (newOp)
+	    sendToChannel(*channel, NULL, RPL_MODE(std::string("ircserv"), channel->getName(), "+o", newOp->getNickname()));
 
     if (channel->isEmpty())
     {
@@ -456,4 +465,18 @@ void Server::sendNewParams(Channel &channel, Client *sender, std::string mode, s
 {
     sendToClient(sender, RPL_MODE(sender->getNickname(), channel.getName(), mode, params));
     sendToChannel(channel, sender, RPL_MODE(sender->getNickname(), channel.getName(), mode, params));
+}
+
+void Server::sendKickConfirmation(Client *client, Client *target, Channel *channel, const std::string &reason)
+{
+    std::string message;
+
+    message = RPL_KICK(
+        client->getPrefix(),
+        channel->getName(),
+        target->getNickname(),
+        reason);
+
+    sendToClient(client, message);
+    sendToChannel(*channel, client, message);
 }

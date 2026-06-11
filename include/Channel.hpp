@@ -73,6 +73,8 @@ class Channel
         std::string getMode();
         std::string getModeParams();
         std::string listAllUsers();
+
+        Client *promoteFirstMember();
         
 };
 
