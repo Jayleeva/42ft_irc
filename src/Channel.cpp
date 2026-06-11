@@ -248,3 +248,13 @@ std::string Channel::listAllUsers()
     }
 	return (list);
 }
+
+Client *Channel::promoteFirstMember()
+{
+	if (_members.empty())
+		return NULL;
+	if (!_operators.empty())
+		return NULL;
+	_operators.insert(*_members.begin());
+	return (*_members.begin());
+}

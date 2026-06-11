@@ -1,20 +1,12 @@
 #include "../../include/Command.hpp"
 
-/*
-**This function allows a client to invite another client into a channel
-** The command does :
-			Retrieve the arguments
-			Extract nickname and channel
-			Verify that channel et nickname exists
-			Send an invitation
-*/
 void Command::invite(std::vector<std::string> parsing, Client &client, Server &server)
 {
-	if (parsing.size() < 3)
+	if (parsing.size() < 3 || parsing[1][0] == '#' || parsing[2][0] != '#')
     {
         printError(ERR_NEEDMOREPARAMS(parsing.front()));
 		server.sendToClient(&client, ERR_NEEDMOREPARAMS(parsing.front()));
-        return ;
+        return;
     }
 
 	std::string nickname = *(parsing.begin() + 1);
@@ -24,7 +16,7 @@ void Command::invite(std::vector<std::string> parsing, Client &client, Server &s
 	{
     	printError(ERR_NOSUCHCHANNEL(channelName));
 		server.sendToClient(&client, ERR_NOSUCHCHANNEL(channelName));
-    	return ;
+    	return;
 	}
 
 	Channel *channel = server.getChannel(channelName);
@@ -66,6 +58,7 @@ void Command::invite(std::vector<std::string> parsing, Client &client, Server &s
 	}
 
 	channel->invite(targetClient);
+
 	server.sendToClient(&client, RPL_INVITING(client.getNickname(), nickname, channel->getName()));
 	server.sendToClient(targetClient, RPL_INVITING(client.getNickname(), nickname, channel->getName()));
 }

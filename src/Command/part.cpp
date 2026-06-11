@@ -34,16 +34,8 @@ void Command::part(std::vector<std::string> parsing, Client &client, Server &ser
         server.sendToClient(&client, ERR_NOTONCHANNEL(channelName));
 		return;
 	}
-
-    std::string reason = "";
-    while (++it != parsing.end())
-    {
-        reason.append(*it);
-        if (it + 1 != parsing.end())
-            reason.append(" ");
-    }
-    server.sendPartConfirmation(&client, channel, reason);
-    server.removeClientFromChannel(&client, channel);
+    
+    server.removeClientFromChannel(&client, channel, true);
 }
 
 //vérifier si channel existe et si le client est membre du channel
