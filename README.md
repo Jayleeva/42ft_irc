@@ -96,8 +96,10 @@ The poll() function:
 
 Choosing an IRC client:
 - https://libera.chat/guides/clients
+- https://weechat.org/files/doc/weechat/stable/weechat_quickstart.fr.html
 
 Understanding how the IRC client works:
+- https://datatracker.ietf.org/doc/html/rfc1459
 - https://docs.redhat.com/en/documentation/red_hat_fuse/7.3/html/connecting_fuse_online_to_applications_and_services/connecting-to-irc_connectors
 - the weechat-fr buffer of the libera server
 

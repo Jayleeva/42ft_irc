@@ -1,10 +1,5 @@
 #include "../../include/Command.hpp"
 
-/*
-**NICK message is used to give user a nickname or change the previous one.
-**NICK <nickname>
-*/
-
 void   printCurrentNicknames(Server &server)
 {
     std::cout << "Current nicknames:\n";
@@ -28,10 +23,6 @@ void Command::nick(std::vector<std::string> parsing, Client &client, Server &ser
     if (!client.hasPass())
     {
         std::cout << "hello\n";
-        /*if (nickname.empty())
-            nickname = "noNickname";  // get hostname de la machine?
-        printError(ERR_PASSWDMISMATCH(nickname));
-        server.sendToClient(&client, ERR_PASSWDMISMATCH(nickname));*/
         return ;
     } 
 

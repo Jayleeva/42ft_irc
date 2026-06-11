@@ -29,7 +29,7 @@ void Command::pass(std::vector<std::string> parsing, Client &client, Server &ser
     {
         std::string nickname = client.getNickname();
         if (nickname.empty())
-            nickname = "noNickname"; // get hostname de la machine?
+            nickname = "noNickname";
         printError(ERR_PASSWDMISMATCH(nickname));
         server.sendToClient(&client, ERR_PASSWDMISMATCH(nickname));
         return ;

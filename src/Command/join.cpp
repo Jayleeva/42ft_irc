@@ -1,10 +1,5 @@
 #include "../../include/Command.hpp"
 
-/*
-**The JOIN command is used by client to start listening a specific
-   channel
-*/
-
 void Command::join(std::vector<std::string> parsing, Client &client, Server &server)
 {
     std::string channelName;

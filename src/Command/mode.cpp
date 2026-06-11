@@ -172,7 +172,6 @@ void Command::mode(std::vector<std::string> parsing, Client &client, Server &ser
 		}
 		it ++;
 	}
-	//server.sendNewParams(*chan, &client, chan->getMode(), chan->getModeParams());
 }
 
 /*

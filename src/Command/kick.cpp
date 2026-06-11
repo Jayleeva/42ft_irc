@@ -1,11 +1,5 @@
 #include "../../include/Command.hpp"
 
-/*
-**The KICK command can be  used  to  forcibly  remove  a  user 
-from  a channel.
-** KICK <channel> <user>
-*/
-
 void Command::kick(std::vector<std::string> parsing, Client &client, Server &server)
 {
 	std::vector<std::string>::iterator it = parsing.begin();

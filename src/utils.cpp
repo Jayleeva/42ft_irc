@@ -1,6 +1,5 @@
 #include "../include/utils.hpp"
 
-//This function is used to check if a channel exists.
 bool  channelExists(std::map<std::string, Channel*> channels, std::string name)
 {
 	std::map<std::string, Channel*>::iterator it;
@@ -13,11 +12,6 @@ bool  channelExists(std::map<std::string, Channel*> channels, std::string name)
 	}
 	return (false);
 }
-
- /*
- **find() : is a function to find something, if its found return the index
-    if not return `npos`.
- */
 
 void printError(const std::string errorMsg)
 {

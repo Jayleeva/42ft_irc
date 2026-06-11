@@ -4,8 +4,7 @@ Command::Command()
 {}
 
 Command::Command(std::vector<std::string> parsing) : _parsing(parsing)
-{
-}
+{}
 
 Command::~Command()
 {}
@@ -19,7 +18,6 @@ void    Command::setParsing(std::vector<std::string> parsing)
 {
     _parsing = parsing;
 }
-
 
 void    printParsing(std::vector<std::string> parsing)
 {
