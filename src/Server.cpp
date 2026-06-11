@@ -454,10 +454,10 @@ void Server::sendJoinConfirmation(Client *client, Channel &channel)
     sendToClient(client, RPL_ENDOFNAMES(client->getNickname(), channel.getName()));
 }
 
-void Server::sendPartConfirmation(Client *client, Channel *channel, std::string reason) 
+void Server::sendPartConfirmation(Client *client, Channel *channel) 
 {
-    sendToClient(client, RPL_PART(client->getNickname(), channel->getName(), reason));
-    sendToChannel(*channel, client, RPL_PART(client->getNickname(), channel->getName(), reason));
+    sendToClient(client, RPL_PART(client->getNickname(), channel->getName()));
+    sendToChannel(*channel, client, RPL_PART(client->getNickname(), channel->getName()));
 }
 
 void Server::sendKickConfirmation(Client *client, Channel *channel, std::string target, std::string reason) 

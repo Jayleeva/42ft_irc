@@ -16,13 +16,13 @@ void Command::kick(std::vector<std::string> parsing, Client &client, Server &ser
 		server.sendToClient(&client, ERR_NEEDMOREPARAMS(parsing.front()));
         return ;
     }
-  std::string channelName = *(parsing.begin() + 1);
-	std::string nickname = *(parsing.begin() + 2);
+  	std::string channelName = *(++it);
+	std::string nickname = *(++it);
 	std::string reason;
 
 	if (parsing.size() > 3)
 	{
-		reason = *(parsing.begin() + 3);
+		reason = *(++it);
 		if (!reason.empty() && reason[0] == ':')
         	reason.erase(0, 1);
 	}
