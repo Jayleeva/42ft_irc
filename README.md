@@ -103,6 +103,10 @@ Understanding how the IRC client works:
 - https://docs.redhat.com/en/documentation/red_hat_fuse/7.3/html/connecting_fuse_online_to_applications_and_services/connecting-to-irc_connectors
 - the weechat-fr buffer of the libera server
 
+Understanding the replies to send:
+- https://www.alien.net.au/irc/irc2numerics.html
+- https://modern.ircdocs.horse/
+
 Understanding the sockets:
 - https://www.geeksforgeeks.org/c/socket-programming-cc/
 
