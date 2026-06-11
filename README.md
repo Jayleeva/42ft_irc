@@ -108,3 +108,6 @@ Understanding the sockets:
 
 Understanding the packets:
 - https://dev.to/3rev/demystifying-tcpip-understanding-the-journey-of-a-network-packet-38g7
+
+AI :
+- AI was used in this project as an educational support to better understanding concepts, clarify technical documentation or for explanations.
