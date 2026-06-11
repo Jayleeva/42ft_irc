@@ -61,7 +61,7 @@ class Command;
 #define RPL_ENDOFNAMES(nick, channel)                   "366 " + nick + " " + channel + " :End of /NAMES list"  // to close the list of names
 #define RPL_NOTOPIC(channel)                            "331 " + channel + " " + channel // to confirm there's no topic
 #define RPL_TOPIC(channel, topic)                       "332 " + channel + " " + topic // to confirm topic
-#define RPL_INVITING(nick, channel)                     "341 " + nick + " " + channel // to confirm the invitation
+#define RPL_INVITING(nick, target, channel)             "341 " + nick + " " + target + " " + channel // to confirm the invitation
 #define RPL_CHANNELMODEIS(channel, mode, params)        "324 " + channel + " " + mode + " " + params // to confirm mode
 
 #define RPL_CAP(nick)                                   "CAP * LS :" + nick
