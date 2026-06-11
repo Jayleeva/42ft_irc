@@ -60,18 +60,18 @@ class Command;
 #define RPL_NAMREPLY(nick, channel, list)               "353 " + nick + " " + channel + " " + list // ":['@'/'+']<nick> (['@'/'+']<nick>)*" //to confirm join
 #define RPL_ENDOFNAMES(nick, channel)                   "366 " + nick + " " + channel + " :End of /NAMES list"  // to close the list of names
 #define RPL_NOTOPIC(channel)                            "331 " + channel + " " + channel // to confirm there's no topic
-#define RPL_TOPIC(channel, topic)                       "332 " + channel + " " + topic // to confirm topic
+#define RPL_TOPIC(channel, topic)                       "332 " + channel + " " + channel + " " + topic // to confirm topic
 #define RPL_INVITING(nick, target, channel)             "341 " + nick + " " + target + " " + channel // to confirm the invitation
-#define RPL_CHANNELMODEIS(channel, mode, params)        "324 " + channel + " " + mode + " " + params // to confirm mode
+#define RPL_CHANNELMODEIS(channel, mode, params)        "324 " + channel + " "  + channel + " " + mode + " " + params // to confirm mode
 
 #define RPL_CAP(nick)                                   "CAP * LS :" + nick
-#define RPL_NICK(oldnick, newnick)                       ":" + oldnick + " NICK :" + newnick
+#define RPL_NICK(oldnick, newnick)                      ":" + oldnick + " NICK :" + newnick
 #define RPL_JOIN(source, channel)                       ":" + source + " JOIN :" + channel
 #define RPL_PRIVMSG(source, target, message)            ":" + source + " PRIVMSG " + target + " " + message
 //#define RPL_NOTICE(source, target, message)             ":" + source + " NOTICE " + target + " :" + message
-#define RPL_KICK(source, channel, target, reason)       ":" + source + " KICK " + channel + " " + target + " :" + reason
-#define RPL_PART(source, channel)                       ":" + source + " PART :" + channel
-#define RPL_QUIT(source, message)                       ":" + source + " QUIT :Quit: " + message
+#define RPL_KICK(source, channel, target, reason)       ":" + source + " KICK " + channel + " " + target + " " + reason
+#define RPL_PART(source, channel, reason)               ":" + source + " PART " + channel + " " + reason
+#define RPL_QUIT(source, message)                       ":" + source + " QUIT " + message
 #define RPL_MODE(source, channel, modes, params)        ":" + source + " MODE " + channel + " " + modes + " " + params
 #define RPL_PING(source, token)                         ":" + source + " PONG :" + token
 

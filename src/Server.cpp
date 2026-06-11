@@ -194,7 +194,7 @@ void    Server::removeFromAllChannels(Client *client)
     }
 }
 
-void    Server::removeClient(nfds_t i)
+void    Server::removeClient(nfds_t i, std::string message)
 {
     std::map<int, Client*>::iterator    it;
 
@@ -202,9 +202,8 @@ void    Server::removeClient(nfds_t i)
     it = this->_clients.find(_fds[i].fd);
     if (it != this->_clients.end())
     {
+        sendToClient(it->second, RPL_QUIT(it->second->getNickname(), message));
         removeFromAllChannels(it->second);
-        std::string message = RPL_QUIT(it->second->getNickname(), " ");
-        sendToClient(it->second, message);
         this->_clients.erase(it);
         delete it->second;
     }
@@ -253,7 +252,7 @@ void    Server::execClient(nfds_t i)
         std::cout << "< " << buffer << std::endl;
     }
     if (nbytes == 0)
-        this->removeClient(i);
+        this->removeClient(i, " ");
 }
 
 void    Server::run()
@@ -297,7 +296,7 @@ void    Server::run()
             }
             else if ((this->_fds[i].revents & POLLHUP) || (this->_fds[i].revents & POLLOUT))
             {
-                this->removeClient(i -1);
+                this->removeClient(i -1, " ");
                 break;
             }
         }
@@ -438,7 +437,7 @@ void Server::sendMessageToChannel(Client *sender, Channel &channel, std::string 
         if (*it != sender)
         {
             std::cout << "IS NOOOOT SENDER\n";
-            sendToClient(*it, RPL_PRIVMSG(sender->getNickname(), (*it)->getNickname(), message));
+            sendToClient(*it, RPL_PRIVMSG(sender->getNickname(), channel.getName(), message));
         }
     }
 }
@@ -455,10 +454,16 @@ void Server::sendJoinConfirmation(Client *client, Channel &channel)
     sendToClient(client, RPL_ENDOFNAMES(client->getNickname(), channel.getName()));
 }
 
-void Server::sendPartConfirmation(Client *client, Channel *channel) // BESOIN?
+void Server::sendPartConfirmation(Client *client, Channel *channel, std::string reason) 
 {
-    sendToClient(client, RPL_PART(client->getPrefix(), channel->getName()));
-    sendToChannel(*channel, client, RPL_PART(client->getPrefix(), channel->getName()));
+    sendToClient(client, RPL_PART(client->getNickname(), channel->getName(), reason));
+    sendToChannel(*channel, client, RPL_PART(client->getNickname(), channel->getName(), reason));
+}
+
+void Server::sendKickConfirmation(Client *client, Channel *channel, std::string target, std::string reason) 
+{
+    sendToClient(client, RPL_KICK(client->getNickname(), channel->getName(), target, reason));
+    sendToChannel(*channel, client, RPL_KICK(client->getNickname(), channel->getName(), target, reason));
 }
 
 void Server::sendNewParams(Channel &channel, Client *sender, std::string mode, std::string params)

@@ -8,13 +8,15 @@ from  a channel.
 
 void Command::kick(std::vector<std::string> parsing, Client &client, Server &server)
 {
+	std::vector<std::string>::iterator it = parsing.begin();
+
     if (parsing.size() < 3)
     {
         printError(ERR_NEEDMOREPARAMS(parsing.front()));
 		server.sendToClient(&client, ERR_NEEDMOREPARAMS(parsing.front()));
         return ;
     }
-    std::string channelName = *(parsing.begin() + 1);
+  std::string channelName = *(parsing.begin() + 1);
 	std::string nickname = *(parsing.begin() + 2);
 	std::string reason;
 

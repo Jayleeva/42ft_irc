@@ -200,12 +200,21 @@ bool Channel::checkKey(const std::string &key) const
 
 std::string Channel::getMode()
 {
-	std::string mode;
+	std::string mode = "";
+	std::string negative = "-";
+	std::string positive = "+";
 
-	mode = (isInviteOnly() ? "+i" : "-i");
-	mode.append(isTopicRestricted() ? "+t" : "-t");
-	mode.append(hasKey() ? "+k" : "-k");
-	mode.append(hasUserLimit() ? "+l" : "-l");
+	(isInviteOnly() ? positive.append("i") : negative.append("i"));
+	(isTopicRestricted() ? positive.append("t") : negative.append("t"));
+	(hasKey() ? positive.append("k") : negative.append("k"));
+	(hasUserLimit() ? positive.append("l") : negative.append("l"));
+
+	if (negative == "-")
+		mode = positive;
+	else if (positive == "+")
+		mode = negative;
+	else
+		mode = negative + " " + positive;
 	return (mode);
 }
 
@@ -220,7 +229,6 @@ std::string Channel::getModeParams()
 		params.append(" ");
 		params.append(ft_itoa(_userLimit));
 	}
-	params.append("*");
 	return (params);
 }
 
@@ -233,8 +241,6 @@ std::string Channel::listAllUsers()
     {
 		if (isOperator(*it))
 			list += '@';
-		else
-			list += '+';	// voices
         list += (*it)->getNickname();
 		if (i + 1 < _members.size())
 			list += ' ';
