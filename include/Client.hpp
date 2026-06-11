@@ -18,6 +18,7 @@ class Client
         bool _hasUser;
         bool _hasPass;
         bool _needRename;
+        std::string _recvBuffer;
         std::set<std::string> _channels;
     
     public:
@@ -28,6 +29,7 @@ class Client
         const std::string& getNickname() const;
         const std::string& getUsername() const;
         const std::string& getHostname() const;
+        std::string& getRecvBuffer();
         const std::string getPrefix() const;
         bool isRegistered() const;
         bool getNeedRename() const;

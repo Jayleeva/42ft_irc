@@ -40,6 +40,11 @@ const std::string& Client::getHostname() const
     return _hostname;
 }
 
+std::string& Client::getRecvBuffer()
+{
+    return _recvBuffer;
+}
+
 const std::string Client::getPrefix() const
 {
     std::string username = _username.empty() ? "" : "!" + _username;

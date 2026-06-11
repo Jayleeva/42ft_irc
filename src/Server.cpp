@@ -225,34 +225,44 @@ void Server::execCmd(std::string input, int fd)
     cmd.execute(*(this->_clients.find(fd)->second), *this);
 }
 
-void    Server::execClient(nfds_t i)
+void Server::execClient(nfds_t i)
 {
     int fd = this->_fds[i].fd;
 
-    char    buffer[MAXBYTES];
-    
+    char buffer[MAXBYTES + 1];
+
     memset(buffer, '\0', sizeof(buffer));
-    ssize_t nbytes = recv(fd, buffer, sizeof(buffer), MSG_DONTWAIT);
+
+    ssize_t nbytes = recv(fd, buffer, MAXBYTES, MSG_DONTWAIT);
+
     if (nbytes > 0)
     {
         buffer[nbytes] = '\0';
 
-        std::stringstream ss(buffer);
-        std::string line;
+        Client *client = _clients[fd];
+        client->getRecvBuffer() += buffer;
 
-        while (std::getline(ss, line, '\n'))
+        std::string &recvBuffer = client->getRecvBuffer();
+        size_t pos;
+
+        while ((pos = recvBuffer.find('\n')) != std::string::npos)
         {
+            std::string line = recvBuffer.substr(0, pos);
+
             if (!line.empty() && line[line.size() - 1] == '\r')
                 line.erase(line.size() - 1);
+
+            recvBuffer.erase(0, pos + 1);
+
             if (!line.empty())
                 execCmd(line, fd);
         }
-        
+
         std::cout << "exec " << RED << nbytes << DEFAULT << std::endl;
         std::cout << "< " << buffer << std::endl;
     }
-    if (nbytes == 0)
-        this->removeClient(i, " ");
+    else if (nbytes == 0)
+        removeClient(i, " ");
 }
 
 void    Server::run()
