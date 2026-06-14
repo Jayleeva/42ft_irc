@@ -69,7 +69,7 @@ class Command;
 #define RPL_JOIN(source, channel)                       ":" + source + " JOIN :" + channel
 #define RPL_PRIVMSG(source, target, message)            ":" + source + " PRIVMSG " + target + " " + message
 //#define RPL_NOTICE(source, target, message)             ":" + source + " NOTICE " + target + " :" + message
-#define RPL_KICK(source, channel, target, reason)       ":" + source + " KICK " + channel + " " + target + " " + reason
+#define RPL_KICK(source, channel, target, reason)       ":" + source + " KICK " + channel + " " + target + " :" + reason
 #define RPL_PART(source, channel)                       ":" + source + " PART " + channel
 #define RPL_QUIT(source, message)                       ":" + source + " QUIT " + message
 #define RPL_MODE(source, channel, modes, params)        ":" + source + " MODE " + channel + " " + modes + " " + params
