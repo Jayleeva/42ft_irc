@@ -48,10 +48,11 @@ class Server
         std::string                     getPassword() const;
         std::string                     getName() const;
 
+        void    setBeforeRun();
         void    openSocket(struct sockaddr_in *addr);
         void    closeSockets();
         void    clearClientsMap();
-        void    run();
+        int     run();
         void    addClient();
         void    removeClient(nfds_t i, std::string message);
         void    removeFromAllChannels(Client *client);
