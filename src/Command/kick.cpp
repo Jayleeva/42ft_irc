@@ -14,15 +14,21 @@ void Command::kick(std::vector<std::string> parsing, Client &client, Server &ser
 	std::string nickname = *(++it);
 	std::string reason;
 
+	reason = "Kicked";
+
 	if (parsing.size() > 3)
 	{
-		reason = *(++it);
+		reason.clear();
+		++it;
+		while (it != parsing.end())
+		{
+			if (!reason.empty())
+				reason += " ";
+			reason += *it;
+			it++;
+		}
 		if (!reason.empty() && reason[0] == ':')
-        	reason.erase(0, 1);
-	}
-	else
-	{
-		reason = "Kicked";
+			reason.erase(0, 1);
 	}
 
 	if (!server.channelExists(channelName))
