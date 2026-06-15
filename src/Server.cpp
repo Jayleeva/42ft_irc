@@ -203,9 +203,11 @@ void    Server::removeClient(nfds_t i, std::string message)
     if (it != this->_clients.end())
     {
         sendToClient(it->second, RPL_QUIT(it->second->getNickname(), message));
-        removeFromAllChannels(it->second);
+        Client *client = it->second;
+
+        removeFromAllChannels(client);
         this->_clients.erase(it);
-        delete it->second;
+        delete client;
     }
 	close(_fds[i].fd);
 
