@@ -1,8 +1,7 @@
 NAME = ircserv
 
-SRC_DIR = ./src
-OBJ_DIR = ./obj
-DIR = ./obj ./obj/Command
+SRC_DIR = src
+OBJ_DIR = obj
 
 SRC = 	main.cpp \
 		Server.cpp \
@@ -22,40 +21,31 @@ SRC = 	main.cpp \
 		Command/privmsg.cpp \
 		Command/topic.cpp \
 		
-
-
 SRCS = $(addprefix $(SRC_DIR)/, $(SRC))
-
-OBJ = $(SRCS:.cpp=.o)
-#OBJS = $(addprefix $(OBJ_DIR)/, $(OBJ))
+OBJS = $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRCS))
 
 CC = c++
-CPPFLAGS = -Wall -Wextra -Werror -std=c++98 -I ./include -g 
-#INCLUDES = -I/usr/include
+CPPFLAGS = -Wall -Wextra -Werror -std=c++98 -I ./include -g
 
 MKDIR = mkdir -p
 RM = rm -rf
 
 all: $(NAME)
 
-$(DIR):
-	$(MKDIR) $(DIR)
+$(NAME): $(OBJS)
+	$(CC) $(CPPFLAGS) $(OBJS) -o $(NAME)
 
-$(NAME): $(OBJ) # $(OBJ_DIR) instead of OBJ | $(DIR)
-	$(CC) $(CPPFLAGS) $(OBJ) -o $(NAME)
-# $(OBJS) instead of OBJ
-
-#$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(DIR)
-#	@$(CC) $(CFLAGS) -o $@ -cpp $< $(INCLUDES)
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
+	@$(MKDIR) $(dir $@)
+	$(CC) $(CPPFLAGS) -c $< -o $@
 
 clean:
-	$(RM) $(OBJ)
-# $(OBJ_DIR) instead of OBJ
+	$(RM) $(OBJ_DIR)
 
 fclean: clean
-	$(RM) $(NAME)
+	$(RM) $(NAME) valgrind.log
 
-re: fclean $(NAME)
+re: fclean all
 
 leaks:	all
 	valgrind -s --leak-check=full --log-file=valgrind.log --show-leak-kinds=all --track-fds=all --default-suppressions=yes ./$(NAME) 6667 password
