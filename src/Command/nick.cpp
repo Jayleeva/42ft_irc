@@ -17,7 +17,6 @@ void Command::nick(std::vector<std::string> parsing, Client &client, Server &ser
         return ;
     }
 
-
     std::string nickname = *(parsing.begin() + 1);
 
     if (!client.hasPass())
@@ -51,7 +50,7 @@ void Command::nick(std::vector<std::string> parsing, Client &client, Server &ser
         return ;
     }
 
-    bool        overwrite = false;
+    bool overwrite = false;
     std::string oldnick = client.getNickname();
     if (client.hasNick())
         overwrite = true;

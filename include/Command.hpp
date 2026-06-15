@@ -61,7 +61,3 @@ class Command
 };
 
 #endif
-
-/*
-**getCmd: Method of Command class, return the command already stored in the object
-*/

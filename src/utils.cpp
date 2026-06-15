@@ -18,7 +18,6 @@ void printError(const std::string errorMsg)
    std::cout << "Error: " << errorMsg << std::endl;
 }
 
-
  bool isValidChannelName(const std::string &name)
 {
     size_t i;

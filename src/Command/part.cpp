@@ -1,11 +1,5 @@
 #include "../../include/Command.hpp"
 
-/*
-** The PART message causes the client sending the message to be removed
-   from the list of active users for all given channels listed in the
-   parameter string.
-*/
-
 void Command::part(std::vector<std::string> parsing, Client &client, Server &server)
 {
     std::vector<std::string>::iterator it = parsing.begin();

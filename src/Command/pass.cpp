@@ -1,10 +1,5 @@
 #include "../../include/Command.hpp"
 
-/*
-**The PASS command is used to set a 'connection password'.
-** PASS <password>   
-*/
-
 void Command::pass(std::vector<std::string> parsing, Client &client, Server &server)
 {
     if (parsing.size() < 2)

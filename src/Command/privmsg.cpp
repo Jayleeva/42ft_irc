@@ -1,13 +1,5 @@
 #include "../../include/Command.hpp"
 
-/*
-** PRIVMSG is used to send private messages between users.  <receiver>
-   is the nickname of the receiver of the message.  <receiver> can also
-   be a list of names or channels separated with commas.
-**PRIVMSG <receiver>{,<receiver>} <text to be sent>
-*/
-
-
 std::string    rebuildMessage(std::vector<std::string>::iterator it, std::vector<std::string>::iterator ite)
 {
     std::string res = "";
@@ -20,7 +12,6 @@ std::string    rebuildMessage(std::vector<std::string>::iterator it, std::vector
     }
     return (res);
 }
-
 
 std::vector<std::string> getAllTargets(std::string list)
 {
