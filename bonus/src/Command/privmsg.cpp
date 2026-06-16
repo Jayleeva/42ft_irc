@@ -1,32 +1,6 @@
 #include "../../include/Command.hpp"
 #include "../../include/Bot.hpp"
 
-std::string    rebuildMessage(std::vector<std::string>::iterator it, std::vector<std::string>::iterator ite)
-{
-    std::string res = "";
-
-    for (std::vector<std::string>::iterator its = it; its != ite; its ++)
-    {
-        res.append(*its);
-        if (its + 1 != ite)
-            res.append(" ");
-    }
-    return (res);
-}
-
-
-std::vector<std::string> getAllTargets(std::string list)
-{
-    std::vector<std::string>    res;
-
-	std::string			        element;
-    std::stringstream 	        ss(list);
-
-	while (getline(ss, element, ','))
-		res.push_back(element);
-    return (res);
-}
-
 void Command::privmsg(std::vector<std::string> parsing, Client &client, Server &server)
 {
     if (parsing.size() < 2)
