@@ -17,7 +17,7 @@ void Command::kick(std::vector<std::string> parsing, Client &client, Server &ser
     std::cout << "target = " << *(it) << std::endl;
     std::string target = *it; // peut y en avoir plusieurs, faire un getline avec ',' en separateur
     std::vector<std::string> allTargets = getAllTargets(*it);
-    it += allTargets.size() -1; // incrementer du nombre de targets
+    it += allTargets.size(); // incrementer du nombre de targets
 	if (it == parsing.end())
 		reason = "Kicked";
 	else
