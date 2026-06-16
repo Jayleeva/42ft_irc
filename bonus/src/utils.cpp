@@ -18,7 +18,6 @@ void printError(const std::string errorMsg)
    std::cout << "Error: " << errorMsg << std::endl;
 }
 
-
  bool isValidChannelName(const std::string &name)
 {
     size_t i;
@@ -70,4 +69,29 @@ int  ft_stoi(std::string str)
             throw NotAnIntException();
     }
     return (static_cast<int>(res));
+}
+
+std::vector<std::string> getAllTargets(std::string list)
+{
+    std::vector<std::string>    res;
+
+	std::string			        element;
+    std::stringstream 	        ss(list);
+
+	while (getline(ss, element, ','))
+		res.push_back(element);
+    return (res);
+}
+
+std::string    rebuildMessage(std::vector<std::string>::iterator it, std::vector<std::string>::iterator ite)
+{
+    std::string res = "";
+
+    for (std::vector<std::string>::iterator its = it; its != ite; its ++)
+    {
+        res.append(*its);
+        if (its + 1 != ite)
+            res.append(" ");
+    }
+    return (res);
 }

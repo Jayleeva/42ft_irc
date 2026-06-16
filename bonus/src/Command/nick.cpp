@@ -70,6 +70,4 @@ void Command::nick(std::vector<std::string> parsing, Client &client, Server &ser
         server.sendToClient(&client, RPL_NICK(oldnick, nickname));
         server.sendToClient(&client, RPL_WELCOME(nickname));
     }
-
-    std::cout << "nickname '" << nickname << "'" << std::endl;
 }

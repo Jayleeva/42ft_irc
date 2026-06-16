@@ -37,14 +37,13 @@ class Command;
 #define ERR_NONICKNAMEGIVEN "431 :No nickname given"
 #define ERR_UNKNOWNMODE(char) ("472 " + char + " :is unknown mode char to me")
 
-#define ERR_BADCHANNAME(channel) ("479 " + channel + " :Bad channel name") // sans argument?
+#define ERR_BADCHANNAME(channel) ("479 " + channel + " :Bad channel name")
 
 #define ERR_NOSUCHCHANNEL(channel) ("403 " + channel + " :No such channel")
 #define ERR_NOTONCHANNEL(channel) ("442 " + channel + " :You're not on that channel")
 #define ERR_CHANNELISFULL(channel) ("471 " + channel + " :Cannot join channel (+l)")
 #define ERR_BADCHANNELKEY(channel) ("475 " + channel + " :Cannot join channel (+k)")
 #define ERR_INVITEONLYCHAN(channel) ("473 " + channel + " :Cannot join channel (+i)")
-//#define ERR_BANNEDFROMCHAN(channel) ("474 " + channel + " :Cannot join channel (+b)")
 #define ERR_TOOMANYCHANNELS(channel) ("405 " + channel + " :You have joined too many channels")
 
 #define ERR_CHANOPRIVSNEEDED(channel) ("482 " + channel + " :You're not channel operator")
@@ -57,19 +56,18 @@ class Command;
 #define ERR_CANNOTSENDTOCHAN(channel) ("404 " + channel + " :Cannot send to channel")
 
 //Return messages
-#define RPL_WELCOME(nick)                               "001 " + nick + " :Welcome to the ircserv network " + nick + "!" // to confirm connection
-#define RPL_NAMREPLY(nick, channel, list)               "353 " + nick + " " + channel + " " + list // ":['@'/'+']<nick> (['@'/'+']<nick>)*" //to confirm join
-#define RPL_ENDOFNAMES(nick, channel)                   "366 " + nick + " " + channel + " :End of /NAMES list"  // to close the list of names
-#define RPL_NOTOPIC(channel)                            "331 " + channel + " " + channel // to confirm there's no topic
-#define RPL_TOPIC(channel, topic)                       "332 " + channel + " " + channel + " " + topic // to confirm topic
-#define RPL_INVITING(nick, target, channel)             "341 " + nick + " " + target + " " + channel // to confirm the invitation
-#define RPL_CHANNELMODEIS(channel, mode, params)        "324 " + channel + " "  + channel + " " + mode + " " + params // to confirm mode
+#define RPL_WELCOME(nick)                               "001 " + nick + " :Welcome to the ircserv network " + nick + "!"
+#define RPL_NAMREPLY(nick, channel, list)               "353 " + nick + " " + channel + " " + list
+#define RPL_ENDOFNAMES(nick, channel)                   "366 " + nick + " " + channel + " :End of /NAMES list"
+#define RPL_NOTOPIC(channel)                            "331 " + channel + " " + channel
+#define RPL_TOPIC(channel, topic)                       "332 " + channel + " " + channel + " " + topic
+#define RPL_INVITING(nick, target, channel)             "341 " + nick + " " + target + " " + channel
+#define RPL_CHANNELMODEIS(channel, mode, params)        "324 " + channel + " "  + channel + " " + mode + " " + params
 
 #define RPL_CAP(nick)                                   "CAP * LS :" + nick
 #define RPL_NICK(oldnick, newnick)                      ":" + oldnick + " NICK :" + newnick
 #define RPL_JOIN(source, channel)                       ":" + source + " JOIN :" + channel
 #define RPL_PRIVMSG(source, target, message)            ":" + source + " PRIVMSG " + target + " " + message
-//#define RPL_NOTICE(source, target, message)             ":" + source + " NOTICE " + target + " :" + message
 #define RPL_KICK(source, channel, target, reason)       ":" + source + " KICK " + channel + " " + target + " :" + reason
 #define RPL_PART(source, channel)                       ":" + source + " PART " + channel
 #define RPL_QUIT(source, message)                       ":" + source + " QUIT " + message
@@ -77,19 +75,21 @@ class Command;
 #define RPL_PING(source, token)                         ":" + source + " PONG :" + token
 
 //Utils functions
-void            printError(const std::string errorMsg);
-bool            channelExists(std::map<std::string, Channel*> channels, std::string name);
-bool 			isValidChannelName(const std::string &name);
-Command         parseCmd(std::string input);
-std::string     ft_itoa(int i);
-int             ft_stoi(std::string str);
+void                        printError(const std::string errorMsg);
+bool                        channelExists(std::map<std::string, Channel*> channels, std::string name);
+bool 			            isValidChannelName(const std::string &name);
+Command                     parseCmd(std::string input);
+std::string                 ft_itoa(int i);
+int                         ft_stoi(std::string str);
+std::vector<std::string>    getAllTargets(std::string list);
+std::string                 rebuildMessage(std::vector<std::string>::iterator it, std::vector<std::string>::iterator ite);
 
-class NotAnIntException : public std::exception // pour hériter des exceptions de la std
+class NotAnIntException : public std::exception
 {
     public:
         virtual const char *what() const throw()
         {
-            return ("Exception: Not an int.");	//personnalisez votre message qui servira de valeur de retour.
+            return ("Exception: Not an int.");
         }
 };
 

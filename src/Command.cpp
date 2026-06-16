@@ -19,17 +19,6 @@ void    Command::setParsing(std::vector<std::string> parsing)
     _parsing = parsing;
 }
 
-void    printParsing(std::vector<std::string> parsing)
-{
-    std::cout << "parsing = ";
-    for (std::vector<std::string>::iterator it = parsing.begin(); it != parsing.end(); it++)
-    {
-        std::cout << *it;
-        if (it + 1 != parsing.end())
-            std::cout << " ";
-    }
-    std::cout << std::endl;
-}
 
 void Command::execute(Client &client, Server &server)
 {
@@ -54,28 +43,20 @@ void Command::execute(Client &client, Server &server)
 
     if (_cmd == CMD_CAP)
     {
-        std::cout << "BRANCH CAP" << std::endl;
         if (_parsing.size() >= 2 && _parsing[1] == "LS")
             server.sendToClient(&client, RPL_CAP(client.getNickname()));
         return ;
     }
     else if (_cmd == CMD_PASS)
-    {
-        std::cout << "BRANCH PASS" << std::endl;
         pass(_parsing, client, server);
-    }
     else if (_cmd == CMD_NICK)
-    {
-        std::cout << "BRANCH NICK" << std::endl;
         nick(_parsing, client, server);
-    }
     else if (_cmd == CMD_USER)
     {
-        std::cout << "BRANCH USER" << std::endl;
         user(_parsing, client, server);
-        std::cout << "registered = "
+        std::cout << YELLOW << "registered = "
               << client.isRegistered()
-              << std::endl;
+              << DEFAULT << std::endl;
         if (client.isRegistered())
             server.sendToClient(&client, RPL_WELCOME(client.getNickname()));
     }

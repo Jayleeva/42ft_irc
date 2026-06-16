@@ -14,22 +14,14 @@ void Command::kick(std::vector<std::string> parsing, Client &client, Server &ser
 	std::string nickname = *(++it);
 	std::string reason;
 
-	reason = "Kicked";
-
-	if (parsing.size() > 3)
-	{
-		reason.clear();
-		++it;
-		while (it != parsing.end())
-		{
-			if (!reason.empty())
-				reason += " ";
-			reason += *it;
-			it++;
-		}
-		if (!reason.empty() && reason[0] == ':')
-			reason.erase(0, 1);
-	}
+    std::cout << "target = " << *(it) << std::endl;
+    std::string target = *it; // peut y en avoir plusieurs, faire un getline avec ',' en separateur
+    std::vector<std::string> allTargets = getAllTargets(*it);
+    it += allTargets.size() -1; // incrementer du nombre de targets
+	if (it == parsing.end())
+		reason = "Kicked";
+	else
+    	reason = rebuildMessage(it, parsing.end());		
 
 	if (!server.channelExists(channelName))
 	{
@@ -47,22 +39,25 @@ void Command::kick(std::vector<std::string> parsing, Client &client, Server &ser
 		return;
     }
 
-    Client *targetClient = server.getClientByNick(nickname);
+	for (std::vector<std::string>::iterator it1 = allTargets.begin(); it1 != allTargets.end(); it1 ++) // pour envoyer a toutes les targets
+    {
+		Client *targetClient = server.getClientByNick(*(it1));
 
-	if(!targetClient)
-	{
-		printError(ERR_NOSUCHNICK(nickname));
-		server.sendToClient(&client, ERR_NOSUCHNICK(nickname));
-		return;
+		if(!targetClient)
+		{
+			printError(ERR_NOSUCHNICK(nickname));
+			server.sendToClient(&client, ERR_NOSUCHNICK(nickname));
+			return;
+		}
+
+		if (!channel->hasMember(targetClient))
+		{
+			printError(ERR_NOTONCHANNEL(channelName));
+			server.sendToClient(&client, ERR_NOTONCHANNEL(channelName));
+			return;
+		}
+
+		server.sendKickConfirmation(&client, targetClient, channel, reason);
+		server.removeClientFromChannel(targetClient, channel, false);
 	}
-
-    if (!channel->hasMember(targetClient))
-	{
-		printError(ERR_NOTONCHANNEL(channelName));
-		server.sendToClient(&client, ERR_NOTONCHANNEL(channelName));
-		return;
-	}
-
-	server.sendKickConfirmation(&client, targetClient, channel, reason);
-	server.removeClientFromChannel(targetClient, channel, false);
 }

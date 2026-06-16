@@ -72,10 +72,6 @@ int main (int argc, char **argv)
     addr.sin_addr.s_addr = INADDR_ANY;
     memset(&(addr.sin_zero), 0, 8);
 
-    std::cout << "recieved port : " << port << std::endl;
-    std::cout << "transformed port : " << addr.sin_port << std::endl;
-    std::cout << "server address : " << addr.sin_addr.s_addr << std::endl;
-
     serv.openSocket(&addr);
     runServer(&serv);
     serv.closeSockets();

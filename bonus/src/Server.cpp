@@ -71,15 +71,11 @@ void Server::openSocket(struct sockaddr_in *addr)
         exit(EXIT_FAILURE);
     }
 
-    std::cout << "is created\n";
-
     if (setsockopt(this->_socket, SOL_SOCKET, SO_REUSEADDR, (const char *) &opt, (sizeof(opt)))) //| SO_REUSEPORT
     {
         perror("setsockopt");
         exit(EXIT_FAILURE);
     }
-
-    std::cout << "is set\n";
 
     if (bind(this->_socket, (struct sockaddr*)addr, sizeof(struct sockaddr)) < 0)
     {
@@ -88,15 +84,13 @@ void Server::openSocket(struct sockaddr_in *addr)
         perror("bind failed");
         exit(EXIT_FAILURE);
     }
- 
-    std::cout << "is bound\n";
 
     if (listen(this->_socket, QUEUE_SIZE) < 0)
     {
         perror("listen failed");
         exit(EXIT_FAILURE);
     }
-    std::cout << "is listening\n";
+    std::cout << YELLOW << "server is ready" << DEFAULT << std::endl;
 }
 
 void    Server::clearClientsMap()
@@ -138,7 +132,7 @@ void    Server::addClient()
     newClient->setHostname(inet_ntoa(clientAddr.sin_addr));
     this->_clients.insert(this->_clients.end(), std::make_pair(clientSocket, newClient));
 
-    std::cout << YELLOW << "Client " << clientSocket << " connected." << DEFAULT << std::endl;
+    std::cout << YELLOW << "\nClient " << clientSocket << " connected." << DEFAULT << std::endl;
 
     char    buffer[MAXBYTES];
     memset(buffer, '\0', sizeof(buffer));
@@ -157,8 +151,6 @@ void    Server::addClient()
             if (!line.empty())
                 execCmd(line, clientSocket);
         }
-        std::cout << "add " << RED << nbytes << DEFAULT << std::endl;
-        std::cout << "< " << buffer << std::endl;
     }
 }
 
@@ -204,12 +196,12 @@ void    Server::removeClient(nfds_t i, std::string message)
     {
         sendToClient(it->second, RPL_QUIT(it->second->getNickname(), message));
         removeFromAllChannels(it->second);
-        delete it->second;
         this->_clients.erase(it);
+        delete it->second;
     }
 	close(_fds[i].fd);
 
-    std::cout << YELLOW << "Client " << _fds[i].fd << " disconnected." << DEFAULT << std::endl;
+    std::cout << YELLOW << "\nClient " << _fds[i].fd << " disconnected." << DEFAULT << std::endl;
 
 	_fds[i].fd = _fds[_nfd -1].fd;
 	_fds[i].events = POLLIN;
@@ -255,11 +247,12 @@ void Server::execClient(nfds_t i)
             recvBuffer.erase(0, pos + 1);
 
             if (!line.empty())
+            {
+                std::cout << "recv " << YELLOW << nbytes << DEFAULT " bytes:" << std::endl;
+                std::cout << "< " << line << std::endl;
                 execCmd(line, fd);
+            }
         }
-
-        std::cout << "exec " << RED << nbytes << DEFAULT << std::endl;
-        std::cout << "< " << buffer << std::endl;
     }
     else if (nbytes == 0)
         removeClient(i, " ");

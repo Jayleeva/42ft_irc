@@ -18,7 +18,6 @@ void Command::pass(std::vector<std::string> parsing, Client &client, Server &ser
 
     std::string arg = *(parsing.begin() + 1);
     arg = arg.substr(0, arg.find("\r\n"));
-    std::cout << "password = '" << arg << "'" << std::endl;
 
     if (arg != server.getPassword())
     {
