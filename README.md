@@ -68,20 +68,20 @@ weechat --dir <newclientname>
 ````
 
 ## Things you can try:
-- authenticate
-- set a nickname
-- set a username
-- join a channel
-- write a private message to an other user (client)
-- kick a user (client) from a channel
-- invite a user (client) to a channel
-- change and view the channel topic
+- authenticate `/pass password`
+- set a nickname `/nick nickname`
+- set a username `/user username`
+- join a channel `/join #channel`
+- write a private message to an other user (client) `/msg nickname message`
+- kick a user (client) from a channel `/kick nickname #channel`
+- invite a user (client) to a channel `/invite nickname #channel`
+- change and view the channel topic `/topic #channel newTopic`
 - change the channel's parameters (mode):
-  * set / remove the access to the channel (open / invite only)
-  * set / remove the restrictions on the command allowing to change or view the channel topic
-  * set / remove the channel's password (key)
-  * give / take owner (operator) privilege
-  * set / remove user limit
+  * set / remove the access to the channel (open / invite only) `/mode +i #channel`
+  * set / remove the restrictions on the command allowing to change or view the channel topic `/mode +t nickname #channel`
+  * set / remove the channel's password (key) `/mode +k "password" #channel`
+  * give / take owner (operator) privilege `/mode +o nickname #channel`
+  * set / remove user limit `/mode +l numberlimit #channel`
 
 # Ressources
 Several websites were used to understand the different technical aspects of the project.
