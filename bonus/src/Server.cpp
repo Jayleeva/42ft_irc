@@ -195,9 +195,11 @@ void    Server::removeClient(nfds_t i, std::string message)
     if (it != this->_clients.end())
     {
         sendToClient(it->second, RPL_QUIT(it->second->getNickname(), message));
-        removeFromAllChannels(it->second);
+        Client *client = it->second;
+
+        removeFromAllChannels(client);
         this->_clients.erase(it);
-        delete it->second;
+        delete client;
     }
 	close(_fds[i].fd);
 
@@ -419,13 +421,8 @@ void Server::sendToChannel(Channel &channel, Client *sender, std::string message
     const std::set<Client*> &members = channel.getMembers();
     for (std::set<Client*>::const_iterator it = members.begin(); it != members.end(); it ++)
     {
-        if (*it == sender)
-            std::cout << "IS SENDEEEER\n";
         if (*it != sender)
-        {
-            std::cout << "IS NOOOOT SENDER\n";
             sendToClient((*it), message);
-        }
     }
 }
 
@@ -436,13 +433,8 @@ void Server::sendMessageToChannel(Client *sender, Channel &channel, std::string 
     const std::set<Client*> &members = channel.getMembers();
     for (std::set<Client*>::const_iterator it = members.begin(); it != members.end(); it ++)
     {
-        if (*it == sender)
-            std::cout << "IS SENDEEEER\n";
         if (*it != sender)
-        {
-            std::cout << "IS NOOOOT SENDER\n";
             sendToClient(*it, RPL_PRIVMSG(sender->getNickname(), channel.getName(), message));
-        }
     }
 }
 

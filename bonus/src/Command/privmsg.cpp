@@ -17,12 +17,10 @@ void Command::privmsg(std::vector<std::string> parsing, Client &client, Server &
     }
     std::vector<std::string>::iterator it = parsing.begin() + 1;
 
-    std::cout << "target = " << *(it) << std::endl;
     std::string target = *it; // peut y en avoir plusieurs, faire un getline avec ',' en separateur
     std::vector<std::string> allTargets = getAllTargets(*it);
     it += allTargets.size(); // incrementer du nombre de targets
     std::string message = rebuildMessage(it, parsing.end());
-    std::cout << "message = '" << message << "'" << std::endl;
 
     for (std::vector<std::string>::iterator it1 = allTargets.begin(); it1 != allTargets.end(); it1 ++) // pour envoyer a toutes les targets
     {
