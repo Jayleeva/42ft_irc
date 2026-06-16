@@ -2,8 +2,6 @@
 #include "../include/Client.hpp"
 #include "../include/Channel.hpp"
 #include <iostream>
-#include <cstdlib>
-#include <ctime>
 
 #include "../include/Server.hpp"
 #include "../include/utils.hpp"
@@ -14,6 +12,24 @@
 //    The socket is already bound to an address.
 //    addrlen is wrong, or addr is not a valid address for this socket's domain.
 
+bool g_running = true;
+
+void handle_sigint(int sig)
+{
+    (void)sig;
+    g_running = false;
+}
+
+void runServer(Server *serv)
+{
+    serv->setBeforeRun();
+    while (g_running)
+    {
+        if (serv->run())
+            break;
+    }
+}
+
 int main (int argc, char **argv)
 {
     Server          serv;
@@ -22,8 +38,6 @@ int main (int argc, char **argv)
 
     if (argc != 3)
         return (1);
-
-    //srand(time(NULL));
 
     password = argv[2];
     if (password.empty())
@@ -45,6 +59,13 @@ int main (int argc, char **argv)
         return (1);
     }
 
+    struct sigaction sa;
+    sa.sa_handler = handle_sigint;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = 0;
+    sigaction(SIGINT, &sa, NULL);
+    sigaction(SIGQUIT, &sa, NULL);
+
     struct sockaddr_in addr;
     addr.sin_family = AF_INET;
     addr.sin_port = htons((u_short)port);
@@ -56,7 +77,7 @@ int main (int argc, char **argv)
     std::cout << "server address : " << addr.sin_addr.s_addr << std::endl;
 
     serv.openSocket(&addr);
-    serv.run();
+    runServer(&serv);
     serv.closeSockets();
 
     return (0);

@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <limits>
+#include <signal.h>
 #include "Client.hpp"
 #include "Channel.hpp"
 #include "Server.hpp"

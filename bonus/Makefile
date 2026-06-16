@@ -58,4 +58,7 @@ fclean: clean
 
 re: fclean $(NAME)
 
+leaks:	all
+	valgrind -s --leak-check=full --log-file=valgrind.log --show-leak-kinds=all --track-fds=all --default-suppressions=yes ./$(NAME) 6667 password
+
 .PHONY: all clean fclean re

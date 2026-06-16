@@ -5,7 +5,6 @@
 Server::Server(): _name("ircserv") {};
 Server::~Server()
 {
-    std::cout << "SERVER DESTRUCTOR" << std::endl;
     std::map<int, Client*>::iterator it;
     std::map<std::string, Channel*>::iterator itChannel;
 
@@ -266,52 +265,53 @@ void Server::execClient(nfds_t i)
         removeClient(i, " ");
 }
 
-void    Server::run()
+void    Server::setBeforeRun()
 {
     memset(this->_fds, 0, sizeof(this->_fds));
     this->_fds[0].events = POLLIN;
     this->_fds[0].fd = this->_socket;
     this->_nfd = 1;
+}
 
-    while (true)
-    {   
-        nfds_t currentSize = this->_nfd;
-        int ready = poll(this->_fds, currentSize, -1);
-        if (ready < 0)
-        {
-            perror("poll() failed");
-            break;
-        }
-        else if (ready == 0)
-        {
-            perror(" poll() timed out."); // doit avoir un timeout ou pas?
-            break;
-        }
-        
-        for (nfds_t i = 0; i < currentSize; i ++)
-        {
-            if (this->_fds[i].revents == 0)
-                continue;
+int    Server::run()
+{
+    nfds_t currentSize = this->_nfd;
+    int ready = poll(this->_fds, currentSize, -1);
+    if (ready < 0)
+    {
+        perror("poll() failed");
+        return (1);
+    }
+    else if (ready == 0)
+    {
+        perror(" poll() timed out.");
+        return (1);
+    }
+    
+    for (nfds_t i = 0; i < currentSize; i ++)
+    {
+        if (this->_fds[i].revents == 0)
+            continue;
 
-            else if (this->_fds[i].revents & POLLIN)
+        else if (this->_fds[i].revents & POLLIN)
+        {
+            if (this->_fds[i].fd == this->_socket)
             {
-                if (this->_fds[i].fd == this->_socket)
-                {
-                    addClient();
-                    break;
-                }
-                else
-                {
-                    this->execClient(i);
-                }
-            }
-            else if ((this->_fds[i].revents & POLLHUP) || (this->_fds[i].revents & POLLOUT))
-            {
-                this->removeClient(i -1, " ");
+                addClient();
                 break;
             }
+            else
+            {
+                this->execClient(i);
+            }
+        }
+        else if ((this->_fds[i].revents & POLLHUP) || (this->_fds[i].revents & POLLOUT))
+        {
+            this->removeClient(i -1, " ");
+            break;
         }
     }
+    return (0);
 }
 
 bool Server::nicknameExists(const std::string &nickname) const
