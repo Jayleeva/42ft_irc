@@ -81,6 +81,4 @@ class Server
 
 };
 
-void    printMap(std::map<int, Client *> map);
-
 #endif

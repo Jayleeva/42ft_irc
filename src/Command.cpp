@@ -54,9 +54,6 @@ void Command::execute(Client &client, Server &server)
     else if (_cmd == CMD_USER)
     {
         user(_parsing, client, server);
-        std::cout << YELLOW << "registered = "
-              << client.isRegistered()
-              << DEFAULT << std::endl;
         if (client.isRegistered())
             server.sendToClient(&client, RPL_WELCOME(client.getNickname()));
     }

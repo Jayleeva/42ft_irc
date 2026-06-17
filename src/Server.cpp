@@ -47,14 +47,6 @@ std::string Server::getName() const
     return (this->_name);
 }
 
-void    printMap(std::map<int, Client *> map)
-{
-    for (std::map<int, Client *>::iterator it = map.begin(); it != map.end(); ++it)
-    {
-        std::cout << "---  " << it->first << " " << it->second << " \n";
-    }
-}
-
 void    Server::setPassword(std::string password)
 {
     this->_password = password;
@@ -152,24 +144,6 @@ void    Server::addClient()
                 execCmd(line, clientSocket);
         }
     }
-}
-
-void int_to_char(int num, char *result)
-{
-    int temp = num;
-    int len = 0;
-
-    while (temp > 0) {
-        len++;
-        temp /= 10;
-    }
-
-    for (int i = len - 1; i >= 0; i--) {
-        result[i] = num % 10 + '0';
-        num /= 10;
-    }
-
-    result[len] = '\0';
 }
 
 void    Server::removeFromAllChannels(Client *client)
@@ -455,12 +429,6 @@ void Server::sendPartConfirmation(Client *client, Channel *channel)
 {
     sendToClient(client, RPL_PART(client->getNickname(), channel->getName()));
     sendToChannel(*channel, client, RPL_PART(client->getNickname(), channel->getName()));
-}
-
-void Server::sendKickConfirmation(Client *client, Channel *channel, std::string target, std::string reason) 
-{
-    sendToClient(client, RPL_KICK(client->getNickname(), channel->getName(), target, reason));
-    sendToChannel(*channel, client, RPL_KICK(client->getNickname(), channel->getName(), target, reason));
 }
 
 void Server::sendNewParams(Channel &channel, Client *sender, std::string mode, std::string params)
