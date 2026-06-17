@@ -22,9 +22,9 @@ void Command::nick(std::vector<std::string> parsing, Client &client, Server &ser
 
     if (!client.hasPass())
     {
-        std::cout << "hello\n";
+        printError("You need to set the server's password in Weechat.");
         return ;
-    } 
+    }
 
     for (size_t j = 0; j < nickname.size(); j++)
     {
