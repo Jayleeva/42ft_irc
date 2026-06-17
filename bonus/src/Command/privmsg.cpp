@@ -30,14 +30,14 @@ void Command::privmsg(std::vector<std::string> parsing, Client &client, Server &
             Channel *channel = server.getChannel(*it1);
             if (!channel)
             {
-                printError(ERR_NOSUCHCHANNEL(channel->getName()));
-                server.sendToClient(&client, ERR_NOSUCHCHANNEL(channel->getName()));
+                printError(ERR_NOSUCHCHANNEL(*it1));
+                server.sendToClient(&client, ERR_NOSUCHCHANNEL(*it1));
                 return ;
             }
             if (!channel->hasMember(&client))
             {   
-                printError(ERR_CANNOTSENDTOCHAN(channel->getName()));
-                server.sendToClient(&client, ERR_CANNOTSENDTOCHAN(channel->getName()));
+                printError(ERR_CANNOTSENDTOCHAN(*it1));
+                server.sendToClient(&client, ERR_CANNOTSENDTOCHAN(*it1));
                 return ;
             }
             server.sendMessageToChannel(&client, *channel, message);
